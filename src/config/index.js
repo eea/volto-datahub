@@ -1,7 +1,19 @@
-import datahubSearchConfig from './datahub-search-config';
 import { mergeConfig } from '@eeacms/search';
+import facets from './facets';
+import views from './views';
+import filters from './filters';
+import vocabs from './vocabulary';
 
 import DatahubLandingPage from '../components/LandingPage/DatahubLandingPage';
+
+const datahubConfig = {
+  title: 'Datahub',
+
+  ...facets,
+  ...views,
+  ...filters,
+  ...vocabs,
+};
 
 const getClientProxyAddress = () => {
   const url = new URL(window.location);
@@ -14,7 +26,7 @@ export default function install(config) {
   // console.log(process.env.RAZZLE_ENV_CONFIG);
   const envConfig = process.env.RAZZLE_ENV_CONFIG
     ? JSON.parse(process.env.RAZZLE_ENV_CONFIG)
-    : datahubSearchConfig;
+    : datahubConfig;
 
   const pjson = require('../../package.json');
   envConfig.app_name = pjson.name;
