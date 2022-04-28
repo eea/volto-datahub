@@ -6,7 +6,7 @@ import {
   dateRangeFacet,
 } from '@eeacms/search';
 
-import { getTodayWithTime } from '../../../searchlib-globalsearch/src/utils';
+import { getTodayWithTime } from '@eeacms/globalsearch/utils';
 const facets = [
   multiTermFacet({
     field: 'rod',
@@ -354,7 +354,6 @@ const facets = [
   //   sortOn: 'custom',
   //   sortOnCustomLabel: 'Alphabetical',
   // }),
-
 ];
 
 export default {
