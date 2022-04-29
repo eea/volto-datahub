@@ -6,7 +6,7 @@ import {
   dateRangeFacet,
 } from '@eeacms/search';
 
-import { getTodayWithTime } from '@eeacms/globalsearch/utils';
+// import { getTodayWithTime } from '@eeacms/globalsearch/utils';
 const facets = [
   multiTermFacet({
     field: 'rod',
