@@ -14,9 +14,9 @@ const applyConfig = (config) => {
 
   const { datahub } = config.settings.searchlib.searchui;
 
-  config.settings.searchlib.searchui.datahub.requestBodyModifiers.push(
-    tweakForNLPService,
-  );
+//  config.settings.searchlib.searchui.datahub.requestBodyModifiers.push(
+//    tweakForNLPService,
+//  );
 
   // Tweak the searchlib config to use the middleware instead of the index
   datahub.elastic_index = '_es/globalsearch';

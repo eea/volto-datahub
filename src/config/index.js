@@ -13,6 +13,8 @@ const datahubConfig = {
   ...views,
   ...filters,
   ...vocabs,
+
+  sourceExcludedFields: ['nlp_*', 'event'], // don't need these in results
 };
 
 const getClientProxyAddress = () => {
