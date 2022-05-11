@@ -6,9 +6,10 @@ import { SegmentedBreadcrumb, TagsList } from '@eeacms/search/components';
 import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
 
 import MoreLikeThisTrigger from '@eeacms/search/components/Result/MoreLikeThisTrigger';
-import ExternalLink from '@eeacms/search/components/Result/ExternalLink';
+// import ExternalLink from '@eeacms/search/components/Result/ExternalLink';
 import ResultContext from '@eeacms/search/components/Result/ResultContext';
 import ContentClusters from '@eeacms/search/components/Result/ContentClusters';
+import { Link } from 'react-router-dom';
 
 const DatahubCardItem = (props) => {
   const { result, showControls = true } = props;
@@ -28,6 +29,7 @@ const DatahubCardItem = (props) => {
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 1000;
   const clusters = result.clusterInfo;
+  const [resultId] = (result.href || '').split('/').reverse();
 
   return (
     <div
@@ -46,9 +48,11 @@ const DatahubCardItem = (props) => {
       <div className={classColLeft}>
         <div className="details">
           <h3>
-            <ExternalLink href={result.href} title={result.title}>
+            <Link to={`/datahub/view/${resultId}`} title={result.title}>
               {firstWords(result.title, 12)}
-            </ExternalLink>
+            </Link>
+            {/* <ExternalLink href={result.href} title={result.title}> */}
+            {/* </ExternalLink> */}
             {result.isNew && (
               <Label className="new-item" horizontal>
                 New
@@ -62,7 +66,7 @@ const DatahubCardItem = (props) => {
           </h3>
           <div className="source">
             <span>Source: </span>
-            <ExternalLink href={result.href}>
+            <Link to={`/datahub/view/${resultId}`} title={result.title}>
               <strong title={result.source} className="source">
                 {firstWords(
                   getTermDisplayValue({
@@ -78,7 +82,7 @@ const DatahubCardItem = (props) => {
                 short={true}
                 maxChars={40}
               />
-            </ExternalLink>
+            </Link>
 
             {showControls && !isSmallScreen && (
               <MoreLikeThisTrigger

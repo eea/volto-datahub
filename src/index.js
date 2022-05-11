@@ -1,5 +1,6 @@
 import installDatahub from './config';
 import DatahubCardItem from './components/Result/DatahubCardItem';
+import DatahubItemView from './components/ItemView/ItemView';
 
 function tweakForNLPService(body, config) {
   if (!config.enableNLP) {
@@ -30,6 +31,15 @@ const applyConfig = (config) => {
   datahub.enableNLP = false;
   // datahub.resultViews[0].factories.item = "DatahubListingViewItem"
 
+  config.settings.nonContentRoutes.push(/\/datahub\/view\/(.*)/);
+  config.addonRoutes = [
+    {
+      path: '/datahub/view/:id',
+      component: DatahubItemView,
+    },
+
+    ...(config.addonRoutes || []),
+  ];
   return config;
 };
 
