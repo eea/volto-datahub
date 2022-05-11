@@ -1,4 +1,17 @@
 export default {
+  resultViews: [
+    {
+      id: 'datahubCards',
+      title: 'Horizontal cards',
+      icon: 'bars',
+      render: null,
+      isDefault: true,
+      factories: {
+        view: 'HorizontalCard.Group',
+        item: 'DatahubCardItem',
+      },
+    },
+  ],
   initialView: {
     factory: 'DatahubLandingPage',
     tilesLandingPageParams: {
