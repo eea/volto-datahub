@@ -51,8 +51,6 @@ const DatahubCardItem = (props) => {
             <Link to={`/datahub/view/${resultId}`} title={result.title}>
               {firstWords(result.title, 12)}
             </Link>
-            {/* <ExternalLink href={result.href} title={result.title}> */}
-            {/* </ExternalLink> */}
             {result.isNew && (
               <Label className="new-item" horizontal>
                 New
