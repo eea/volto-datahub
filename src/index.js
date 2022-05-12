@@ -26,7 +26,7 @@ const applyConfig = (config) => {
   resolve.DatahubCardItem = { component: DatahubCardItem };
 
   // Tweak the searchlib config to use the middleware instead of the index
-  datahub.elastic_index = '_es/globalsearch';
+  datahub.elastic_index = '_es/datahub';
   datahub.index_name = 'data_searchui_datahub';
   datahub.enableNLP = false;
   // datahub.resultViews[0].factories.item = "DatahubListingViewItem"

@@ -2,7 +2,7 @@ import React from 'react';
 import cx from 'classnames';
 import { Label, Button, Dropdown } from 'semantic-ui-react';
 import { useAppConfig, useWindowDimensions } from '@eeacms/search/lib/hocs';
-import { SegmentedBreadcrumb, TagsList } from '@eeacms/search/components';
+import { TagsList } from '@eeacms/search/components'; // SegmentedBreadcrumb,
 import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
 
 import MoreLikeThisTrigger from '@eeacms/search/components/Result/MoreLikeThisTrigger';
