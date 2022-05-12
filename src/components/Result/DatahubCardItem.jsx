@@ -75,11 +75,11 @@ const DatahubCardItem = (props) => {
                   8,
                 )}
               </strong>
-              <SegmentedBreadcrumb
-                href={result.href}
-                short={true}
-                maxChars={40}
-              />
+              {/* <SegmentedBreadcrumb */}
+              {/*   href={result.href} */}
+              {/*   short={true} */}
+              {/*   maxChars={40} */}
+              {/* /> */}
             </Link>
 
             {showControls && !isSmallScreen && (
