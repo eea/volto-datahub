@@ -19,11 +19,10 @@ const appName = 'datahub';
 function ItemView(props) {
   const { docid } = props;
   const result = useResult(null, docid);
-  return JSON.stringify(result);
+  return result ? JSON.stringify(result) : null;
 }
 
 function DatahubItemView(props) {
-
   const [isClient, setIsClient] = React.useState();
   React.useEffect(() => setIsClient(true), []);
 
