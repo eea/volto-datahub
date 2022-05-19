@@ -18,7 +18,7 @@ import {
 } from '@eeacms/search/lib/hocs';
 import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui'; // ErrorBoundary,
-import { Blockquote } from '@eeacms/volto-eea-design-system/ui';
+import { Quote } from '@eeacms/volto-eea-design-system/ui';
 import config from '@plone/volto/registry';
 
 const appName = 'datahub';
@@ -63,7 +63,7 @@ function ItemView(props) {
               </div>
             </div>
           </Portal>
-          <Blockquote>{description?.raw}</Blockquote>
+          <Quote>{description?.raw}</Quote>
           <h3>Tabular data</h3>
           <Accordion exclusive={false}>
             <Accordion.Title
