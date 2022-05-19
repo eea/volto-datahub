@@ -1,6 +1,6 @@
 const vocab = {
   cluster_name: {
-    sdi: 'Datahub series'
+    sdi: 'Datahub series',
   },
 };
 

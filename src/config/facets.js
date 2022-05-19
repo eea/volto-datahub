@@ -1,8 +1,8 @@
 import { multiTermFacet, fixedRangeFacet } from '@eeacms/search';
 import {
-  booleanFacet,
-  histogramFacet,
-  makeRange,
+  // booleanFacet,
+  // histogramFacet,
+  // makeRange,
   dateRangeFacet,
 } from '@eeacms/search';
 
