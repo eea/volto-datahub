@@ -14,8 +14,6 @@ import {
 } from '@eeacms/search/components/LandingPage/state';
 import { Icon, Term } from '@eeacms/search/components';
 
-import '@eeacms/search/components/LandingPage/tiles.less';
-
 const getFacetConfig = (sections, name) => {
   return sections?.find((facet) => facet.facetField === name);
 };
