@@ -18,14 +18,16 @@
   },
   "dependencies": {
     "@plone/scripts": "*",
-    "@eeacms/volto-globalsearch": "0.1.0"
+    "@eeacms/volto-globalsearch": "0.1.0",
+    "@eeacms/volto-searchlib": "0.3.0"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.9.5",
     "babel-plugin-transform-class-properties": "^6.24.1"
   },
   "addons": [
-    "@eeacms/volto-globalsearch"
+    "@eeacms/volto-globalsearch",
+    "@eeacms/volto-searchlib"
   ],
   "scripts": {
     "release": "release-it",
