@@ -10,13 +10,20 @@ import {
 import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import { Portal } from 'react-portal';
-import { useResult } from '@eeacms/search/lib/hocs';
+// import { useResult } from '@eeacms/search/lib/hocs';
+// import {
+//   AppConfigContext,
+//   SearchContext,
+//   // useIsMounted,
+// } from '@eeacms/search/lib/hocs';
+// import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
 import {
+  useResult,
   AppConfigContext,
   SearchContext,
-  // useIsMounted,
-} from '@eeacms/search/lib/hocs';
-import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
+  rebind,
+  applyConfigurationSchema,
+} from '@eeacms/search';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui'; // ErrorBoundary,
 import { Callout } from '@eeacms/volto-eea-design-system/ui';
 import config from '@plone/volto/registry';

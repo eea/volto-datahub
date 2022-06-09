@@ -4,15 +4,26 @@ import { Button } from 'semantic-ui-react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useAtom } from 'jotai';
 
-import { showFacetsAsideAtom } from '@eeacms/search/state';
-import { getFacetCounts } from '@eeacms/search/components/LandingPage/request';
-import buildStateFacets from '@eeacms/search/lib/search/state/facets';
-import { customOrder } from '@eeacms/search/lib/utils';
+// import { showFacetsAsideAtom } from '@eeacms/search/state';
+// import { getFacetCounts } from '@eeacms/search/components/LandingPage/request';
+// import buildStateFacets from '@eeacms/search/lib/search/state/facets';
+// import { customOrder } from '@eeacms/search/lib/utils';
+// import {
+//   landingPageDataAtom,
+//   isRequestedAtom,
+// } from '@eeacms/search/components/LandingPage/state';
+// import { Icon, Term } from '@eeacms/search/components';
+
 import {
+  customOrder,
+  showFacetsAsideAtom,
+  getFacetCounts,
+  buildStateFacets,
   landingPageDataAtom,
   isRequestedAtom,
-} from '@eeacms/search/components/LandingPage/state';
-import { Icon, Term } from '@eeacms/search/components';
+  Icon,
+  Term,
+} from '@eeacms/search';
 
 const getFacetConfig = (sections, name) => {
   return sections?.find((facet) => facet.facetField === name);
