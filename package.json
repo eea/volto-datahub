@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@plone/scripts": "*",
-    "@eeacms/volto-globalsearch": "*"
+    "@eeacms/volto-globalsearch": "0.1.1"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.9.5",
@@ -26,7 +26,6 @@
   },
   "addons": [
     "@eeacms/volto-globalsearch",
-    "@eeacms/volto-searchlib"
   ],
   "scripts": {
     "release": "release-it",
