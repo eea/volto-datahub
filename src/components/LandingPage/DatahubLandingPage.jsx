@@ -117,8 +117,8 @@ const LandingPage = (props) => {
 
       if (!landingPageData) {
         const state = {
-          filters: sections
-            ?.filter((f) => f.filterType === 'any:exact')
+          filters: (sections || [])
+            .filter((f) => f.filterType === 'any:exact')
             .map(({ facetField, filterType = 'any' }) => ({
               field: facetField,
               values: [],
