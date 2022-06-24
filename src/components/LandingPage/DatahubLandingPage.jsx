@@ -154,7 +154,7 @@ const LandingPage = (props) => {
   return (
     <div className="landing-page-container">
       <div className="landing-page">
-        <h3 className="browse-by">Browse by</h3>
+        <h4 className="browse-by">Browse by</h4>
 
         <div className="filters">
           {sections
@@ -173,50 +173,56 @@ const LandingPage = (props) => {
               );
             })}
         </div>
-        <div className="ui cards">
-          {sortedTiles(tiles, activeSectionConfig, appConfig).map((topic) => {
-            const onClickHandler = () => {
-              setFilter(
-                activeSection,
-                topic.value,
-                activeSectionConfig.filterType || 'any',
-              );
+        <div className="landing-page-cards">
+          <div className="ui cards">
+            {sortedTiles(tiles, activeSectionConfig, appConfig).map((topic) => {
+              const onClickHandler = () => {
+                setFilter(
+                  activeSection,
+                  topic.value,
+                  activeSectionConfig.filterType || 'any',
+                );
 
-              // apply configured default values
-              appConfig.facets
-                .filter((f) => f.field !== activeSection && f.default)
-                .forEach((facet) => {
-                  facet.default.values.forEach((value) =>
-                    setFilter(facet.field, value, facet.default.type || 'any'),
-                  );
-                });
-              setSort(sortField, sortDirection);
-              setShowFacets(true);
-            };
+                // apply configured default values
+                appConfig.facets
+                  .filter((f) => f.field !== activeSection && f.default)
+                  .forEach((facet) => {
+                    facet.default.values.forEach((value) =>
+                      setFilter(
+                        facet.field,
+                        value,
+                        facet.default.type || 'any',
+                      ),
+                    );
+                  });
+                setSort(sortField, sortDirection);
+                setShowFacets(true);
+              };
 
-            return (
-              <div
-                key={topic.value}
-                tabIndex="-1"
-                role="button"
-                onKeyDown={onClickHandler}
-                className="ui card"
-                onClick={onClickHandler}
-              >
-                <div className="content">
-                  <div className="header">
-                    {icon ? <Icon {...icon} type={topic.value} /> : ''}
-                    <Term term={topic.value} field={activeSection} />
+              return (
+                <div
+                  key={topic.value}
+                  tabIndex="-1"
+                  role="button"
+                  onKeyDown={onClickHandler}
+                  className="ui card"
+                  onClick={onClickHandler}
+                >
+                  <div className="content">
+                    <div className="header">
+                      {icon ? <Icon {...icon} type={topic.value} /> : ''}
+                      <Term term={topic.value} field={activeSection} />
+                    </div>
+                  </div>
+                  <div className="extra content">
+                    <span className="count">
+                      {topic.count} {topic.count === 1 ? 'item' : 'items'}
+                    </span>
                   </div>
                 </div>
-                <div className="extra content">
-                  <span className="count">
-                    {topic.count} {topic.count === 1 ? 'item' : 'items'}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
         {hasOverflow ? (
           <div className="info">
@@ -225,24 +231,26 @@ const LandingPage = (props) => {
         ) : null}
         {children}
         <hr></hr>
-        <div className="ui cards">
-          <div
-            key="all_series"
-            tabIndex="-1"
-            role="button"
-            onKeyDown={fixedOnClickHandler}
-            className="ui card"
-            onClick={fixedOnClickHandler}
-          >
-            <div className="content">
-              <div className="header">
-                <Term term={all_series.value} field="cluster_name" />
+        <div className="landing-page-cards">
+          <div className="ui cards">
+            <div
+              key="all_series"
+              tabIndex="-1"
+              role="button"
+              onKeyDown={fixedOnClickHandler}
+              className="ui card"
+              onClick={fixedOnClickHandler}
+            >
+              <div className="content">
+                <div className="header">
+                  <Term term={all_series.value} field="cluster_name" />
+                </div>
               </div>
-            </div>
-            <div className="extra content">
-              <span className="count">
-                {all_series.count} {all_series.count === 1 ? 'item' : 'items'}
-              </span>
+              <div className="extra content">
+                <span className="count">
+                  {all_series.count} {all_series.count === 1 ? 'item' : 'items'}
+                </span>
+              </div>
             </div>
           </div>
         </div>

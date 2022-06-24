@@ -26,6 +26,7 @@ const applyConfig = (config) => {
   datahub.elastic_index = '_es/datahub';
   datahub.index_name = 'data_searchui_datahub';
   datahub.enableNLP = false;
+  datahub.showPromptQueries = false;
   datahub.requestBodyModifiers.push(tweakForNLPService);
   // datahub.resultViews[0].factories.item = "DatahubListingViewItem"
 
