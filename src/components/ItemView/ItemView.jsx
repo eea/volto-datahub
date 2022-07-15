@@ -17,7 +17,7 @@ import {
   rebind,
   applyConfigurationSchema,
 } from '@eeacms/search';
-import { DateTime } from '@eeacms/search/components';
+import { DateTime } from '@eeacms/search';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui'; // ErrorBoundary,
 import { Callout } from '@eeacms/volto-eea-design-system/ui';
 import config from '@plone/volto/registry';
