@@ -1,22 +1,15 @@
 import React from 'react';
 import {
   Container,
-  Grid,
   Card,
   Image,
   Accordion,
   Icon,
+  Tab,
 } from 'semantic-ui-react';
 import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import { Portal } from 'react-portal';
-// import { useResult } from '@eeacms/search/lib/hocs';
-// import {
-//   AppConfigContext,
-//   SearchContext,
-//   // useIsMounted,
-// } from '@eeacms/search/lib/hocs';
-// import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
 import {
   useResult,
   AppConfigContext,
@@ -24,9 +17,17 @@ import {
   rebind,
   applyConfigurationSchema,
 } from '@eeacms/search';
+import { DateTime } from '@eeacms/search/components';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui'; // ErrorBoundary,
 import { Callout } from '@eeacms/volto-eea-design-system/ui';
 import config from '@plone/volto/registry';
+// import { useResult } from '@eeacms/search/lib/hocs';
+// import {
+//   AppConfigContext,
+//   SearchContext,
+//   // useIsMounted,
+// } from '@eeacms/search/lib/hocs';
+// import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
 
 const appName = 'datahub';
 
@@ -34,12 +35,19 @@ function ItemView(props) {
   const { docid } = props;
   const result = useResult(null, docid);
   const item = result ? result._result : {};
-  const { title, description, id, raw_value, event } = item;
-  const { contactForResource, contact } = raw_value?.raw || {};
+  const { title, description, raw_value, event, readingTime, issued } = item;
+  const {
+    // contactForResource,
+    // contact,
+    resourceTemporalDateRange,
+    changeDate,
+  } = raw_value?.raw || {};
+
   const relatedItemsData = event?.raw.original;
   const relatedDatasets =
     (relatedItemsData && JSON.parse(relatedItemsData)) || {};
   const { children } = relatedDatasets?.raw_value || {};
+
   const [activeIndex, setActiveIndex] = React.useState([]);
 
   const toggleOpenAccordion = (e, titleProps) => {
@@ -52,212 +60,197 @@ function ItemView(props) {
     setActiveIndex(newIndex);
   };
 
-  // console.log('datahub item', item);
-  // console.log('related datasets', children);
+  // console.log('result', result._result);
 
-  return (
-    <>
-      {item ? (
-        <div>
-          <Portal node={document.getElementById('page-header')}>
-            <div className="eea banner">
-              <div className="gradient">
-                <div className="ui container">
-                  <div className="content">
-                    <h1 className="documentFirstHeading">{title?.raw}</h1>
-                  </div>
-                </div>
+  const panes = [
+    {
+      menuItem: 'European data',
+      render: () => <Tab.Pane attached={false}>Tab 1 Content</Tab.Pane>,
+    },
+    {
+      menuItem: 'Dataset definition',
+      render: () => <Tab.Pane attached={false}>Tab 2 Content</Tab.Pane>,
+    },
+  ];
+
+  return item ? (
+    <div className="dataset-view">
+      <Portal node={document.getElementById('page-header')}>
+        <div className="eea banner">
+          <div className="gradient">
+            <div className="ui container">
+              <div className="content">
+                <h1 className="documentFirstHeading">Datahub</h1>
               </div>
             </div>
-          </Portal>
-          <Callout>{description?.raw}</Callout>
-          <h3>Tabular data</h3>
-          <Accordion exclusive={false}>
-            <Accordion.Title
-              active={activeIndex.includes(0)}
-              index={0}
-              onClick={toggleOpenAccordion}
-            >
-              Distribution files
-              <Icon className="ri-arrow-down-s-line" />
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex.includes(0)}>
-              <p></p>
-            </Accordion.Content>
+          </div>
+        </div>
+      </Portal>
 
-            <Accordion.Title
-              active={activeIndex.includes(1)}
-              index={1}
-              onClick={toggleOpenAccordion}
-            >
-              Programmatic access (APIs)
-              <Icon className="ri-arrow-down-s-line" />
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex.includes(1)}>
-              <a
-                href="https://discodata.eea.europa.eu/#!/"
-                title="DiscoData REST API call"
-                rel="noopener noreferrer"
-              >
-                DiscoData
-              </a>
-              (REST API)
-            </Accordion.Content>
+      <div className="dataset-container">
+        <div className="dataset-header">
+          <h1>{title?.raw}</h1>
+          <div className="dataset-header-bottom">
+            <span className="header-data">Prod-ID: [No data]</span>
+            <span className="header-data">
+              Created: <DateTime format="DATE_MED" value={issued?.raw} />
+            </span>
+            <span className="header-data">Published: [No data]</span>
+            <span className="header-data">
+              Last modified: <DateTime format="DATE_MED" value={changeDate} />
+            </span>
+            <span className="header-data">
+              Reading time: {readingTime?.raw}
+            </span>
+          </div>
+        </div>
+        <Callout>{description?.raw}</Callout>
 
-            <Accordion.Title
-              active={activeIndex.includes(2)}
-              index={2}
-              onClick={toggleOpenAccordion}
-            >
-              Additional information
-              <Icon className="ri-arrow-down-s-line" />
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex.includes(2)}>
-              {description?.raw}
-            </Accordion.Content>
+        <Tab
+          menu={{ secondary: true, pointing: true }}
+          panes={panes}
+          className="dataset-tab-setion"
+        />
+      </div>
 
-            <Accordion.Title
-              active={activeIndex.includes(3)}
-              index={3}
-              onClick={toggleOpenAccordion}
-            >
-              Metadata
-              <Icon className="ri-arrow-down-s-line" />
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex.includes(3)}>
-              Topics:
-              <ul>
-                {raw_value?.raw['allKeywords.th_eea-topics.keywords']?.map(
-                  (topic, i) => {
-                    return (
-                      <li key={i}>
-                        <a href={topic.link} target="_blank" rel="noreferrer">
-                          {topic.default}
-                        </a>
-                      </li>
-                    );
-                  },
-                )}
-              </ul>
-            </Accordion.Content>
-          </Accordion>
+      <div className="info-wrapper">
+        <div className="info-content">
+          <div className="info-title">More Information for {title?.raw}.</div>
+          <p>{description?.raw}</p>
+        </div>
+      </div>
 
-          <h3>Geospatial data</h3>
+      {children && children.length > 0 && (
+        <div className="related-wrapper">
+          <h2>Related content</h2>
+          <Card.Group itemsPerRow={4}>
+            {children.map((item, index) => {
+              return (
+                <Card
+                  href={`/datahub/view/${item.metadataIdentifier}`}
+                  key={index}
+                >
+                  <Image src={item.overview[0].url} wrapped ui={false} />
+                  <Card.Content>
+                    <Card.Description>
+                      {item.resourceTitleObject.default}
+                    </Card.Description>
+                  </Card.Content>
+                </Card>
+              );
+            })}
+          </Card.Group>
+        </div>
+      )}
 
-          <h3>Additional information</h3>
-          <Accordion exclusive={false}>
-            <Accordion.Title
-              active={activeIndex.includes(4)}
-              index={4}
-              onClick={toggleOpenAccordion}
-            >
-              About this dataset
-              <Icon className="ri-arrow-down-s-line" />
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex.includes(4)}>
-              {description?.raw}
-            </Accordion.Content>
+      <div className="below-content-wrapper">
+        <Accordion exclusive={false}>
+          <Accordion.Title
+            active={activeIndex.includes(0)}
+            index={0}
+            onClick={toggleOpenAccordion}
+          >
+            Metadata
+            <Icon className="ri-arrow-down-s-line" />
+          </Accordion.Title>
+          <Accordion.Content active={activeIndex.includes(0)}>
+            [No data]
+          </Accordion.Content>
 
-            <Accordion.Title
-              active={activeIndex.includes(5)}
-              index={5}
-              onClick={toggleOpenAccordion}
-            >
-              Contact information
-              <Icon className="ri-arrow-down-s-line" />
-            </Accordion.Title>
-            <Accordion.Content active={activeIndex.includes(5)}>
-              {contactForResource ? (
-                <>
-                  {contactForResource.map((c, i) => {
-                    return (
-                      <Grid key={i}>
-                        <Grid.Column width={4}>
-                          <p>{c.role}: </p>
-                        </Grid.Column>
-                        <Grid.Column width={8}>
-                          <a
-                            href="https://www.eea.europa.eu/"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <strong>{c.organisation}</strong>
-                          </a>
-                          <p>{c.address}</p>
-                          <a href={'mailto:' + c.email}>{c.email}</a>
-                        </Grid.Column>
-                      </Grid>
-                    );
-                  })}
-                </>
-              ) : (
-                <>
-                  {contact &&
-                    contact.length > 0 &&
-                    contact.map((c, i) => {
-                      return (
-                        <Grid key={i}>
-                          <Grid.Column width={4}>
-                            {/*<p>{contact.role}: </p>*/}
-                            <p>Point of contact:</p>
-                          </Grid.Column>
-                          <Grid.Column width={8}>
-                            <a
-                              href="https://www.eea.europa.eu/"
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              <strong>{c.organisation}</strong>
-                            </a>
-                            <p>{c.address}</p>
-                            <a href={'mailto:' + c.email}>{c.email}</a>
-                          </Grid.Column>
-                        </Grid>
-                      );
-                    })}
-                </>
-              )}
-            </Accordion.Content>
-          </Accordion>
+          <Accordion.Title
+            active={activeIndex.includes(1)}
+            index={1}
+            onClick={toggleOpenAccordion}
+          >
+            Permalinks
+            <Icon className="ri-arrow-down-s-line" />
+          </Accordion.Title>
+          <Accordion.Content active={activeIndex.includes(1)}>
+            [No data]
+          </Accordion.Content>
 
-          <h3>Related datasets</h3>
-          {children && children.length > 0 && (
-            <Card.Group itemsPerRow={3}>
-              {children.map((item, index) => {
+          <Accordion.Title
+            active={activeIndex.includes(2)}
+            index={2}
+            onClick={toggleOpenAccordion}
+          >
+            Geographic coverage
+            <Icon className="ri-arrow-down-s-line" />
+          </Accordion.Title>
+          <Accordion.Content active={activeIndex.includes(2)}>
+            <div className="geotags">
+              {item.spatial?.raw.map((geotag, i) => {
+                return <span key={i}>{geotag}</span>;
+              })}
+            </div>
+          </Accordion.Content>
+
+          <Accordion.Title
+            active={activeIndex.includes(3)}
+            index={3}
+            onClick={toggleOpenAccordion}
+          >
+            Temporal coverage
+            <Icon className="ri-arrow-down-s-line" />
+          </Accordion.Title>
+          <Accordion.Content active={activeIndex.includes(3)}>
+            <ul>
+              {resourceTemporalDateRange?.map((temp, i) => {
                 return (
-                  <Card
-                    href={`/datahub/view/${item.metadataIdentifier}`}
-                    key={index}
-                  >
-                    <Image src={item.overview[0].url} wrapped ui={false} />
-                    <Card.Content>
-                      <Card.Header>
-                        {item.resourceTitleObject.default}
-                      </Card.Header>
-                    </Card.Content>
-                  </Card>
+                  <li key={i}>
+                    <DateTime format="DATE_MED" value={temp.gte} /> -
+                    <DateTime format="DATE_MED" value={temp.lte} />
+                  </li>
                 );
               })}
-            </Card.Group>
-          )}
+            </ul>
+          </Accordion.Content>
 
-          <p>
-            Source: SDI record{' '}
-            <a
-              href={
-                'https://galliwasp.eea.europa.eu/catalogue/srv/eng/catalog.search#/metadata/' +
-                id
-              }
-            >
-              {id}
-            </a>
-          </p>
-        </div>
-      ) : (
-        ''
-      )}
-    </>
-  );
+          <Accordion.Title
+            active={activeIndex.includes(4)}
+            index={4}
+            onClick={toggleOpenAccordion}
+          >
+            Topics
+            <Icon className="ri-arrow-down-s-line" />
+          </Accordion.Title>
+          <Accordion.Content active={activeIndex.includes(4)}>
+            {Array.isArray(item.topic?.raw) ? (
+              <>
+                {item?.topic?.raw.map((tag, i) => {
+                  return <span>{tag.default}</span>;
+                })}
+              </>
+            ) : (
+              <span>{item.topic?.raw}</span>
+            )}
+          </Accordion.Content>
+
+          <Accordion.Title
+            active={activeIndex.includes(5)}
+            index={5}
+            onClick={toggleOpenAccordion}
+          >
+            Tags
+            <Icon className="ri-arrow-down-s-line" />
+          </Accordion.Title>
+          <Accordion.Content active={activeIndex.includes(5)}>
+            <div className="dataset-tags">
+              {raw_value?.raw['allKeywords.th_EEAkeywordlist.keywords']?.map(
+                (tag, i) => {
+                  return (
+                    <span className="tag-item" key={i}>
+                      {tag.default}
+                    </span>
+                  );
+                },
+              )}
+            </div>
+          </Accordion.Content>
+        </Accordion>
+      </div>
+    </div>
+  ) : null;
 }
 
 function DatahubItemView(props) {
