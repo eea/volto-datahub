@@ -60,7 +60,7 @@ function ItemView(props) {
     setActiveIndex(newIndex);
   };
 
-  console.log('result', result?._result);
+  // console.log('result', result?._result);
 
   const panes = [
     {
