@@ -17,6 +17,7 @@ const facets = [
     label: 'EEA topics',
     show: 10000,
     showAllOptions: true, // show all options (even if 0) in modal facet
+    alwaysVisible: true,
   }),
   multiTermFacet({
     field: 'gemet',
