@@ -60,7 +60,7 @@ function ItemView(props) {
     setActiveIndex(newIndex);
   };
 
-  // console.log('result', result._result);
+  console.log('result', result?._result);
 
   const panes = [
     {
@@ -154,7 +154,39 @@ function ItemView(props) {
             <Icon className="ri-arrow-down-s-line" />
           </Accordion.Title>
           <Accordion.Content active={activeIndex.includes(0)}>
-            [No data]
+            {item.rod && (
+              <div>
+                Reporting obligations (ROD):
+                <ul>
+                  {Array.isArray(item.rod?.raw) ? (
+                    <>
+                      {item?.rod?.raw.map((item, i) => {
+                        return <li key={i}>{item}</li>;
+                      })}
+                    </>
+                  ) : (
+                    <li>{item.rod?.raw}</li>
+                  )}
+                </ul>
+              </div>
+            )}
+
+            {item?.organisation && (
+              <div>
+                Organisation:
+                <ul>
+                  {Array.isArray(item?.organisation?.raw) ? (
+                    <>
+                      {item?.organisation?.raw.map((item, i) => {
+                        return <li key={i}>{item}</li>;
+                      })}
+                    </>
+                  ) : (
+                    <li>{item?.organisation?.raw}</li>
+                  )}
+                </ul>
+              </div>
+            )}
           </Accordion.Content>
 
           <Accordion.Title
@@ -178,11 +210,19 @@ function ItemView(props) {
             <Icon className="ri-arrow-down-s-line" />
           </Accordion.Title>
           <Accordion.Content active={activeIndex.includes(2)}>
-            <div className="geotags">
-              {item.spatial?.raw.map((geotag, i) => {
-                return <span key={i}>{geotag}</span>;
-              })}
-            </div>
+            {item.spatial && (
+              <div className="geotags">
+                {Array.isArray(item?.spatial?.raw) ? (
+                  <>
+                    {item?.spatial?.raw.map((item, i) => {
+                      return <span key={i}>{item}</span>;
+                    })}
+                  </>
+                ) : (
+                  <span>{item?.spatial?.raw}</span>
+                )}
+              </div>
+            )}
           </Accordion.Content>
 
           <Accordion.Title
@@ -215,14 +255,22 @@ function ItemView(props) {
             <Icon className="ri-arrow-down-s-line" />
           </Accordion.Title>
           <Accordion.Content active={activeIndex.includes(4)}>
-            {Array.isArray(item.topic?.raw) ? (
+            {item.topic && (
               <>
-                {item?.topic?.raw.map((tag, i) => {
-                  return <span>{tag.default}</span>;
-                })}
+                {Array.isArray(item?.topic?.raw) ? (
+                  <>
+                    {item?.topic?.raw.map((item, i) => {
+                      return (
+                        <span className="tag-item" key={i}>
+                          {item}
+                        </span>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <span className="tag-item">{item?.topic?.raw}</span>
+                )}
               </>
-            ) : (
-              <span>{item.topic?.raw}</span>
             )}
           </Accordion.Content>
 
