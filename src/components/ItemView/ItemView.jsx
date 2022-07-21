@@ -99,9 +99,9 @@ function ItemView(props) {
             <span className="header-data">
               Last modified: <DateTime format="DATE_MED" value={changeDate} />
             </span>
-            <span className="header-data">
+            {/*<span className="header-data">
               Reading time: {readingTime?.raw}
-            </span>
+            </span>*/}
           </div>
         </div>
         <Callout>{description?.raw}</Callout>
