@@ -35,7 +35,7 @@ function ItemView(props) {
   const { docid } = props;
   const result = useResult(null, docid);
   const item = result ? result._result : {};
-  const { title, description, raw_value, event, readingTime, issued } = item;
+  const { title, description, raw_value, event, issued } = item; // readingTime
   const {
     // contactForResource,
     // contact,
