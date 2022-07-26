@@ -18,16 +18,9 @@ import {
   applyConfigurationSchema,
 } from '@eeacms/search';
 import { DateTime } from '@eeacms/search';
-import { SearchProvider, WithSearch } from '@elastic/react-search-ui'; // ErrorBoundary,
+import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { Callout } from '@eeacms/volto-eea-design-system/ui';
 import config from '@plone/volto/registry';
-// import { useResult } from '@eeacms/search/lib/hocs';
-// import {
-//   AppConfigContext,
-//   SearchContext,
-//   // useIsMounted,
-// } from '@eeacms/search/lib/hocs';
-// import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
 
 const appName = 'datahub';
 
@@ -35,11 +28,11 @@ function ItemView(props) {
   const { docid } = props;
   const result = useResult(null, docid);
   const item = result ? result._result : {};
-  const { title, description, raw_value, event, issued } = item; // readingTime
+  const { title, description, raw_value, event, issued, time_coverage } = item; // readingTime
   const {
     // contactForResource,
     // contact,
-    resourceTemporalDateRange,
+    // resourceTemporalDateRange,
     changeDate,
   } = raw_value?.raw || {};
 
@@ -47,6 +40,8 @@ function ItemView(props) {
   const relatedDatasets =
     (relatedItemsData && JSON.parse(relatedItemsData)) || {};
   const { children } = relatedDatasets?.raw_value || {};
+  const startTempCoverage = parseInt(time_coverage?.raw.at(0));
+  const endTempCoverage = parseInt(time_coverage?.raw.at(-1));
 
   const [activeIndex, setActiveIndex] = React.useState([]);
 
@@ -234,7 +229,7 @@ function ItemView(props) {
             <Icon className="ri-arrow-down-s-line" />
           </Accordion.Title>
           <Accordion.Content active={activeIndex.includes(3)}>
-            <ul>
+            {/*<ul>
               {resourceTemporalDateRange?.map((temp, i) => {
                 return (
                   <li key={i}>
@@ -243,7 +238,17 @@ function ItemView(props) {
                   </li>
                 );
               })}
-            </ul>
+            </ul>*/}
+            {time_coverage?.raw.length > 0 && (
+              <div className="temporal-coverage">
+                <div className="side-temp">{`${startTempCoverage - 1}`}</div>
+                <div className="time-range">
+                  <span>{startTempCoverage}</span> -
+                  <span>{endTempCoverage}</span>
+                </div>
+                <div className="side-temp">{`${endTempCoverage + 1}`}</div>
+              </div>
+            )}
           </Accordion.Content>
 
           <Accordion.Title
