@@ -1,31 +1,43 @@
 import React from 'react';
 import cx from 'classnames';
-import { Label, Button, Dropdown } from 'semantic-ui-react';
+import {
+  Label,
+  // Button,
+  // Dropdown
+} from 'semantic-ui-react';
+import { DateTime as FormattedDate, StringList } from '@eeacms/search';
+import { DateTime } from 'luxon';
 // import { useAppConfig, useWindowDimensions } from '@eeacms/search/lib/hocs';
 // import { TagsList } from '@eeacms/search/components'; // SegmentedBreadcrumb,
 // import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
-
 // import MoreLikeThisTrigger from '@eeacms/search/components/Result/MoreLikeThisTrigger';
 // import ExternalLink from '@eeacms/search/components/Result/ExternalLink';
 // import ResultContext from '@eeacms/search/components/Result/ResultContext';
 // import ContentClusters from '@eeacms/search/components/Result/ContentClusters';
 import {
   useAppConfig,
-  useWindowDimensions,
-  ContentClusters,
-  MoreLikeThisTrigger,
-  TagsList,
-  // ExternalLink,
   ResultContext,
   firstWords,
-  getTermDisplayValue,
+  // ContentClusters,
+  // useWindowDimensions,
+  // MoreLikeThisTrigger,
+  // TagsList,
+  // ExternalLink,
+  // getTermDisplayValue,
 } from '@eeacms/search';
 import { Link } from 'react-router-dom';
 
 const DatahubCardItem = (props) => {
-  const { result, showControls = true } = props;
+  const {
+    result,
+    // showControls = true
+  } = props;
   const { appConfig } = useAppConfig();
-  const { vocab = {}, debugQuery } = appConfig;
+  const {
+    // vocab = {},
+    debugQuery,
+  } = appConfig;
+  const { topic } = result._result || [];
   const [hovered, setHovered] = React.useState(false);
 
   // console.log('result', result.metaTypes, result._result);
@@ -37,9 +49,9 @@ const DatahubCardItem = (props) => {
 
   const classColLeft = result.hasImage ? 'col-left' : 'col-left no-image';
 
-  const { width } = useWindowDimensions();
-  const isSmallScreen = width < 1000;
-  const clusters = result.clusterInfo;
+  // const { width } = useWindowDimensions();
+  // const isSmallScreen = width < 1000;
+  // const clusters = result.clusterInfo;
   const [resultId] = (result.href || '').split('/').reverse();
 
   return (
@@ -48,16 +60,20 @@ const DatahubCardItem = (props) => {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className="col-full">
+      {/*<div className="col-full">
         <div className="meta">
           <ContentClusters clusters={clusters} item={result} />
           <div className="tags-list">
             <TagsList value={result.tags} />
           </div>
         </div>
-      </div>
+      </div>*/}
       <div className={classColLeft}>
         <div className="details">
+          <div className="result-info">
+            <span className="result-info-title">Author: </span>
+            [EEA]
+          </div>
           <h3>
             <Link to={`/datahub/view/${resultId}`} title={result.title}>
               {firstWords(result.title, 12)}
@@ -73,7 +89,13 @@ const DatahubCardItem = (props) => {
               </Label>
             )}
           </h3>
-          <div className="source">
+          {/* <SegmentedBreadcrumb */}
+          {/*   href={result.href} */}
+          {/*   short={true} */}
+          {/*   maxChars={40} */}
+          {/* /> */}
+
+          {/*<div className="source">
             <span>Source: </span>
             <Link to={`/datahub/view/${resultId}`} title={result.title}>
               <strong title={result.source} className="source">
@@ -86,11 +108,6 @@ const DatahubCardItem = (props) => {
                   8,
                 )}
               </strong>
-              {/* <SegmentedBreadcrumb */}
-              {/*   href={result.href} */}
-              {/*   short={true} */}
-              {/*   maxChars={40} */}
-              {/* /> */}
             </Link>
 
             {showControls && !isSmallScreen && (
@@ -114,9 +131,31 @@ const DatahubCardItem = (props) => {
                 </Dropdown.Menu>
               </Dropdown>
             )}
-          </div>
+          </div>*/}
 
           {props.children ? props.children : <ResultContext {...props} />}
+
+          <div className="result-bottom">
+            {topic ? (
+              <div className="result-info">
+                <span className="result-info-title">Topic: </span>
+                <StringList value={topic.raw} />
+              </div>
+            ) : null}
+            <div className="result-info">
+              <span className="result-info-title">Last modified: </span>
+              <FormattedDate
+                format="DATE_MED"
+                value={DateTime.fromISO(
+                  result?._result.raw_value.raw.changeDate,
+                )}
+              />
+            </div>
+            <div className="result-info">
+              <span className="result-info-title">Available formats: </span>
+              [Icons]
+            </div>
+          </div>
         </div>
         {debugQuery && (
           <div>
