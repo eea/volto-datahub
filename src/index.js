@@ -30,10 +30,10 @@ const applyConfig = (config) => {
   datahub.requestBodyModifiers.push(tweakForNLPService);
   // datahub.resultViews[0].factories.item = "DatahubListingViewItem"
 
-  config.settings.nonContentRoutes.push(/\/datahub\/view\/(.*)/);
+  config.settings.nonContentRoutes.push(/datahubitem-view\/(.*)/); // \/(.*)\/
   config.addonRoutes = [
     {
-      path: '/datahub/view/:id',
+      path: '*/datahubitem-view/:id',
       component: DatahubItemView,
     },
 

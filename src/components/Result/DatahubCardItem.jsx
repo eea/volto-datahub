@@ -78,7 +78,7 @@ const DatahubCardItem = (props) => {
           <h3>
             <Link
               to={{
-                pathname: `/datahub/view/${resultId}`,
+                pathname: `/en/datahub/datahubitem-view/${resultId}`,
                 state: {
                   fromPathname: window.location.pathname,
                   fromSearch: window.location.search,
