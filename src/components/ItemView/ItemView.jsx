@@ -20,15 +20,47 @@ import {
 import { DateTime } from '@eeacms/search';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { Callout } from '@eeacms/volto-eea-design-system/ui';
+import { useDispatch } from 'react-redux';
 import config from '@plone/volto/registry';
 
 const appName = 'datahub';
 
 function ItemView(props) {
   const { docid } = props;
+
+  const dispatch = useDispatch();
+  // const content = useSelector((state) => state.content.data);
   const result = useResult(null, docid);
-  const item = result ? result._result : {};
-  const { title, description, raw_value, event, issued, time_coverage } = item; // readingTime
+  const item = result ? result._result : null;
+  const { title, description, raw_value, event, issued, time_coverage } =
+    item || {}; // readingTime
+  const rawTitle = title?.raw || '';
+
+  React.useEffect(() => {
+    const handler = async () => {
+      if (item) {
+        const action = {
+          type: 'GET_BREADCRUMBS_SUCCESS',
+          result: {
+            items: [
+              {
+                title: 'Datahub',
+                '@id': '/en/datahub',
+              },
+              {
+                title: rawTitle,
+                '@id': `/en/datahub/view/${docid}`,
+              },
+            ],
+          },
+        };
+        await dispatch({ type: 'GET_BREADCRUMBS_PENDING' }); // satisfy content load protection
+        await dispatch(action);
+      }
+    };
+
+    handler();
+  }, [item, dispatch, docid, rawTitle]);
   const {
     // contactForResource,
     // contact,
@@ -149,7 +181,7 @@ function ItemView(props) {
             <Icon className="ri-arrow-down-s-line" />
           </Accordion.Title>
           <Accordion.Content active={activeIndex.includes(0)}>
-            {item.rod && (
+            {!!item?.rod && (
               <div>
                 Reporting obligations (ROD):
                 <ul>
@@ -166,7 +198,7 @@ function ItemView(props) {
               </div>
             )}
 
-            {item?.organisation && (
+            {!!item?.organisation && (
               <div>
                 Organisation:
                 <ul>
