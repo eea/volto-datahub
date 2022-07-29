@@ -21,21 +21,17 @@ import { DateTime } from '@eeacms/search';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { Callout } from '@eeacms/volto-eea-design-system/ui';
 import config from '@plone/volto/registry';
+import { Link, useLocation } from 'react-router-dom';
 
 const appName = 'datahub';
 
 function ItemView(props) {
-  const { docid } = props;
+  const { docid, location } = props;
+  const { fromPathname, fromSearch } = location?.state || {};
   const result = useResult(null, docid);
   const item = result ? result._result : {};
   const { title, description, raw_value, event, issued, time_coverage } = item; // readingTime
-  const {
-    // contactForResource,
-    // contact,
-    // resourceTemporalDateRange,
-    changeDate,
-  } = raw_value?.raw || {};
-
+  const { changeDate } = raw_value?.raw || {};
   const relatedItemsData = event?.raw.original;
   const relatedDatasets =
     (relatedItemsData && JSON.parse(relatedItemsData)) || {};
@@ -54,7 +50,6 @@ function ItemView(props) {
 
     setActiveIndex(newIndex);
   };
-
   // console.log('result', result?._result);
 
   const panes = [
@@ -82,30 +77,45 @@ function ItemView(props) {
         </div>
       </Portal>
 
-      <div className="dataset-container">
-        <div className="dataset-header">
-          <h1>{title?.raw}</h1>
-          <div className="dataset-header-bottom">
-            <span className="header-data">Prod-ID: [No data]</span>
-            <span className="header-data">
-              Created: <DateTime format="DATE_MED" value={issued?.raw} />
-            </span>
-            <span className="header-data">Published: [No data]</span>
-            <span className="header-data">
-              Last modified: <DateTime format="DATE_MED" value={changeDate} />
-            </span>
-            {/*<span className="header-data">
-              Reading time: {readingTime?.raw}
-            </span>*/}
-          </div>
-        </div>
-        <Callout>{description?.raw}</Callout>
+      <div>
+        {location?.state && (
+          <Link
+            className="search-link"
+            to={{
+              pathname: fromPathname,
+              search: fromSearch,
+            }}
+          >
+            <i class="ri-arrow-go-back-line"></i>
+            Back to search
+          </Link>
+        )}
 
-        <Tab
-          menu={{ secondary: true, pointing: true }}
-          panes={panes}
-          className="dataset-tab-setion"
-        />
+        <div className="dataset-container">
+          <div className="dataset-header">
+            <h1>{title?.raw}</h1>
+            <div className="dataset-header-bottom">
+              <span className="header-data">Prod-ID: [No data]</span>
+              <span className="header-data">
+                Created: <DateTime format="DATE_MED" value={issued?.raw} />
+              </span>
+              <span className="header-data">Published: [No data]</span>
+              <span className="header-data">
+                Last modified: <DateTime format="DATE_MED" value={changeDate} />
+              </span>
+              {/*<span className="header-data">
+                Reading time: {readingTime?.raw}
+              </span>*/}
+            </div>
+          </div>
+          <Callout>{description?.raw}</Callout>
+
+          <Tab
+            menu={{ secondary: true, pointing: true }}
+            panes={panes}
+            className="dataset-tab-setion"
+          />
+        </div>
       </div>
 
       <div className="info-wrapper">
@@ -307,6 +317,7 @@ function ItemView(props) {
 }
 
 function DatahubItemView(props) {
+  const location = useLocation();
   const [isClient, setIsClient] = React.useState();
   React.useEffect(() => setIsClient(true), []);
 
@@ -339,7 +350,7 @@ function DatahubItemView(props) {
               return (
                 <AppConfigContext.Provider value={appConfigContext}>
                   <SearchContext.Provider value={params}>
-                    <ItemView docid={docid} />
+                    <ItemView docid={docid} location={location} />
                   </SearchContext.Provider>
                 </AppConfigContext.Provider>
               );
