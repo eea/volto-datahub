@@ -75,7 +75,10 @@ const DatahubCardItem = (props) => {
             [EEA]
           </div>
           <h3>
-            <Link to={`/datahub/view/${resultId}`} title={result.title}>
+            <Link
+              to={`/en/datahub/datahubitem-view/${resultId}`}
+              title={result.title}
+            >
               {firstWords(result.title, 12)}
             </Link>
             {result.isNew && (
