@@ -20,15 +20,48 @@ import {
 import { DateTime } from '@eeacms/search';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { Callout } from '@eeacms/volto-eea-design-system/ui';
+import { useDispatch } from 'react-redux';
 import config from '@plone/volto/registry';
+import { Link, useLocation } from 'react-router-dom';
 
 const appName = 'datahub';
 
 function ItemView(props) {
-  const { docid } = props;
+  const { docid, location } = props;
+  const { fromPathname, fromSearch } = location?.state || {};
+  const dispatch = useDispatch();
+  // const content = useSelector((state) => state.content.data);
   const result = useResult(null, docid);
-  const item = result ? result._result : {};
-  const { title, description, raw_value, event, issued, time_coverage } = item; // readingTime
+  const item = result ? result._result : null;
+  const { title, description, raw_value, event, issued, time_coverage } =
+    item || {}; // readingTime
+  const rawTitle = title?.raw || '';
+
+  React.useEffect(() => {
+    const handler = async () => {
+      if (item) {
+        const action = {
+          type: 'GET_BREADCRUMBS_SUCCESS',
+          result: {
+            items: [
+              {
+                title: 'Datahub',
+                '@id': '/en/datahub',
+              },
+              {
+                title: rawTitle,
+                '@id': `/en/datahub/view/${docid}`,
+              },
+            ],
+          },
+        };
+        await dispatch({ type: 'GET_BREADCRUMBS_PENDING' }); // satisfy content load protection
+        await dispatch(action);
+      }
+    };
+
+    handler();
+  }, [item, dispatch, docid, rawTitle]);
   const {
     // contactForResource,
     // contact,
@@ -54,7 +87,6 @@ function ItemView(props) {
 
     setActiveIndex(newIndex);
   };
-
   // console.log('result', result?._result);
 
   const panes = [
@@ -83,6 +115,18 @@ function ItemView(props) {
       </Portal>
 
       <div className="dataset-container">
+        {location?.state && (
+          <Link
+            className="search-link"
+            to={{
+              pathname: fromPathname,
+              search: fromSearch,
+            }}
+          >
+            <i class="ri-arrow-go-back-line"></i>
+            Back to search
+          </Link>
+        )}
         <div className="dataset-header">
           <h1>{title?.raw}</h1>
           <div className="dataset-header-bottom">
@@ -95,8 +139,8 @@ function ItemView(props) {
               Last modified: <DateTime format="DATE_MED" value={changeDate} />
             </span>
             {/*<span className="header-data">
-              Reading time: {readingTime?.raw}
-            </span>*/}
+                Reading time: {readingTime?.raw}
+              </span>*/}
           </div>
         </div>
         <Callout>{description?.raw}</Callout>
@@ -149,7 +193,7 @@ function ItemView(props) {
             <Icon className="ri-arrow-down-s-line" />
           </Accordion.Title>
           <Accordion.Content active={activeIndex.includes(0)}>
-            {item.rod && (
+            {!!item?.rod && (
               <div>
                 Reporting obligations (ROD):
                 <ul>
@@ -166,7 +210,7 @@ function ItemView(props) {
               </div>
             )}
 
-            {item?.organisation && (
+            {!!item?.organisation && (
               <div>
                 Organisation:
                 <ul>
@@ -307,6 +351,7 @@ function ItemView(props) {
 }
 
 function DatahubItemView(props) {
+  const location = useLocation();
   const [isClient, setIsClient] = React.useState();
   React.useEffect(() => setIsClient(true), []);
 
@@ -339,7 +384,7 @@ function DatahubItemView(props) {
               return (
                 <AppConfigContext.Provider value={appConfigContext}>
                   <SearchContext.Provider value={params}>
-                    <ItemView docid={docid} />
+                    <ItemView docid={docid} location={location} />
                   </SearchContext.Provider>
                 </AppConfigContext.Provider>
               );

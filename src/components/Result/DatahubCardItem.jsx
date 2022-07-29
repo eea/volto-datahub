@@ -40,7 +40,7 @@ const DatahubCardItem = (props) => {
   const { topic } = result._result || [];
   const [hovered, setHovered] = React.useState(false);
 
-  // console.log('result', result.metaTypes, result._result);
+  // const { pathname, search } = useLocation();
 
   let metaType = result.metaTypes || '';
   if (metaType.length === 0) {
@@ -48,11 +48,12 @@ const DatahubCardItem = (props) => {
   }
 
   const classColLeft = result.hasImage ? 'col-left' : 'col-left no-image';
+  const [resultId] = (result.href || '').split('/').reverse();
 
   // const { width } = useWindowDimensions();
   // const isSmallScreen = width < 1000;
   // const clusters = result.clusterInfo;
-  const [resultId] = (result.href || '').split('/').reverse();
+  // console.log('result', result.metaTypes, result._result);
 
   return (
     <div
@@ -75,7 +76,16 @@ const DatahubCardItem = (props) => {
             [EEA]
           </div>
           <h3>
-            <Link to={`/datahub/view/${resultId}`} title={result.title}>
+            <Link
+              to={{
+                pathname: `/en/datahub/datahubitem-view/${resultId}`,
+                state: {
+                  fromPathname: window.location.pathname,
+                  fromSearch: window.location.search,
+                },
+              }}
+              title={result.title}
+            >
               {firstWords(result.title, 12)}
             </Link>
             {result.isNew && (
