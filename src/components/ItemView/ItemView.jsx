@@ -19,10 +19,11 @@ import {
 } from '@eeacms/search';
 import { DateTime } from '@eeacms/search';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
-import { Callout } from '@eeacms/volto-eea-design-system/ui';
+import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
 import { useDispatch } from 'react-redux';
 import config from '@plone/volto/registry';
 import { Link, useLocation } from 'react-router-dom';
+import bannerBG from './banner.svg';
 
 const appName = 'datahub';
 
@@ -103,14 +104,12 @@ function ItemView(props) {
   return item ? (
     <div className="dataset-view">
       <Portal node={document.getElementById('page-header')}>
-        <div className="eea banner">
-          <div className="gradient">
-            <div className="ui container">
-              <div className="content">
-                <h1 className="documentFirstHeading">Datahub</h1>
-              </div>
-            </div>
-          </div>
+        <div className="dataset">
+          <Banner image_url={bannerBG} image>
+            <Banner.Content>
+              <Banner.Title>Datahub</Banner.Title>
+            </Banner.Content>
+          </Banner>
         </div>
       </Portal>
 
