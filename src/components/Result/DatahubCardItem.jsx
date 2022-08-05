@@ -148,7 +148,7 @@ const DatahubCardItem = (props) => {
           <div className="result-bottom">
             {topic ? (
               <div className="result-info">
-                <span className="result-info-title">Topic: </span>
+                <span className="result-info-title">Topics: </span>
                 <StringList value={topic.raw} />
               </div>
             ) : null}
