@@ -23,6 +23,7 @@ import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
 import { useDispatch } from 'react-redux';
 import config from '@plone/volto/registry';
 import { Link, useLocation } from 'react-router-dom';
+import TemporalCoverage from './TemporalCoverage';
 import bannerBG from './banner.svg';
 
 const appName = 'datahub';
@@ -63,19 +64,17 @@ function ItemView(props) {
 
     handler();
   }, [item, dispatch, docid, rawTitle]);
+
   const {
     // contactForResource,
     // contact,
     // resourceTemporalDateRange,
     changeDate,
   } = raw_value?.raw || {};
-
   const relatedItemsData = event?.raw.original;
   const relatedDatasets =
     (relatedItemsData && JSON.parse(relatedItemsData)) || {};
   const { children } = relatedDatasets?.raw_value || {};
-  const startTempCoverage = parseInt(time_coverage?.raw.at(0));
-  const endTempCoverage = parseInt(time_coverage?.raw.at(-1));
 
   const [activeIndex, setActiveIndex] = React.useState([]);
 
@@ -114,12 +113,22 @@ function ItemView(props) {
       </Portal>
 
       <div className="dataset-container">
-        {location?.state && (
+        {location?.state ? (
           <Link
             className="search-link"
             to={{
               pathname: fromPathname,
               search: fromSearch,
+            }}
+          >
+            <i class="ri-arrow-go-back-line"></i>
+            Back to search
+          </Link>
+        ) : (
+          <Link
+            className="search-link"
+            to={{
+              pathname: '/en/datahub/',
             }}
           >
             <i class="ri-arrow-go-back-line"></i>
@@ -282,16 +291,7 @@ function ItemView(props) {
                 );
               })}
             </ul>*/}
-            {time_coverage?.raw.length > 0 && (
-              <div className="temporal-coverage">
-                <div className="side-temp">{`${startTempCoverage - 1}`}</div>
-                <div className="time-range">
-                  <span>{startTempCoverage}</span> -
-                  <span>{endTempCoverage}</span>
-                </div>
-                <div className="side-temp">{`${endTempCoverage + 1}`}</div>
-              </div>
-            )}
+            <TemporalCoverage temporalCoverage={time_coverage?.raw} />
           </Accordion.Content>
 
           <Accordion.Title
