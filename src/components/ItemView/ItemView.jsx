@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Container,
-  Card,
-  Image,
-  Accordion,
-  Icon,
-  Tab,
-} from 'semantic-ui-react';
+import { Container, Accordion, Icon, Tab, List } from 'semantic-ui-react';
 import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import { Portal } from 'react-portal';
@@ -28,6 +21,134 @@ import bannerBG from './banner.svg';
 
 const appName = 'datahub';
 
+const DatasetList = (props) => {
+  const { datasets } = props; // type
+  const [activeIndex, setActiveIndex] = React.useState(null);
+
+  function handleClick(e, titleProps) {
+    const { index } = titleProps;
+    const newIndex = activeIndex === index ? -1 : index;
+    setActiveIndex(newIndex);
+  }
+
+  return (
+    <Accordion>
+      {datasets
+        // .filter((i) => i.resourceType[0] === type)
+        .map((dataset, index) => {
+          return (
+            <>
+              {dataset.link && dataset.link.length > 0 ? (
+                <>
+                  <Accordion.Title
+                    active={activeIndex === index}
+                    index={index}
+                    onClick={handleClick}
+                  >
+                    {dataset.resourceTitleObject.default}
+                    <Icon className="ri-arrow-down-s-line" />
+                  </Accordion.Title>
+                  <Accordion.Content active={activeIndex === index}>
+                    {/* <p className="dataset-description">
+                      {dataset.resourceAbstractObject.default}
+                    </p> */}
+
+                    <List divided relaxed>
+                      {(dataset.link || [])
+                        .filter((i) => i.protocol === 'WWW:URL')
+                        .map((item, i) => {
+                          return (
+                            <List.Item>
+                              <List.Content>
+                                <div className="dataset-item">
+                                  <span>{item.name}</span>
+
+                                  <a href={item.url}>
+                                    <Icon className="download" /> Download link
+                                  </a>
+                                </div>
+                              </List.Content>
+                            </List.Item>
+                          );
+                        })}
+                    </List>
+
+                    <List divided relaxed>
+                      {(dataset.link || [])
+                        .filter(
+                          (i) =>
+                            i.protocol === 'EEA:FILEPATH' ||
+                            i.protocol === 'WWW:LINK',
+                        )
+                        .map((item, i) => {
+                          return (
+                            <List.Item>
+                              <List.Content>
+                                <div className="dataset-item">
+                                  {item.name ? (
+                                    <span>
+                                      <Icon className="file outline" />{' '}
+                                      {item.name}
+                                    </span>
+                                  ) : (
+                                    <span>[no name]</span>
+                                  )}
+
+                                  <a href={item.url}>
+                                    <Icon className="download" /> Download link
+                                  </a>
+                                </div>
+                              </List.Content>
+                            </List.Item>
+                          );
+                        })}
+                    </List>
+
+                    <List divided relaxed>
+                      {(dataset.link || [])
+                        .filter((i) => i.protocol === 'ESRI:REST')
+                        .map((item, i) => {
+                          return (
+                            <List.Item>
+                              <List.Content>
+                                <Icon className="globe" />{' '}
+                                <span>{item.protocol}: </span>
+                                <a href={item.url}>{item.name || item.url}</a>
+                              </List.Content>
+                            </List.Item>
+                          );
+                        })}
+                    </List>
+
+                    <List divided relaxed>
+                      {(dataset.link || [])
+                        .filter((i) => i.protocol === 'OGC:WMS')
+                        .map((item, i) => {
+                          return (
+                            <List.Item>
+                              <List.Content>
+                                <Icon className="globe" />{' '}
+                                <span>{item.protocol}: </span>
+                                <a href={item.url}>
+                                  {item.description || item.url}
+                                </a>
+                              </List.Content>
+                            </List.Item>
+                          );
+                        })}
+                    </List>
+                  </Accordion.Content>
+                </>
+              ) : (
+                ''
+              )}
+            </>
+          );
+        })}
+    </Accordion>
+  );
+};
+
 function ItemView(props) {
   const { docid, location } = props;
   const { fromPathname, fromSearch } = location?.state || {};
@@ -35,8 +156,8 @@ function ItemView(props) {
   // const content = useSelector((state) => state.content.data);
   const result = useResult(null, docid);
   const item = result ? result._result : null;
-  const { title, description, raw_value, event, issued, time_coverage } =
-    item || {}; // readingTime
+  const { title, description, raw_value, issued, time_coverage } = item || {}; // readingTime
+  const { changeDate, children } = raw_value?.raw || {};
   const rawTitle = title?.raw || '';
 
   React.useEffect(() => {
@@ -65,17 +186,6 @@ function ItemView(props) {
     handler();
   }, [item, dispatch, docid, rawTitle]);
 
-  const {
-    // contactForResource,
-    // contact,
-    // resourceTemporalDateRange,
-    changeDate,
-  } = raw_value?.raw || {};
-  const relatedItemsData = event?.raw.original;
-  const relatedDatasets =
-    (relatedItemsData && JSON.parse(relatedItemsData)) || {};
-  const { children } = relatedDatasets?.raw_value || {};
-
   const [activeIndex, setActiveIndex] = React.useState([]);
 
   const toggleOpenAccordion = (e, titleProps) => {
@@ -87,16 +197,29 @@ function ItemView(props) {
 
     setActiveIndex(newIndex);
   };
-  // console.log('result', result?._result);
+
+  console.log('result', result?._result);
 
   const panes = [
-    {
-      menuItem: 'European data',
-      render: () => <Tab.Pane attached={false}>Tab 1 Content</Tab.Pane>,
-    },
+    // {
+    //   menuItem: 'European data',
+    //   render: () => (
+    //     <Tab.Pane attached={false}>
+    //       {children && children.length > 0 && (
+    //         <DatasetList datasets={children} type="nonGeographicDataset" />
+    //       )}
+    //     </Tab.Pane>
+    //   ),
+    // },
     {
       menuItem: 'Dataset definition',
-      render: () => <Tab.Pane attached={false}>Tab 2 Content</Tab.Pane>,
+      render: () => (
+        <Tab.Pane attached={false}>
+          {children && children.length > 0 && (
+            <DatasetList datasets={children} />
+          )}
+        </Tab.Pane>
+      ),
     },
   ];
 
@@ -121,7 +244,7 @@ function ItemView(props) {
               search: fromSearch,
             }}
           >
-            <i class="ri-arrow-go-back-line"></i>
+            <Icon className="ri-arrow-go-back-line" />
             Back to search
           </Link>
         ) : (
@@ -131,10 +254,11 @@ function ItemView(props) {
               pathname: '/en/datahub/',
             }}
           >
-            <i class="ri-arrow-go-back-line"></i>
+            <Icon className="ri-arrow-go-back-line" />
             Back to search
           </Link>
         )}
+
         <div className="dataset-header">
           <h1>{title?.raw}</h1>
           <div className="dataset-header-bottom">
@@ -151,6 +275,7 @@ function ItemView(props) {
               </span>*/}
           </div>
         </div>
+
         <Callout>{description?.raw}</Callout>
 
         <Tab
@@ -166,29 +291,6 @@ function ItemView(props) {
           <p>{description?.raw}</p>
         </div>
       </div>
-
-      {children && children.length > 0 && (
-        <div className="related-wrapper">
-          <h2>Related content</h2>
-          <Card.Group itemsPerRow={4}>
-            {children.map((item, index) => {
-              return (
-                <Card
-                  href={`/datahub/view/${item.metadataIdentifier}`}
-                  key={index}
-                >
-                  <Image src={item.overview[0].url} wrapped ui={false} />
-                  <Card.Content>
-                    <Card.Description>
-                      {item.resourceTitleObject.default}
-                    </Card.Description>
-                  </Card.Content>
-                </Card>
-              );
-            })}
-          </Card.Group>
-        </div>
-      )}
 
       <div className="below-content-wrapper">
         <Accordion exclusive={false}>

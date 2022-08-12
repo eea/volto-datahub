@@ -73,7 +73,7 @@ const DatahubCardItem = (props) => {
         <div className="details">
           <div className="result-info">
             <span className="result-info-title">Author: </span>
-            [EEA]
+            {result._result?.raw_value?.raw.Org}
           </div>
           <h3>
             <Link
@@ -157,7 +157,7 @@ const DatahubCardItem = (props) => {
               <FormattedDate
                 format="DATE_MED"
                 value={DateTime.fromISO(
-                  result?._result.raw_value.raw.changeDate,
+                  result?._result?.raw_value.raw.changeDate,
                 )}
               />
             </div>
