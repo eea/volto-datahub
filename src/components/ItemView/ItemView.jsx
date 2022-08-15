@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Accordion, Icon, Tab, List } from 'semantic-ui-react';
+import { Container, Accordion, Icon, List } from 'semantic-ui-react';
 import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import { Portal } from 'react-portal';
