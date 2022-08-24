@@ -67,6 +67,16 @@ function ItemView(props) {
     handler();
   }, [item, dispatch, docid, rawTitle]);
 
+  const datasets = React.useMemo(
+    () =>
+      (children || []).sort(
+        (a, b) =>
+          new Date(b.publicationDateForResource).getTime() -
+          new Date(a.publicationDateForResource).getTime(),
+      ),
+    [children],
+  );
+
   // console.log('result', result?._result);
 
   return item ? (
@@ -115,24 +125,31 @@ function ItemView(props) {
 
         <Callout>{description?.raw}</Callout>
 
-        {children && children.length > 0 && (
+        {datasets && datasets.length > 0 && (
           <>
             <h2>Data</h2>
             <Accordion>
-              {children.map((dataset, index) => {
+              {datasets.map((dataset, index) => {
                 return (
                   <>
-                    {dataset.link && dataset.link.length > 0 ? (
-                      <>
-                        <Accordion.Title
-                          active={activeIndex === index}
-                          index={index}
-                          onClick={handleClick}
-                        >
-                          {dataset.resourceTitleObject.default}
-                          <Icon className="ri-arrow-down-s-line" />
-                        </Accordion.Title>
-                        <Accordion.Content active={activeIndex === index}>
+                    <Accordion.Title
+                      active={activeIndex === index}
+                      index={index}
+                      onClick={handleClick}
+                    >
+                      <div className="title-wrapper">
+                        <span>{dataset.resourceTitleObject.default}</span>
+                        <span>
+                          {(dataset.format || []).map((item, i) => {
+                            return <span className="format-label">{item}</span>;
+                          })}
+                        </span>
+                      </div>
+                      <Icon className="ri-arrow-down-s-line" />
+                    </Accordion.Title>
+                    <Accordion.Content active={activeIndex === index}>
+                      {dataset.link && dataset.link.length > 0 ? (
+                        <>
                           <List divided relaxed>
                             {(dataset.link || [])
                               .filter((i) => i.protocol === 'WWW:URL')
@@ -221,11 +238,11 @@ function ItemView(props) {
                                 );
                               })}
                           </List>
-                        </Accordion.Content>
-                      </>
-                    ) : (
-                      ''
-                    )}
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </Accordion.Content>
                   </>
                 );
               })}
