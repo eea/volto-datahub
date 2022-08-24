@@ -33,7 +33,7 @@ function ItemView(props) {
   const endTempCoverage = time_coverage?.raw.at(-1);
   const rawTitle = title?.raw || '';
 
-  const [activeIndex, setActiveIndex] = React.useState(null);
+  const [activeIndex, setActiveIndex] = React.useState(0);
 
   function handleClick(e, titleProps) {
     const { index } = titleProps;
