@@ -232,17 +232,8 @@ function ItemView(props) {
             </Accordion>
           </>
         )}
-      </div>
 
-      <div className="info-wrapper">
-        <div className="info-content">
-          <div className="info-title">More Information for {title?.raw}.</div>
-          <p>{description?.raw}</p>
-        </div>
-      </div>
-
-      <div className="dataset-container">
-        <h2>More information</h2>
+        <h2>SDI Metadata Catalogue</h2>
         {!!item?.rod && (
           <div>
             <h5>Reporting obligations (ROD)</h5>
@@ -288,6 +279,13 @@ function ItemView(props) {
           </>
         )}
       </div>
+
+      {/* <div className="info-wrapper">
+        <div className="info-content">
+          <div className="info-title">More Information for {title?.raw}.</div>
+          <p>{description?.raw}</p>
+        </div>
+      </div> */}
     </div>
   ) : null;
 }
