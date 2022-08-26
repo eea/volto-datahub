@@ -192,12 +192,7 @@ function ItemView(props) {
                             })}
 
                           {dataset.link
-                            .filter(
-                              (i) =>
-                                i.protocol === 'EEA:FILEPATH' ||
-                                i.protocol === 'WWW:LINK' ||
-                                i.protocol === 'EEA:FOLDERPATH',
-                            )
+                            .filter((i) => i.protocol === 'WWW:LINK')
                             .map((item, i) => {
                               return (
                                 <List.Item>
@@ -228,6 +223,27 @@ function ItemView(props) {
                           {dataset.link
                             .filter(
                               (i) =>
+                                i.protocol === 'EEA:FILEPATH' ||
+                                i.protocol === 'EEA:FOLDERPATH',
+                            )
+                            .map((item, i) => {
+                              return (
+                                <List.Item>
+                                  <List.Content>
+                                    <div className="dataset-item">
+                                      <Icon className="download" />
+                                      <a href={item.url} className="item-link">
+                                        WebDAV: {item.name || item.function}
+                                      </a>
+                                    </div>
+                                  </List.Content>
+                                </List.Item>
+                              );
+                            })}
+
+                          {dataset.link
+                            .filter(
+                              (i) =>
                                 i.protocol === 'ESRI:REST' ||
                                 i.protocol === 'OGC:WMS',
                             )
@@ -235,7 +251,7 @@ function ItemView(props) {
                               return (
                                 <List.Item>
                                   <List.Content>
-                                    <SVGIcon name={servicesSVG} size="22" />{' '}
+                                    <SVGIcon name={servicesSVG} size="19" />{' '}
                                     {(item.name || item.description) && (
                                       <span className="item-protocol">
                                         {item.protocol}:
@@ -272,6 +288,25 @@ function ItemView(props) {
                                 </List.Item>
                               );
                             })}
+
+                          {dataset.resourceType[0] !==
+                            'nonGeographicDataset' && (
+                            <List.Item>
+                              <List.Content>
+                                <div className="dataset-item">
+                                  <Icon className="file pdf" />
+                                  <a
+                                    className="item-link"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    href={`https://sdi.eea.europa.eu/catalogue/srv/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+                                  >
+                                    PDF Factsheet
+                                  </a>
+                                </div>
+                              </List.Content>
+                            </List.Item>
+                          )}
                         </List>
                       ) : (
                         ''
