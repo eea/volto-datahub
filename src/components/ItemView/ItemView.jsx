@@ -43,12 +43,12 @@ function ItemView(props) {
   // const content = useSelector((state) => state.content.data);
   const result = useResult(null, docid);
   const item = result ? result._result : null;
-  const { title, description, raw_value, issued, time_coverage } = item || {}; // readingTime
-  const { changeDate, children } = raw_value?.raw || {};
-  const startTempCoverage = time_coverage?.raw.at(0);
-  const endTempCoverage = time_coverage?.raw.at(-1);
+  const { title, description, raw_value, issued } = item || {}; // readingTime
+  const { changeDate, children, merged_time_coverage_range } =
+    raw_value?.raw || {};
+  // const startTempCoverage = time_coverage?.raw.at(0);
+  // const endTempCoverage = time_coverage?.raw.at(-1);
   const rawTitle = title?.raw || '';
-
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   function handleClick(e, titleProps) {
@@ -94,7 +94,6 @@ function ItemView(props) {
   );
 
   // console.log('result', result?._result);
-
   return item ? (
     <div className="dataset-view">
       <Portal node={document.getElementById('page-header')}>
@@ -146,6 +145,7 @@ function ItemView(props) {
             <h2>Data</h2>
             <Accordion>
               {datasets.map((dataset, index) => {
+                const { resourceTemporalExtentDetails } = dataset;
                 return (
                   <>
                     <Accordion.Title
@@ -164,6 +164,39 @@ function ItemView(props) {
                       <Icon className="ri-arrow-down-s-line" />
                     </Accordion.Title>
                     <Accordion.Content active={activeIndex === index}>
+                      {resourceTemporalExtentDetails &&
+                        resourceTemporalExtentDetails?.length > 0 && (
+                          <>
+                            <h5>Temporal coverage</h5>
+                            <ul>
+                              {resourceTemporalExtentDetails.map((tc, i) => {
+                                let tc_start = tc?.start?.date;
+                                if (tc_start) {
+                                  tc_start = new Date(
+                                    Date.parse(tc_start),
+                                  ).getFullYear();
+                                }
+                                let tc_end = tc?.end?.date;
+                                if (tc_end) {
+                                  tc_end = new Date(
+                                    Date.parse(tc_end),
+                                  ).getFullYear();
+                                }
+                                tc_start = tc_start || '';
+                                tc_end = tc_end || '';
+                                if (tc_start === tc_end) {
+                                  return <li>{tc_start};</li>;
+                                } else {
+                                  return (
+                                    <li>
+                                      {tc_start} - {tc_end}
+                                    </li>
+                                  );
+                                }
+                              })}
+                            </ul>
+                          </>
+                        )}
                       {!!dataset.link && dataset.link.length > 0 ? (
                         <List divided relaxed>
                           {dataset.link
@@ -319,7 +352,9 @@ function ItemView(props) {
           </>
         )}
 
-        {(item?.rod || item?.organisation || time_coverage?.raw.length > 0) && (
+        {(item?.rod ||
+          item?.organisation ||
+          merged_time_coverage_range?.length > 0) && (
           <h2>SDI Metadata Catalogue</h2>
         )}
         {!!item?.rod && (
@@ -354,20 +389,21 @@ function ItemView(props) {
             </ul>
           </div>
         )}
-        {time_coverage?.raw && time_coverage?.raw.length > 0 && (
+        {merged_time_coverage_range && merged_time_coverage_range?.length > 0 && (
           <>
             <h5>Temporal coverage</h5>
-            {Array.isArray(time_coverage?.raw) ? (
-              <span>
-                {startTempCoverage} - {endTempCoverage}
-              </span>
-            ) : (
-              <span>{time_coverage?.raw}</span>
-            )}
+            <ul>
+              {merged_time_coverage_range.map((tc, i) => {
+                return (
+                  <li>
+                    {tc.start || ''} - {tc.end || ''}
+                  </li>
+                );
+              })}
+            </ul>
           </>
         )}
       </div>
-
       {/* <div className="info-wrapper">
         <div className="info-content">
           <div className="info-title">More Information for {title?.raw}.</div>
