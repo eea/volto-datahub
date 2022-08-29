@@ -1,4 +1,9 @@
-import { multiTermFacet, fixedRangeFacet } from '@eeacms/search';
+import {
+  multiTermFacet,
+  fixedRangeFacet,
+  histogramFacet,
+  makeRange,
+} from '@eeacms/search';
 import { dateRangeFacet } from '@eeacms/search';
 
 const facets = [
@@ -95,6 +100,22 @@ const facets = [
     showInFacetsList: false,
     label: 'Sources',
     iconsFamily: 'Sources',
+  }),
+  histogramFacet({
+    field: 'time_coverage',
+    isMulti: true,
+    label: 'Time coverage',
+    // TODO: implement split in buckets
+    ranges: makeRange({
+      step: 1,
+      normalRange: [1985, 2025],
+      includeOutlierStart: false,
+      includeOutlierEnd: false,
+    }),
+    step: 10,
+    // isFilterable: false,
+    aggs_script:
+      "def vals = doc['time_coverage']; if (vals.length == 0){return 2500} else {def ret = [];for (val in vals){def tmp_val = val.substring(0,4);ret.add(tmp_val.toLowerCase() == tmp_val.toUpperCase() ? Integer.parseInt(tmp_val) : 2500);}return ret;}",
   }),
 ];
 
