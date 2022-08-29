@@ -17,8 +17,24 @@ import { useDispatch } from 'react-redux';
 import config from '@plone/volto/registry';
 import { Link, useLocation } from 'react-router-dom';
 import bannerBG from './banner.svg';
+import servicesSVG from './icons/services.svg';
 
 const appName = 'datahub';
+
+const SVGIcon = ({ name, size, color, className, title, onClick }) => {
+  return (
+    <svg
+      xmlns={name.attributes && name.attributes.xmlns}
+      viewBox={name.attributes && name.attributes.viewBox}
+      style={{ height: size, width: 'auto', fill: color || 'currentColor' }}
+      className={className ? `icon ${className}` : 'icon'}
+      onClick={onClick}
+      dangerouslySetInnerHTML={{
+        __html: title ? `<title>${title}</title>${name.content}` : name.content,
+      }}
+    />
+  );
+};
 
 function ItemView(props) {
   const { docid, location } = props;
@@ -137,108 +153,161 @@ function ItemView(props) {
                       index={index}
                       onClick={handleClick}
                     >
-                      <div className="title-wrapper">
-                        <span>{dataset.resourceTitleObject.default}</span>
+                      <span className="dataset-title">
+                        <div>{dataset.resourceTitleObject.default}</div>
                         <span>
                           {(dataset.format || []).map((item, i) => {
                             return <span className="format-label">{item}</span>;
                           })}
                         </span>
-                      </div>
+                      </span>
                       <Icon className="ri-arrow-down-s-line" />
                     </Accordion.Title>
                     <Accordion.Content active={activeIndex === index}>
-                      {dataset.link && dataset.link.length > 0 ? (
-                        <>
-                          <List divided relaxed>
-                            {(dataset.link || [])
-                              .filter((i) => i.protocol === 'WWW:URL')
-                              .map((item, i) => {
-                                return (
-                                  <List.Item>
-                                    <List.Content>
-                                      <div className="dataset-item">
+                      {!!dataset.link && dataset.link.length > 0 ? (
+                        <List divided relaxed>
+                          {dataset.link
+                            .filter((i) => i.protocol === 'WWW:URL')
+                            .map((item, i) => {
+                              return (
+                                <List.Item>
+                                  <List.Content>
+                                    <div className="dataset-item">
+                                      <Icon className="download" />
+                                      <a href={item.url} className="item-link">
                                         <span>{item.name}</span>
-
-                                        <a href={item.url}>
-                                          <Icon className="download" /> Download
-                                          link
-                                        </a>
-                                      </div>
-                                    </List.Content>
-                                  </List.Item>
-                                );
-                              })}
-                          </List>
-
-                          <List divided relaxed>
-                            {(dataset.link || [])
-                              .filter(
-                                (i) =>
-                                  i.protocol === 'EEA:FILEPATH' ||
-                                  i.protocol === 'WWW:LINK',
-                              )
-                              .map((item, i) => {
-                                return (
-                                  <List.Item>
-                                    <List.Content>
-                                      <div className="dataset-item">
-                                        {item.name ? (
-                                          <span>
-                                            <Icon className="file outline" />{' '}
-                                            {item.name}
-                                          </span>
-                                        ) : (
-                                          <span>[no name]</span>
-                                        )}
-
-                                        <a href={item.url}>
-                                          <Icon className="download" /> Download
-                                          link
-                                        </a>
-                                      </div>
-                                    </List.Content>
-                                  </List.Item>
-                                );
-                              })}
-                          </List>
-
-                          <List divided relaxed>
-                            {(dataset.link || [])
-                              .filter((i) => i.protocol === 'ESRI:REST')
-                              .map((item, i) => {
-                                return (
-                                  <List.Item>
-                                    <List.Content>
-                                      <Icon className="globe" />{' '}
-                                      <span>{item.protocol}: </span>
-                                      <a href={item.url}>
-                                        {item.name || item.url}
                                       </a>
-                                    </List.Content>
-                                  </List.Item>
-                                );
-                              })}
-                          </List>
+                                    </div>
+                                  </List.Content>
+                                  {item.description && (
+                                    <span
+                                      className="item-description"
+                                      title={item.description}
+                                    >
+                                      {item.description}
+                                    </span>
+                                  )}
+                                </List.Item>
+                              );
+                            })}
 
-                          <List divided relaxed>
-                            {(dataset.link || [])
-                              .filter((i) => i.protocol === 'OGC:WMS')
-                              .map((item, i) => {
-                                return (
-                                  <List.Item>
-                                    <List.Content>
-                                      <Icon className="globe" />{' '}
-                                      <span>{item.protocol}: </span>
-                                      <a href={item.url}>
-                                        {item.description || item.url}
+                          {dataset.link
+                            .filter((i) => i.protocol === 'WWW:LINK')
+                            .map((item, i) => {
+                              return (
+                                <List.Item>
+                                  <List.Content>
+                                    <div className="dataset-item">
+                                      <Icon className="download" />
+                                      {item.name ? (
+                                        <a
+                                          href={item.url}
+                                          className="item-link"
+                                        >
+                                          {item.name}
+                                        </a>
+                                      ) : (
+                                        <a
+                                          href={item.url}
+                                          className="item-link"
+                                        >
+                                          Download link
+                                        </a>
+                                      )}
+                                    </div>
+                                  </List.Content>
+                                </List.Item>
+                              );
+                            })}
+
+                          {dataset.link
+                            .filter(
+                              (i) =>
+                                i.protocol === 'EEA:FILEPATH' ||
+                                i.protocol === 'EEA:FOLDERPATH',
+                            )
+                            .map((item, i) => {
+                              return (
+                                <List.Item>
+                                  <List.Content>
+                                    <div className="dataset-item">
+                                      <Icon className="download" />
+                                      <a href={item.url} className="item-link">
+                                        WebDAV: {item.name || item.function}
                                       </a>
-                                    </List.Content>
-                                  </List.Item>
-                                );
-                              })}
-                          </List>
-                        </>
+                                    </div>
+                                  </List.Content>
+                                </List.Item>
+                              );
+                            })}
+
+                          {dataset.link
+                            .filter(
+                              (i) =>
+                                i.protocol === 'ESRI:REST' ||
+                                i.protocol === 'OGC:WMS',
+                            )
+                            .map((item, i) => {
+                              return (
+                                <List.Item>
+                                  <List.Content>
+                                    <SVGIcon name={servicesSVG} size="19" />{' '}
+                                    {(item.name || item.description) && (
+                                      <span className="item-protocol">
+                                        {item.protocol}:
+                                      </span>
+                                    )}
+                                    <a className="item-link" href={item.url}>
+                                      {item.name ||
+                                        item.description ||
+                                        item.protocol}
+                                    </a>
+                                  </List.Content>
+                                </List.Item>
+                              );
+                            })}
+
+                          {dataset.link
+                            .filter((i) => i.protocol.includes('WWW:LINK'))
+                            .map((item, i) => {
+                              return (
+                                <List.Item>
+                                  <List.Content>
+                                    <div className="dataset-item">
+                                      <Icon className="linkify" />
+                                      <a href={item.url} className="item-link">
+                                        <span>{item.name || item.url}</span>
+                                      </a>
+                                    </div>
+                                  </List.Content>
+                                  {item.description && (
+                                    <span className="item-description">
+                                      {item.description}
+                                    </span>
+                                  )}
+                                </List.Item>
+                              );
+                            })}
+
+                          {dataset.resourceType[0] !==
+                            'nonGeographicDataset' && (
+                            <List.Item>
+                              <List.Content>
+                                <div className="dataset-item">
+                                  <Icon className="file pdf" />
+                                  <a
+                                    className="item-link"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    href={`https://sdi.eea.europa.eu/catalogue/srv/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+                                  >
+                                    PDF Factsheet
+                                  </a>
+                                </div>
+                              </List.Content>
+                            </List.Item>
+                          )}
+                        </List>
                       ) : (
                         ''
                       )}
@@ -250,7 +319,9 @@ function ItemView(props) {
           </>
         )}
 
-        <h2>SDI Metadata Catalogue</h2>
+        {(item?.rod || item?.organisation || time_coverage?.raw.length > 0) && (
+          <h2>SDI Metadata Catalogue</h2>
+        )}
         {!!item?.rod && (
           <div>
             <h5>Reporting obligations (ROD)</h5>
