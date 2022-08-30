@@ -184,15 +184,13 @@ function ItemView(props) {
                                 }
                                 tc_start = tc_start || '';
                                 tc_end = tc_end || '';
-                                if (tc_start === tc_end) {
-                                  return <li>{tc_start};</li>;
-                                } else {
-                                  return (
-                                    <li>
-                                      {tc_start} - {tc_end}
-                                    </li>
-                                  );
-                                }
+                                return (
+                                  <li>
+                                    {tc_start === tc_end && tc_start}
+                                    {tc_start !== tc_end &&
+                                      tc_start + ' - ' + tc_end}
+                                  </li>
+                                );
                               })}
                             </ul>
                           </>
