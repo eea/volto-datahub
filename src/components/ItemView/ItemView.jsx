@@ -392,9 +392,12 @@ function ItemView(props) {
             <h5>Temporal coverage</h5>
             <ul>
               {merged_time_coverage_range.map((tc, i) => {
+                const tc_start = tc.start || '';
+                const tc_end = tc.end || '';
                 return (
                   <li>
-                    {tc.start || ''} - {tc.end || ''}
+                    {tc_start === tc_end && tc_start}
+                    {tc_start !== tc_end && tc_start + ' - ' + tc_end}
                   </li>
                 );
               })}
