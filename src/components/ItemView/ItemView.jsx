@@ -4,7 +4,7 @@ import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import { Portal } from 'react-portal';
 import {
-//  useAppConfig,
+  //  useAppConfig,
   useResult,
   AppConfigContext,
   SearchContext,
@@ -96,6 +96,8 @@ function ItemView(props) {
   );
 
   // console.log('result', result?._result);
+  // console.log('children', children);
+
   return item ? (
     <div className="dataset-view">
       <Portal node={document.getElementById('page-header')}>
@@ -166,11 +168,12 @@ function ItemView(props) {
                       <Icon className="ri-arrow-down-s-line" />
                     </Accordion.Title>
                     <Accordion.Content active={activeIndex === index}>
-                      {resourceTemporalExtentDetails &&
-                        resourceTemporalExtentDetails?.length > 0 && (
-                          <>
-                            <h5>Temporal coverage</h5>
-                            <ul>
+                      <div className="dataset-content">
+                        {resourceTemporalExtentDetails &&
+                          resourceTemporalExtentDetails?.length > 0 && (
+                            <div>
+                              <strong>Temporal coverage: </strong>
+
                               {resourceTemporalExtentDetails.map((tc, i) => {
                                 let tc_start = tc?.start?.date;
                                 if (tc_start) {
@@ -187,16 +190,37 @@ function ItemView(props) {
                                 tc_start = tc_start || '';
                                 tc_end = tc_end || '';
                                 return (
-                                  <li>
-                                    {tc_start === tc_end && tc_start}
-                                    {tc_start !== tc_end &&
-                                      tc_start + ' - ' + tc_end}
-                                  </li>
+                                  <>
+                                    <span>
+                                      {tc_start === tc_end && tc_start}
+                                      {tc_start !== tc_end &&
+                                        tc_start + ' - ' + tc_end}
+                                    </span>
+                                    {i !==
+                                    resourceTemporalExtentDetails.length - 1
+                                      ? ', '
+                                      : ' '}
+                                  </>
                                 );
                               })}
-                            </ul>
-                          </>
+                            </div>
+                          )}
+                        {dataset.resourceType[0] !== 'nonGeographicDataset' && (
+                          <div className="dataset-pdf">
+                            <div className="pdf-btn">
+                              <Icon className="file pdf" />
+                              <a
+                                target="_blank"
+                                rel="noreferrer"
+                                href={`https://sdi.eea.europa.eu/catalogue/srv/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+                              >
+                                PDF Factsheet
+                              </a>
+                            </div>
+                          </div>
                         )}
+                      </div>
+
                       {!!dataset.link && dataset.link.length > 0 ? (
                         <List divided relaxed>
                           {dataset.link
@@ -321,25 +345,6 @@ function ItemView(props) {
                                 </List.Item>
                               );
                             })}
-
-                          {dataset.resourceType[0] !==
-                            'nonGeographicDataset' && (
-                            <List.Item>
-                              <List.Content>
-                                <div className="dataset-item">
-                                  <Icon className="file pdf" />
-                                  <a
-                                    className="item-link"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    href={`https://sdi.eea.europa.eu/catalogue/srv/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
-                                  >
-                                    PDF Factsheet
-                                  </a>
-                                </div>
-                              </List.Content>
-                            </List.Item>
-                          )}
                         </List>
                       ) : (
                         ''
@@ -391,19 +396,21 @@ function ItemView(props) {
         )}
         {merged_time_coverage_range && merged_time_coverage_range?.length > 0 && (
           <>
-            <h5>Temporal coverage</h5>
-            <ul>
-              {merged_time_coverage_range.map((tc, i) => {
-                const tc_start = tc.start || '';
-                const tc_end = tc.end || '';
-                return (
-                  <li>
+            <h5>Temporal coverage:</h5>
+
+            {merged_time_coverage_range.map((tc, i) => {
+              const tc_start = tc.start || '';
+              const tc_end = tc.end || '';
+              return (
+                <>
+                  <span>
                     {tc_start === tc_end && tc_start}
                     {tc_start !== tc_end && tc_start + ' - ' + tc_end}
-                  </li>
-                );
-              })}
-            </ul>
+                  </span>
+                  {i !== merged_time_coverage_range.length - 1 ? ', ' : ' '}
+                </>
+              );
+            })}
           </>
         )}
       </div>
