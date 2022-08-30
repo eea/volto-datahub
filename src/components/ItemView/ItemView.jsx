@@ -4,14 +4,14 @@ import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import { Portal } from 'react-portal';
 import {
-  //  useAppConfig,
+  // useAppConfig,
   useResult,
   AppConfigContext,
   SearchContext,
   rebind,
   applyConfigurationSchema,
 } from '@eeacms/search';
-import { useAppConfig } from '@eeacms/search/lib/hocs';
+// import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { DateTime } from '@eeacms/search';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
@@ -48,8 +48,6 @@ function ItemView(props) {
   const { title, description, raw_value, issued } = item || {}; // readingTime
   const { changeDate, children, merged_time_coverage_range } =
     raw_value?.raw || {};
-  // const startTempCoverage = time_coverage?.raw.at(0);
-  // const endTempCoverage = time_coverage?.raw.at(-1);
   const rawTitle = title?.raw || '';
   const [activeIndex, setActiveIndex] = React.useState(0);
 
@@ -158,8 +156,8 @@ function ItemView(props) {
                       onClick={handleClick}
                     >
                       <span className="dataset-title">
-                        <div>{dataset.resourceTitleObject.default}</div>
-                        <span>
+                        {dataset.resourceTitleObject.default}
+                        <span className="formats">
                           {(dataset.format || []).map((item, i) => {
                             return <span className="format-label">{item}</span>;
                           })}
@@ -308,7 +306,7 @@ function ItemView(props) {
                               return (
                                 <List.Item>
                                   <List.Content>
-                                    <SVGIcon name={servicesSVG} size="19" />{' '}
+                                    <SVGIcon name={servicesSVG} size="18" />
                                     {(item.name || item.description) && (
                                       <span className="item-protocol">
                                         {item.protocol}:
