@@ -4,12 +4,14 @@ import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import { Portal } from 'react-portal';
 import {
+//  useAppConfig,
   useResult,
   AppConfigContext,
   SearchContext,
   rebind,
   applyConfigurationSchema,
 } from '@eeacms/search';
+import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { DateTime } from '@eeacms/search';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
