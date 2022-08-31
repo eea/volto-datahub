@@ -95,7 +95,14 @@ function ItemView(props) {
 
   // console.log('result', result?._result);
   // console.log('children', children);
-
+  if (item?.organisation) {
+    if (!Array.isArray(item?.organisation?.raw)) {
+      item.organisation.raw = [item.organisation.raw];
+    }
+    item.organisation.raw = item.organisation.raw.filter(
+      (org) => org !== 'European Environment Agency',
+    );
+  }
   return item ? (
     <div className="dataset-view">
       <Portal node={document.getElementById('page-header')}>
@@ -376,7 +383,7 @@ function ItemView(props) {
             </ul>
           </div>
         )}
-        {!!item?.organisation && (
+        {!!item?.organisation && item?.organisation.raw.length > 0 && (
           <div>
             <h5>Organisation</h5>
             <ul>
