@@ -39,7 +39,7 @@ const SVGIcon = ({ name, size, color, className, title, onClick }) => {
 };
 
 function ItemView(props) {
-  const { docid, location } = props;
+  const { docid, location, appConfig } = props;
   const { fromPathname, fromSearch } = location?.state || {};
   const dispatch = useDispatch();
   // const content = useSelector((state) => state.content.data);
@@ -210,7 +210,7 @@ function ItemView(props) {
                               <a
                                 target="_blank"
                                 rel="noreferrer"
-                                href={`https://sdi.eea.europa.eu/catalogue/srv/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+                                href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
                               >
                                 PDF Factsheet
                               </a>
@@ -411,6 +411,17 @@ function ItemView(props) {
             })}
           </>
         )}
+
+        <div className="pdf-btn">
+          <Icon className="file pdf" />
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${docid}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+          >
+            PDF Factsheet
+          </a>
+        </div>
       </div>
       {/* <div className="info-wrapper">
         <div className="info-content">
@@ -456,7 +467,11 @@ function DatahubItemView(props) {
               return (
                 <AppConfigContext.Provider value={appConfigContext}>
                   <SearchContext.Provider value={params}>
-                    <ItemView docid={docid} location={location} />
+                    <ItemView
+                      docid={docid}
+                      location={location}
+                      appConfig={appConfig}
+                    />
                   </SearchContext.Provider>
                 </AppConfigContext.Provider>
               );

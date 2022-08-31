@@ -28,6 +28,7 @@ const applyConfig = (config) => {
   datahub.enableNLP = false;
   datahub.showPromptQueries = false;
   datahub.requestBodyModifiers.push(tweakForNLPService);
+  datahub.indexBaseUrl = 'https://galliwasp.eea.europa.eu';
   // datahub.resultViews[0].factories.item = "DatahubListingViewItem"
 
   config.settings.nonContentRoutes.push(/datahubitem-view\/(.*)/); // \/(.*)\/
