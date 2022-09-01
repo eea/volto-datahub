@@ -4,14 +4,12 @@ import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import { Portal } from 'react-portal';
 import {
-  // useAppConfig,
   useResult,
   AppConfigContext,
   SearchContext,
   rebind,
   applyConfigurationSchema,
 } from '@eeacms/search';
-// import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { DateTime } from '@eeacms/search';
 import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
 import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
@@ -20,6 +18,8 @@ import config from '@plone/volto/registry';
 import { Link, useLocation } from 'react-router-dom';
 import bannerBG from './banner.svg';
 import servicesSVG from './icons/services.svg';
+
+import MoreLikeThis from './MoreLikeThis';
 
 const appName = 'datahub';
 
@@ -430,8 +430,12 @@ function ItemView(props) {
             </a>
           </div>
         </div>
+        <MoreLikeThis
+          docid={docid}
+          title={title.raw}
+          appConfig={appConfig}
+        ></MoreLikeThis>
       </div>
-
       {/* <div className="info-wrapper">
         <div className="info-content">
           <div className="info-title">More Information for {title?.raw}.</div>
