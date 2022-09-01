@@ -1,12 +1,13 @@
 import React from 'react';
-import runRequest from '@eeacms/search/lib/runRequest';
+import { Card } from 'semantic-ui-react';
+import { runRequest, firstWords } from '@eeacms/search';
 
 function buildQuery(title, docid) {
   const body = {
     // _source: {
     //   include: ['label', 'about', ],
     // },
-    size: 6,
+    size: 3,
     query: {
       bool: {
         must: [
@@ -48,19 +49,35 @@ const MoreLikeThis = (props) => {
     }
     getSimilarDocs(docid, title, appConfig);
   }, [appConfig, docid, title]);
+
   return similarDocs && similarDocs.length > 0 ? (
     <div className="more-like-this">
-      <h4>More like this</h4>
-      <ul>
-        {similarDocs.map((item, i) => {
-          return (
-            <li>
-              <span>{item._source.label}</span>
-              <span>{item._source.about}</span>
-            </li>
-          );
-        })}
-      </ul>
+      <h2>Similar content</h2>
+      <div className="section-wrapper">
+        <Card.Group itemsPerRow={3}>
+          {similarDocs.map((item, i) => {
+            return (
+              <Card
+                href={`/en/datahub/datahubitem-view/${item._source.about}`}
+                key={i}
+              >
+                <Card.Content>
+                  <Card.Header>
+                    <span title={item._source.label}>
+                      {firstWords(item._source.label, 10)}
+                    </span>
+                  </Card.Header>
+                  <Card.Description>
+                    <span className="card-description">
+                      {item._source.description}
+                    </span>
+                  </Card.Description>
+                </Card.Content>
+              </Card>
+            );
+          })}
+        </Card.Group>
+      </div>
     </div>
   ) : null;
 };
