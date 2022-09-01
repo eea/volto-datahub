@@ -3,9 +3,9 @@ import runRequest from '@eeacms/search/lib/runRequest';
 
 function buildQuery(title, docid) {
   const body = {
-    _source: {
-      include: ['label', 'about'],
-    },
+    // _source: {
+    //   include: ['label', 'about', ],
+    // },
     size: 6,
     query: {
       bool: {
