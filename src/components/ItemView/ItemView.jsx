@@ -103,6 +103,7 @@ function ItemView(props) {
       (org) => org !== 'European Environment Agency',
     );
   }
+
   return item ? (
     <div className="dataset-view">
       <Portal node={document.getElementById('page-header')}>
@@ -362,74 +363,75 @@ function ItemView(props) {
           </>
         )}
 
-        {(item?.rod ||
-          item?.organisation ||
-          merged_time_coverage_range?.length > 0) && (
-          <h2>SDI Metadata Catalogue</h2>
-        )}
-        {!!item?.rod && (
-          <div>
-            <h5>Reporting obligations (ROD)</h5>
-            <ul>
+        <div className="metadata-wrapper">
+          {(item?.rod ||
+            item?.organisation ||
+            merged_time_coverage_range?.length > 0) && (
+            <h2>SDI Metadata Catalogue</h2>
+          )}
+          {!!item?.rod && (
+            <div className="metadata-section">
+              <h5>Reporting obligations (ROD)</h5>
+
               {Array.isArray(item.rod?.raw) ? (
                 <>
                   {item?.rod?.raw.map((item, i) => {
-                    return <li key={i}>{item}</li>;
+                    return <div key={i}>{item}</div>;
                   })}
                 </>
               ) : (
-                <li>{item.rod?.raw}</li>
+                <div>{item.rod?.raw}</div>
               )}
-            </ul>
-          </div>
-        )}
-        {!!item?.organisation && item?.organisation.raw.length > 0 && (
-          <div>
-            <h5>Organisation</h5>
-            <ul>
+            </div>
+          )}
+          {!!item?.organisation && item?.organisation.raw.length > 0 && (
+            <div className="metadata-section">
+              <h5>Organisation:</h5>
               {Array.isArray(item?.organisation?.raw) ? (
                 <>
                   {item?.organisation?.raw.map((item, i) => {
-                    return <li key={i}>{item}</li>;
+                    return <div key={i}>{item}</div>;
                   })}
                 </>
               ) : (
-                <li>{item?.organisation?.raw}</li>
+                <div>{item?.organisation?.raw}</div>
               )}
-            </ul>
+            </div>
+          )}
+          {merged_time_coverage_range &&
+            merged_time_coverage_range?.length > 0 && (
+              <div className="metadata-section">
+                <h5>Temporal coverage:</h5>
+
+                {merged_time_coverage_range.map((tc, i) => {
+                  const tc_start = tc.start || '';
+                  const tc_end = tc.end || '';
+                  return (
+                    <>
+                      <span>
+                        {tc_start === tc_end && tc_start}
+                        {tc_start !== tc_end && tc_start + ' - ' + tc_end}
+                      </span>
+                      {i !== merged_time_coverage_range.length - 1 ? ', ' : ' '}
+                    </>
+                  );
+                })}
+              </div>
+            )}
+
+          <div className="pdf-btn">
+            <Icon className="file pdf" />
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${docid}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+            >
+              PDF Factsheet
+            </a>
           </div>
-        )}
-        {merged_time_coverage_range && merged_time_coverage_range?.length > 0 && (
-          <>
-            <h5>Temporal coverage:</h5>
-
-            {merged_time_coverage_range.map((tc, i) => {
-              const tc_start = tc.start || '';
-              const tc_end = tc.end || '';
-              return (
-                <>
-                  <span>
-                    {tc_start === tc_end && tc_start}
-                    {tc_start !== tc_end && tc_start + ' - ' + tc_end}
-                  </span>
-                  {i !== merged_time_coverage_range.length - 1 ? ', ' : ' '}
-                </>
-              );
-            })}
-          </>
-        )}
-
-        <div className="pdf-btn">
-          <Icon className="file pdf" />
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${docid}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
-          >
-            PDF Factsheet
-          </a>
         </div>
       </div>
+
       {/* <div className="info-wrapper">
         <div className="info-content">
           <div className="info-title">More Information for {title?.raw}.</div>
