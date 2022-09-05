@@ -52,13 +52,13 @@ const MetadataSection = (props) => {
             const tc_start = tc.start || '';
             const tc_end = tc.end || '';
             return (
-              <>
+              <React.Fragment key={i}>
                 <span>
                   {tc_start === tc_end && tc_start}
                   {tc_start !== tc_end && tc_start + ' - ' + tc_end}
                 </span>
                 {i !== merged_time_coverage_range.length - 1 ? ', ' : ' '}
-              </>
+              </React.Fragment>
             );
           })}
         </div>
