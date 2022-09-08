@@ -71,10 +71,10 @@ const DatahubCardItem = (props) => {
       </div>*/}
       <div className={classColLeft}>
         <div className="details">
-          <div className="result-info">
+          {/* <div className="result-info">
             <span className="result-info-title">Author: </span>
             {result._result?.raw_value?.raw.Org}
-          </div>
+          </div> */}
           <h3>
             <Link
               to={{
