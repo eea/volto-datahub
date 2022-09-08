@@ -71,7 +71,7 @@ const MetadataSection = (props) => {
           rel="noreferrer"
           href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${docid}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
         >
-          PDF Factsheet
+          SDI Metadata Factsheet
         </a>
       </div>
     </div>

@@ -282,7 +282,7 @@ const Datasets = (props) => {
                           rel="noreferrer"
                           href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
                         >
-                          PDF Factsheet
+                          SDI Metadata Factsheet
                         </a>
                       </div>
                     </div>
