@@ -92,11 +92,13 @@ function ItemView(props) {
         <div className="dataset-header">
           <h1>{title?.raw}</h1>
           <div className="dataset-header-bottom">
-            <span className="header-data">Prod-ID: [No data]</span>
-            <span className="header-data">
+            <span className="header-data">Prod-ID: -</span>
+            {/* <span className="header-data">
               Created: <DateTime format="DATE_MED" value={issued?.raw} />
+            </span> */}
+            <span className="header-data">
+              Published: <DateTime format="DATE_MED" value={result.issued} />
             </span>
-            <span className="header-data">Published: [No data]</span>
             <span className="header-data">
               Last modified: <DateTime format="DATE_MED" value={changeDate} />
             </span>

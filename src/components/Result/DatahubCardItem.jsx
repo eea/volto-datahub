@@ -53,7 +53,7 @@ const DatahubCardItem = (props) => {
   // const { width } = useWindowDimensions();
   // const isSmallScreen = width < 1000;
   // const clusters = result.clusterInfo;
-  // console.log('result', result.metaTypes, result._result);
+  // console.log('result', result._result);
 
   return (
     <div
@@ -153,13 +153,8 @@ const DatahubCardItem = (props) => {
               </div>
             ) : null}
             <div className="result-info">
-              <span className="result-info-title">Last modified: </span>
-              <FormattedDate
-                format="DATE_MED"
-                value={DateTime.fromISO(
-                  result?._result?.raw_value.raw.changeDate,
-                )}
-              />
+              <span className="result-info-title">Published: </span>
+              <FormattedDate format="DATE_MED" value={result.issued} />
             </div>
             <div className="result-info">
               <span className="result-info-title">Available formats: </span>
