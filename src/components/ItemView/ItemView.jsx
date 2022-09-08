@@ -32,7 +32,7 @@ function ItemView(props) {
   // const content = useSelector((state) => state.content.data);
   const result = useResult(null, docid);
   const item = result ? result._result : null;
-  const { title, description, raw_value, issued } = item || {}; // readingTime
+  const { title, description, raw_value } = item || {}; // readingTime
   const { changeDate } = raw_value?.raw || {};
   const rawTitle = title?.raw || '';
 

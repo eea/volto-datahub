@@ -5,8 +5,8 @@ import {
   // Button,
   // Dropdown
 } from 'semantic-ui-react';
-import { DateTime as FormattedDate, StringList } from '@eeacms/search';
-import { DateTime } from 'luxon';
+import { DateTime, StringList } from '@eeacms/search';
+// import { DateTime } from 'luxon';
 // import { useAppConfig, useWindowDimensions } from '@eeacms/search/lib/hocs';
 // import { TagsList } from '@eeacms/search/components'; // SegmentedBreadcrumb,
 // import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
@@ -154,7 +154,7 @@ const DatahubCardItem = (props) => {
             ) : null}
             <div className="result-info">
               <span className="result-info-title">Published: </span>
-              <FormattedDate format="DATE_MED" value={result.issued} />
+              <DateTime format="DATE_MED" value={result.issued} />
             </div>
             <div className="result-info">
               <span className="result-info-title">Available formats: </span>
