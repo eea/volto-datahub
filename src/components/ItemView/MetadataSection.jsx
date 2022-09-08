@@ -16,7 +16,7 @@ const MetadataSection = (props) => {
 
   return (
     <div className="metadata-wrapper">
-      <h2>SDI Metadata Catalogue</h2>
+      <h2>More information</h2>
 
       {!!rod && (
         <div className="metadata-section">
