@@ -4,7 +4,6 @@ import DatahubItemView from './components/ItemView/ItemView';
 
 function tweakForNLPService(body, config) {
   if (!config.enableNLP) {
-    body._source = { ...body.source };
     delete body.source;
     delete body.index;
     return body;
@@ -25,7 +24,7 @@ const applyConfig = (config) => {
   // Tweak the searchlib config to use the middleware instead of the index
   datahub.elastic_index = '_es/datahub';
   datahub.index_name = 'data_searchui_datahub';
-  datahub.enableNLP = false;
+  datahub.enableNLP = true;
   datahub.showPromptQueries = false;
   datahub.requestBodyModifiers.push(tweakForNLPService);
   datahub.indexBaseUrl = 'https://galliwasp.eea.europa.eu';
