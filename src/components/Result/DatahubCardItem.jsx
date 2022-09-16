@@ -5,8 +5,8 @@ import {
   // Button,
   // Dropdown
 } from 'semantic-ui-react';
-import { DateTime as FormattedDate, StringList } from '@eeacms/search';
-import { DateTime } from 'luxon';
+import { DateTime, StringList } from '@eeacms/search';
+// import { DateTime } from 'luxon';
 // import { useAppConfig, useWindowDimensions } from '@eeacms/search/lib/hocs';
 // import { TagsList } from '@eeacms/search/components'; // SegmentedBreadcrumb,
 // import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
@@ -53,7 +53,7 @@ const DatahubCardItem = (props) => {
   // const { width } = useWindowDimensions();
   // const isSmallScreen = width < 1000;
   // const clusters = result.clusterInfo;
-  // console.log('result', result.metaTypes, result._result);
+  // console.log('result', result._result);
 
   return (
     <div
@@ -71,10 +71,10 @@ const DatahubCardItem = (props) => {
       </div>*/}
       <div className={classColLeft}>
         <div className="details">
-          <div className="result-info">
+          {/* <div className="result-info">
             <span className="result-info-title">Author: </span>
             {result._result?.raw_value?.raw.Org}
-          </div>
+          </div> */}
           <h3>
             <Link
               to={{
@@ -153,13 +153,8 @@ const DatahubCardItem = (props) => {
               </div>
             ) : null}
             <div className="result-info">
-              <span className="result-info-title">Last modified: </span>
-              <FormattedDate
-                format="DATE_MED"
-                value={DateTime.fromISO(
-                  result?._result?.raw_value.raw.changeDate,
-                )}
-              />
+              <span className="result-info-title">Published: </span>
+              <DateTime format="DATE_MED" value={result.issued} />
             </div>
             <div className="result-info">
               <span className="result-info-title">Available formats: </span>
