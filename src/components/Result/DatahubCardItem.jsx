@@ -35,16 +35,16 @@ const DatahubCardItem = (props) => {
     preview_image_url: result.hasImage ? result.thumbUrl : undefined,
     extra: (
       <div className="result-bottom">
+        <div className="result-info">
+          <span className="result-info-title">Published: </span>
+          <DateTime format="DATE_MED" value={result.issued} />
+        </div>
         {topic ? (
           <div className="result-info">
             <span className="result-info-title">Topics: </span>
             <StringList value={topic.raw} />
           </div>
         ) : null}
-        <div className="result-info">
-          <span className="result-info-title">Published: </span>
-          <DateTime format="DATE_MED" value={result.issued} />
-        </div>
         <div className="result-info">
           <span className="result-info-title">Available formats: </span>
           [Icons]
