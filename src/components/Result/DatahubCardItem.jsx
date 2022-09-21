@@ -1,28 +1,36 @@
 import React from 'react';
-import cx from 'classnames';
-import { Label } from 'semantic-ui-react';
+
 import { DateTime, StringList } from '@eeacms/search';
-import { useAppConfig, ResultContext, firstWords } from '@eeacms/search';
+import { ResultContext } from '@eeacms/search';
 import { Link } from 'react-router-dom';
 import { UniversalItem } from '@eeacms/volto-listing-block';
 
 const DatahubCardItem = (props) => {
   const { result } = props;
-  const { appConfig } = useAppConfig();
-  const { debugQuery } = appConfig;
   const { topic } = result._result || [];
-  const [hovered, setHovered] = React.useState(false);
 
-  let metaType = result.metaTypes || '';
-  if (metaType.length === 0) {
-    metaType = 'Others';
-  }
+  // let metaType = result.metaTypes || '';
+  // if (metaType.length === 0) {
+  //   metaType = 'Others';
+  // }
 
-  const classColLeft = result.hasImage ? 'col-left' : 'col-left no-image';
   const [resultId] = (result.href || '').split('/').reverse();
 
   const item = {
-    title: result.title,
+    title: (
+      <Link
+        to={{
+          pathname: `/en/datahub/datahubitem-view/${resultId}`,
+          state: {
+            fromPathname: window.location.pathname,
+            fromSearch: window.location.search,
+          },
+        }}
+        title={result.title}
+      >
+        {result.title}
+      </Link>
+    ),
     description: <ResultContext {...props} />,
     preview_image_url: result.hasImage ? result.thumbUrl : undefined,
     extra: (
@@ -44,6 +52,7 @@ const DatahubCardItem = (props) => {
       </div>
     ),
   };
+
   const itemModel = {
     hasImage: result.hasImage,
     hasDescription: true,
