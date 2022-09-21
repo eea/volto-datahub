@@ -56,6 +56,7 @@ const DatahubCardItem = (props) => {
   const itemModel = {
     hasImage: result.hasImage,
     hasDescription: true,
+    '@type': 'searchItem',
   };
 
   return <UniversalItem item={item} itemModel={itemModel} />;
