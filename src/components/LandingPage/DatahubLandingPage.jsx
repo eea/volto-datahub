@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Button } from 'semantic-ui-react';
+import { Tab, Card, Menu } from 'semantic-ui-react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useAtom } from 'jotai';
 
@@ -151,79 +151,96 @@ const LandingPage = (props) => {
     sections,
   ]);
 
+  const panes = sections
+    .filter((section) => !section.hidden)
+    .map((section, index) => {
+      const tabIndex = index + 1;
+
+      return {
+        id: section,
+        menuItem: {
+          children: () => {
+            return (
+              <React.Fragment key={`tab-${tabIndex}`}>
+                <Menu.Item
+                  active={activeSection === section.facetField}
+                  onClick={() => setActiveSection(section.facetField)}
+                >
+                  {section.title}
+                </Menu.Item>
+              </React.Fragment>
+            );
+          },
+        },
+        render: () => {
+          return (
+            <Tab.Pane>
+              <div className="landing-page-cards">
+                <Card.Group itemsPerRow={5}>
+                  {sortedTiles(tiles, activeSectionConfig, appConfig).map(
+                    (topic, index) => {
+                      const onClickHandler = () => {
+                        setFilter(
+                          activeSection,
+                          topic.value,
+                          activeSectionConfig.filterType || 'any',
+                        );
+
+                        // apply configured default values
+                        appConfig.facets
+                          .filter((f) => f.field !== activeSection && f.default)
+                          .forEach((facet) => {
+                            facet.default.values.forEach((value) =>
+                              setFilter(
+                                facet.field,
+                                value,
+                                facet.default.type || 'any',
+                              ),
+                            );
+                          });
+                        setSort(sortField, sortDirection);
+                        setShowFacets(true);
+                      };
+
+                      return (
+                        <Card onClick={onClickHandler} key={index}>
+                          <Card.Content>
+                            <Card.Header>
+                              {icon ? (
+                                <Icon {...icon} type={topic.value} />
+                              ) : (
+                                ''
+                              )}
+                              <Term term={topic.value} field={activeSection} />
+                            </Card.Header>
+                          </Card.Content>
+                          <Card.Content extra>
+                            <span className="count">
+                              {topic.count}{' '}
+                              {topic.count === 1 ? 'item' : 'items'}
+                            </span>
+                          </Card.Content>
+                        </Card>
+                      );
+                    },
+                  )}
+                </Card.Group>
+              </div>
+            </Tab.Pane>
+          );
+        },
+      };
+    });
+
   return (
     <div className="landing-page-container">
       <div className="landing-page">
         <h4 className="browse-by">Browse by</h4>
-
-        <div className="filters">
-          {sections
-            .filter((section) => !section.hidden)
-            .map((section) => {
-              return (
-                <Button
-                  key={section.facetField}
-                  toggle
-                  active={activeSection === section.facetField}
-                  className="ui button"
-                  onClick={() => setActiveSection(section.facetField)}
-                >
-                  {section.title}
-                </Button>
-              );
-            })}
-        </div>
-        <div className="landing-page-cards">
-          <div className="ui cards">
-            {sortedTiles(tiles, activeSectionConfig, appConfig).map((topic) => {
-              const onClickHandler = () => {
-                setFilter(
-                  activeSection,
-                  topic.value,
-                  activeSectionConfig.filterType || 'any',
-                );
-
-                // apply configured default values
-                appConfig.facets
-                  .filter((f) => f.field !== activeSection && f.default)
-                  .forEach((facet) => {
-                    facet.default.values.forEach((value) =>
-                      setFilter(
-                        facet.field,
-                        value,
-                        facet.default.type || 'any',
-                      ),
-                    );
-                  });
-                setSort(sortField, sortDirection);
-                setShowFacets(true);
-              };
-
-              return (
-                <div
-                  key={topic.value}
-                  tabIndex="-1"
-                  role="button"
-                  onKeyDown={onClickHandler}
-                  className="ui card"
-                  onClick={onClickHandler}
-                >
-                  <div className="content">
-                    <div className="header">
-                      {icon ? <Icon {...icon} type={topic.value} /> : ''}
-                      <Term term={topic.value} field={activeSection} />
-                    </div>
-                  </div>
-                  <div className="extra content">
-                    <span className="count">
-                      {topic.count} {topic.count === 1 ? 'item' : 'items'}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
+        <Tab
+          className="search-tab"
+          menu={{ secondary: true, pointing: true }}
+          panes={panes}
+        />
         {hasOverflow ? (
           <div className="info">
             <p>Only first {maxPerSection} items are displayed.</p>
