@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from 'semantic-ui-react';
 import { runRequest, firstWords } from '@eeacms/search';
 
-function buildQuery(title, docid) {
+function buildQuery(title, docid, index_name) {
   const body = {
     // _source: {
     //   include: ['label', 'about', ],
@@ -32,18 +32,19 @@ function buildQuery(title, docid) {
         ],
       },
     },
+    ...(index_name ? { index: index_name } : {}),
   };
   return body;
 }
 
 const MoreLikeThis = (props) => {
   const { docid, title, appConfig } = props;
-
   const [similarDocs, setSimilarDocs] = React.useState();
 
   React.useEffect(() => {
     async function getSimilarDocs(docid, title, appConfig) {
-      const query_body = buildQuery(title, docid);
+      const { index_name } = appConfig;
+      const query_body = buildQuery(title, docid, index_name);
       const resp = await runRequest(query_body, appConfig);
       setSimilarDocs(resp.body.hits.hits);
     }
