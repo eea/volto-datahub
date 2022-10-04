@@ -114,7 +114,7 @@ function ItemView(props) {
 
         <MetadataSection item={item} appConfig={appConfig} docid={docid} />
 
-        <MoreLikeThis docid={docid} title={title.raw} appConfig={appConfig} />
+        <MoreLikeThis docid={docid} title={title?.raw} appConfig={appConfig} />
       </div>
 
       {/* <div className="info-wrapper">
