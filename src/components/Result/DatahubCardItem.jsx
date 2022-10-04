@@ -14,13 +14,11 @@ const DatahubCardItem = (props) => {
   //   metaType = 'Others';
   // }
 
-  const [resultId] = (result.href || '').split('/').reverse();
-
   const item = {
     title: (
       <Link
         to={{
-          pathname: `/en/datahub/datahubitem-view/${resultId}`,
+          pathname: result.href,
           state: {
             fromPathname: window.location.pathname,
             fromSearch: window.location.search,

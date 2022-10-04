@@ -1,6 +1,7 @@
 import installDatahub from './config';
 import DatahubCardItem from './components/Result/DatahubCardItem';
 import DatahubItemView from './components/ItemView/ItemView';
+import { DatahubResultModel } from './config/models';
 
 function tweakForNLPService(body, config) {
   if (!config.enableNLP) {
@@ -20,6 +21,7 @@ const applyConfig = (config) => {
   } = config.settings.searchlib;
 
   resolve.DatahubCardItem = { component: DatahubCardItem };
+  resolve.DatahubResultModel = DatahubResultModel;
 
   // Tweak the searchlib config to use the middleware instead of the index
   datahub.elastic_index = '_es/datahub';
@@ -29,6 +31,7 @@ const applyConfig = (config) => {
   datahub.requestBodyModifiers.push(tweakForNLPService);
   datahub.indexBaseUrl = 'https://galliwasp.eea.europa.eu';
   // datahub.resultViews[0].factories.item = "DatahubListingViewItem"
+  datahub.resultItemModel.factory = 'DatahubResultModel';
 
   config.settings.nonContentRoutes.push(/datahubitem-view\/(.*)/); // \/(.*)\/
   config.addonRoutes = [
