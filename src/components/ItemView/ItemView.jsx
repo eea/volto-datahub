@@ -21,7 +21,7 @@ import {
   MetadataSection,
   Datasets,
 } from '@eeacms/volto-datahub/components/ItemView';
-import bannerBG from './banner.svg';
+// import bannerBG from './banner.svg';
 
 const appName = 'datahub';
 
@@ -33,7 +33,12 @@ function ItemView(props) {
   const result = useResult(null, docid);
   const item = result ? result._result : null;
   const { title, description, raw_value } = item || {}; // readingTime
-  const { changeDate } = raw_value?.raw || {};
+  const { changeDate, resourceIdentifier } = raw_value?.raw || {};
+
+  const prodID = (resourceIdentifier || []).filter((p) => {
+    return p.code.includes('DAT');
+  })[0]?.code;
+
   const rawTitle = title?.raw || '';
 
   React.useEffect(() => {
@@ -66,48 +71,46 @@ function ItemView(props) {
     <div className="dataset-view">
       <Portal node={document.getElementById('page-header')}>
         <div className="dataset">
-          <Banner image_url={bannerBG} image>
+          <Banner>
             <Banner.Content>
-              <Banner.Title>Datahub</Banner.Title>
+              <Banner.Subtitle>
+                <Link
+                  to={
+                    location?.state
+                      ? { pathname: fromPathname, search: fromSearch }
+                      : {
+                          pathname: '/en/datahub/',
+                        }
+                  }
+                >
+                  <Icon className="arrow left" />
+                  Datahub overview
+                </Link>
+              </Banner.Subtitle>
+              <Banner.Title>{title?.raw}</Banner.Title>
+              <Banner.Metadata>
+                <Banner.MetadataField label="Prod-ID" value={prodID} />
+                <Banner.MetadataField
+                  label="Published"
+                  type="date"
+                  value={<DateTime format="DATE_MED" value={result.issued} />}
+                />
+                <Banner.MetadataField
+                  label="Last modified"
+                  type="date"
+                  value={<DateTime format="DATE_MED" value={changeDate} />}
+                />
+                {/* <Banner.MetadataField
+                  label="Reading time"
+                  value={readingTime?.raw}
+                /> */}
+              </Banner.Metadata>
             </Banner.Content>
           </Banner>
         </div>
       </Portal>
 
       <div className="dataset-container">
-        <Link
-          className="search-link"
-          to={
-            location?.state
-              ? { pathname: fromPathname, search: fromSearch }
-              : {
-                  pathname: '/en/datahub/',
-                }
-          }
-        >
-          <Icon className="ri-arrow-go-back-line" />
-          Back to search
-        </Link>
-
-        <div className="dataset-header">
-          <h1>{title?.raw}</h1>
-          <div className="dataset-header-bottom">
-            <span className="header-data">Prod-ID: -</span>
-            {/* <span className="header-data">
-              Created: <DateTime format="DATE_MED" value={issued?.raw} />
-            </span> */}
-            <span className="header-data">
-              Published: <DateTime format="DATE_MED" value={result.issued} />
-            </span>
-            <span className="header-data">
-              Last modified: <DateTime format="DATE_MED" value={changeDate} />
-            </span>
-            {/*<span className="header-data">
-                Reading time: {readingTime?.raw}
-              </span>*/}
-          </div>
-        </div>
-
         <Callout>{description?.raw}</Callout>
 
         <Datasets item={item} appConfig={appConfig} />
