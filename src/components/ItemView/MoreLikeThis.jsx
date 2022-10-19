@@ -46,7 +46,7 @@ const MoreLikeThis = (props) => {
       const { index_name } = appConfig;
       const query_body = buildQuery(title, docid, index_name);
       const resp = await runRequest(query_body, appConfig);
-      setSimilarDocs(resp.body.hits.hits);
+      setSimilarDocs(resp.body?.hits?.hits);
     }
     getSimilarDocs(docid, title, appConfig);
   }, [appConfig, docid, title]);

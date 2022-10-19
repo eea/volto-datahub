@@ -242,7 +242,7 @@ const LandingPage = (props) => {
           panes={panes}
         />
         {hasOverflow ? (
-          <div className="info">
+          <div className="tab-info">
             <p>Only first {maxPerSection} items are displayed.</p>
           </div>
         ) : null}
