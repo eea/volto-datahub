@@ -15,35 +15,13 @@
 [![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-addon-template-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-addon-template-develop)
 
 
-[Volto](https://github.com/plone/volto) add-on
+EEA DataHub search [Volto](https://github.com/plone/volto) add-on
 
-## Features
+## Demo
 
-Demo GIF
+- https://demo-www.eea.europa.eu/en/datahub
 
 ## Getting started
-
-### Try volto-addon-template with Docker
-
-1. Get the latest Docker images
-
-   ```
-   docker pull plone
-   docker pull plone/volto
-   ```
-
-1. Start Plone backend
-   ```
-   docker run -d --name plone -p 8080:8080 -e SITE=Plone -e PROFILES="profile-plone.restapi:blocks" plone
-   ```
-
-1. Start Volto frontend
-
-   ```
-   docker run -it --rm -p 3000:3000 --link plone -e ADDONS="@eeacms/volto-addon-template" plone/volto
-   ```
-
-1. Go to http://localhost:3000
 
 ### Add volto-addon-template to your Volto project
 
@@ -59,7 +37,7 @@ Demo GIF
    ],
 
    "dependencies": {
-       "@eeacms/volto-addon-template": "^1.0.0"
+       "@eeacms/volto-addon-template": "*"
    }
    ```
 
