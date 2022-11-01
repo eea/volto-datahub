@@ -3,7 +3,7 @@ import React from 'react';
 import { DateTime, StringList } from '@eeacms/search';
 import { ResultContext } from '@eeacms/search';
 import { Link } from 'react-router-dom';
-import { UniversalItem } from '@eeacms/volto-listing-block';
+import { UniversalCard } from '@eeacms/volto-listing-block';
 
 const DatahubCardItem = (props) => {
   const { result } = props;
@@ -57,7 +57,7 @@ const DatahubCardItem = (props) => {
     '@type': 'searchItem',
   };
 
-  return <UniversalItem item={item} itemModel={itemModel} />;
+  return <UniversalCard item={item} itemModel={itemModel} />;
 };
 
 //  <div
