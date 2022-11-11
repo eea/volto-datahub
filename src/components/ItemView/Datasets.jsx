@@ -43,7 +43,12 @@ const DatasetList = (props) => {
                   <List.Content>
                     <div className="dataset-item">
                       <Icon className="download" />
-                      <a href={item.url} className="item-link">
+                      <a
+                        href={item.url}
+                        className="item-link"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         <span>{item.name}</span>
                       </a>
                     </div>
@@ -64,11 +69,21 @@ const DatasetList = (props) => {
                     <div className="dataset-item">
                       <Icon className="download" />
                       {item.name ? (
-                        <a href={item.url} className="item-link">
+                        <a
+                          href={item.url}
+                          className="item-link"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
                           {item.name}
                         </a>
                       ) : (
-                        <a href={item.url} className="item-link">
+                        <a
+                          href={item.url}
+                          className="item-link"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
                           Download link
                         </a>
                       )}
@@ -84,7 +99,12 @@ const DatasetList = (props) => {
                   <List.Content>
                     <div className="dataset-item">
                       <Icon className="download" />
-                      <a href={item.url} className="item-link">
+                      <a
+                        href={item.url}
+                        className="item-link"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         WebDAV: {item.name || item.function}
                       </a>
                     </div>
@@ -99,7 +119,12 @@ const DatasetList = (props) => {
                   <List.Content>
                     <div className="dataset-item">
                       <Icon className="download" />
-                      <a href={item.url} className="item-link">
+                      <a
+                        href={item.url}
+                        className="item-link"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         WebDAV: {item.name || item.function}
                       </a>
                     </div>
