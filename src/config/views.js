@@ -26,9 +26,9 @@ export default {
           sortOn: 'alpha',
         },
         {
-          id: 'rod',
-          title: 'Reporting obligations',
-          facetField: 'rod',
+          id: 'instrument',
+          title: 'Legal instruments',
+          facetField: 'instrument',
           sortOn: 'alpha',
         },
         {
