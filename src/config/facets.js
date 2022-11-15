@@ -16,6 +16,14 @@ const facets = [
     showAllOptions: true, // show all options (even if 0) in modal facet
   }),
   multiTermFacet({
+    field: 'instrument',
+    isFilterable: true,
+    isMulti: true,
+    label: 'Legal instruments',
+    show: 10000,
+    showAllOptions: true, // show all options (even if 0) in modal facet
+  }),
+  multiTermFacet({
     field: 'topic',
     isFilterable: true,
     isMulti: true,
