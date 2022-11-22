@@ -8,18 +8,18 @@ import { dateRangeFacet } from '@eeacms/search';
 
 const facets = [
   multiTermFacet({
-    field: 'rod',
-    isFilterable: true,
-    isMulti: true,
-    label: 'Reporting obligations',
-    show: 10000,
-    showAllOptions: true, // show all options (even if 0) in modal facet
-  }),
-  multiTermFacet({
     field: 'instrument',
     isFilterable: true,
     isMulti: true,
     label: 'Legal instruments',
+    show: 10000,
+    showAllOptions: true, // show all options (even if 0) in modal facet
+  }),
+  multiTermFacet({
+    field: 'rod',
+    isFilterable: true,
+    isMulti: true,
+    label: 'Reporting obligations',
     show: 10000,
     showAllOptions: true, // show all options (even if 0) in modal facet
   }),
