@@ -33,6 +33,14 @@ const facets = [
     alwaysVisible: true,
   }),
   multiTermFacet({
+    field: 'dataset_formats',
+    isFilterable: true,
+    isMulti: true,
+    label: 'Available formats',
+    show: 10000,
+    showAllOptions: true, // show all options (even if 0) in modal facet
+  }),
+  multiTermFacet({
     field: 'gemet',
     isFilterable: true,
     isMulti: true,
