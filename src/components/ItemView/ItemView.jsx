@@ -39,7 +39,7 @@ function ItemView(props) {
     return p.code.includes('DAT');
   })[0]?.code;
 
-  const rawTitle = title?.raw || '';
+  const rawTitle = item && item._meta.found ? title?.raw || '' : docid;
 
   React.useEffect(() => {
     const handler = async () => {
@@ -67,7 +67,7 @@ function ItemView(props) {
     handler();
   }, [item, dispatch, docid, rawTitle]);
 
-  return item ? (
+  return item && item._meta.found ? (
     <div className="dataset-view">
       <Portal node={document.getElementById('page-header')}>
         <div className="dataset">
@@ -127,7 +127,9 @@ function ItemView(props) {
         </div>
       </div> */}
     </div>
-  ) : null;
+  ) : (
+    <div>Data series not found</div>
+  );
 }
 
 function DatahubItemView(props) {
