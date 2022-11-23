@@ -128,7 +128,9 @@ function ItemView(props) {
       </div> */}
     </div>
   ) : (
-    <div>Data series not found</div>
+    <>
+      <h1>Data series not found...</h1>
+    </>
   );
 }
 
