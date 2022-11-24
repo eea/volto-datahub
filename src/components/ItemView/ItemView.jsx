@@ -127,10 +127,12 @@ function ItemView(props) {
         </div>
       </div> */}
     </div>
-  ) : (
+  ) : item ? (
     <>
       <h1>Data series not found...</h1>
     </>
+  ) : (
+    <></>
   );
 }
 
