@@ -2,6 +2,7 @@ import installDatahub from './config';
 import DatahubCardItem from './components/Result/DatahubCardItem';
 import DatahubItemView from './components/ItemView/ItemView';
 import { DatahubResultModel } from './config/models';
+import { datahub_results } from './store';
 
 function tweakForNLPService(body, config) {
   if (!config.enableNLP) {
@@ -42,6 +43,7 @@ const applyConfig = (config) => {
 
     ...(config.addonRoutes || []),
   ];
+  config.addonReducers.datahub_results = datahub_results;
   return config;
 };
 
