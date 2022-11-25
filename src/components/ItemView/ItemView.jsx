@@ -56,7 +56,7 @@ function ItemView(props) {
     return p.code.includes('DAT');
   })[0]?.code;
 
-  const rawTitle = title?.raw || '';
+  const rawTitle = item && item._meta.found ? title?.raw || '' : docid;
 
   React.useEffect(() => {
     const handler = async () => {
@@ -87,7 +87,7 @@ function ItemView(props) {
   const [isClient, setIsClient] = React.useState();
   React.useEffect(() => setIsClient(true), []);
 
-  return item ? (
+  return item && item._meta.found ? (
     <div className="dataset-view">
       <Helmet title={title?.raw} />
       {isClient && (
@@ -150,7 +150,13 @@ function ItemView(props) {
         </div>
       </div> */}
     </div>
-  ) : null;
+  ) : item ? (
+    <>
+      <h1>Data series not found...</h1>
+    </>
+  ) : (
+    <></>
+  );
 }
 
 function DatahubItemView(props) {
