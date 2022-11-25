@@ -7,13 +7,12 @@ import { UniversalCard } from '@eeacms/volto-listing-block';
 
 const DatahubCardItem = (props) => {
   const { result } = props;
-  const { topic } = result._result || [];
+  const { topic, dataset_formats } = result._result || [];
 
   // let metaType = result.metaTypes || '';
   // if (metaType.length === 0) {
   //   metaType = 'Others';
   // }
-
   const item = {
     title: (
       <Link
@@ -43,10 +42,12 @@ const DatahubCardItem = (props) => {
             <StringList value={topic.raw} />
           </div>
         ) : null}
-        <div className="result-info">
-          <span className="result-info-title">Available formats: </span>
-          [Icons]
-        </div>
+        {dataset_formats ? (
+          <div className="result-info">
+            <span className="result-info-title">Available formats: </span>
+            <StringList value={dataset_formats.raw} />
+          </div>
+        ) : null}
       </div>
     ),
   };

@@ -2,6 +2,28 @@ import React from 'react';
 import { Icon, List, Accordion } from 'semantic-ui-react';
 
 import servicesSVG from './icons/services.svg';
+import lockSVG from 'remixicon/icons/System/lock-line.svg';
+
+const is_internal_url = (url) => {
+  let internal = false;
+  url.split('/').forEach((part) => {
+    if (part.split('_')[6] === 'i') {
+      internal = true;
+    }
+  });
+  return internal;
+};
+
+const is_internal = (dataset) => {
+  let internal = false;
+  const links = dataset?.link || [];
+  links.forEach((link) => {
+    if (is_internal_url(link?.url)) {
+      internal = true;
+    }
+  });
+  return internal;
+};
 
 const SVGIcon = ({ name, size, color, className, title, onClick }) => {
   return (
@@ -51,6 +73,9 @@ const DatasetList = (props) => {
                       >
                         <span>{item.name}</span>
                       </a>
+                      {is_internal_url(item.url) && (
+                        <SVGIcon name={lockSVG} size="18" />
+                      )}
                     </div>
                   </List.Content>
                   {item.description && (
@@ -87,6 +112,9 @@ const DatasetList = (props) => {
                           Download link
                         </a>
                       )}
+                      {is_internal_url(item.url) && (
+                        <SVGIcon name={lockSVG} size="18" />
+                      )}
                     </div>
                   </List.Content>
                 </List.Item>
@@ -107,6 +135,9 @@ const DatasetList = (props) => {
                       >
                         WebDAV: {item.name || item.function}
                       </a>
+                      {is_internal_url(item.url) && (
+                        <SVGIcon name={lockSVG} size="18" />
+                      )}
                     </div>
                   </List.Content>
                 </List.Item>
@@ -127,6 +158,9 @@ const DatasetList = (props) => {
                       >
                         WebDAV: {item.name || item.function}
                       </a>
+                      {is_internal_url(item.url) && (
+                        <SVGIcon name={lockSVG} size="18" />
+                      )}
                     </div>
                   </List.Content>
                 </List.Item>
@@ -144,13 +178,18 @@ const DatasetList = (props) => {
               return (
                 <List.Item key={i}>
                   <List.Content>
-                    <SVGIcon name={servicesSVG} size="18" />
-                    {/* {(item.name || item.description) && (
-                      <span className="item-protocol">{item.protocol}:</span>
-                    )} */}
-                    <a className="item-link" href={item.url}>
-                      {item.protocol} {item.name || item.description}
-                    </a>
+                    <div>
+                      <SVGIcon name={servicesSVG} size="18" />
+                      {/* {(item.name || item.description) && (
+                        <span className="item-protocol">{item.protocol}:</span>
+                      )} */}
+                      <a className="item-link" href={item.url}>
+                        {item.protocol} {item.name || item.description}
+                      </a>
+                      {is_internal_url(item.url) && (
+                        <SVGIcon name={lockSVG} size="18" />
+                      )}
+                    </div>
                   </List.Content>
                 </List.Item>
               );
@@ -160,13 +199,18 @@ const DatasetList = (props) => {
               return (
                 <List.Item key={i}>
                   <List.Content>
-                    <SVGIcon name={servicesSVG} size="18" />
-                    {/* {(item.name || item.description) && (
-                        <span className="item-protocol">{item.protocol}:</span>
-                      )} */}
-                    <a className="item-link" href={item.url}>
-                      {item.protocol} {item.name || item.description}
-                    </a>
+                    <div>
+                      <SVGIcon name={servicesSVG} size="18" />
+                      {/* {(item.name || item.description) && (
+                          <span className="item-protocol">{item.protocol}:</span>
+                        )} */}
+                      <a className="item-link" href={item.url}>
+                        {item.protocol} {item.name || item.description}
+                      </a>
+                      {is_internal_url(item.url) && (
+                        <SVGIcon name={lockSVG} size="18" />
+                      )}
+                    </div>
                   </List.Content>
                 </List.Item>
               );
@@ -193,6 +237,9 @@ const DatasetList = (props) => {
                       >
                         <span>{item.name || item.url}</span>
                       </a>
+                      {is_internal_url(item.url) && (
+                        <SVGIcon name={lockSVG} size="18" />
+                      )}
                     </div>
                   </List.Content>
                   {item.description && (
@@ -259,6 +306,7 @@ const Datasets = (props) => {
                       );
                     })}
                   </span>
+                  {is_internal(dataset) && <SVGIcon name={lockSVG} size="18" />}
                 </span>
                 <Icon className="ri-arrow-down-s-line" />
               </Accordion.Title>
