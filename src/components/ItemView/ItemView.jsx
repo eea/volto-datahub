@@ -1,36 +1,53 @@
 import React from 'react';
 import { Portal } from 'react-portal';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { Container, Icon } from 'semantic-ui-react';
 import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
-import {
-  useResult,
-  AppConfigContext,
-  SearchContext,
-  rebind,
-  applyConfigurationSchema,
-  DateTime,
-} from '@eeacms/search';
-import { SearchProvider, WithSearch } from '@elastic/react-search-ui';
+import { rebind, applyConfigurationSchema, DateTime } from '@eeacms/search';
 import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
 import {
   MoreLikeThis,
   MetadataSection,
   Datasets,
 } from '@eeacms/volto-datahub/components/ItemView';
-// import bannerBG from './banner.svg';
+
+import { asyncConnect, Helmet } from '@plone/volto/helpers';
+import { fetchResult } from '@eeacms/search/lib/hocs/useResult';
+import { setDatahubResult } from '@eeacms/volto-datahub/store';
 
 const appName = 'datahub';
 
 function ItemView(props) {
-  const { docid, location, appConfig } = props;
+  const { docid, location } = props;
   const { fromPathname, fromSearch } = location?.state || {};
   const dispatch = useDispatch();
   // const content = useSelector((state) => state.content.data);
-  const result = useResult(null, docid);
+  let result = useSelector((state) => state.datahub_results?.[docid]);
+  const registry = config.settings.searchlib;
+  const appConfig = React.useMemo(
+    () => applyConfigurationSchema(rebind(registry.searchui[appName])),
+    [registry.searchui],
+  );
+
+  React.useEffect(() => {
+    let ignore = false;
+
+    const doIt = async () => {
+      const result = await fetchResult(docid, appConfig, registry);
+      dispatch(setDatahubResult(docid, result));
+    };
+
+    if (!ignore && !result) {
+      doIt();
+    }
+    return () => {
+      ignore = true;
+    };
+  }, [result, docid, appConfig, registry, dispatch]);
+
   const item = result ? result._result : null;
   const { title, description, raw_value } = item || {}; // readingTime
   const { changeDate, resourceIdentifier } = raw_value?.raw || {};
@@ -67,48 +84,54 @@ function ItemView(props) {
     handler();
   }, [item, dispatch, docid, rawTitle]);
 
+  const [isClient, setIsClient] = React.useState();
+  React.useEffect(() => setIsClient(true), []);
+
   return item ? (
     <div className="dataset-view">
-      <Portal node={document.getElementById('page-header')}>
-        <div className="dataset">
-          <Banner>
-            <Banner.Content>
-              <Banner.Subtitle>
-                <Link
-                  to={
-                    location?.state
-                      ? { pathname: fromPathname, search: fromSearch }
-                      : {
-                          pathname: '/en/datahub/',
-                        }
-                  }
-                >
-                  <Icon className="arrow left" />
-                  Datahub overview
-                </Link>
-              </Banner.Subtitle>
-              <Banner.Title>{title?.raw}</Banner.Title>
-              <Banner.Metadata>
-                <Banner.MetadataField label="Prod-ID" value={prodID} />
-                <Banner.MetadataField
-                  label="Published"
-                  type="date"
-                  value={<DateTime format="DATE_MED" value={result.issued} />}
-                />
-                <Banner.MetadataField
-                  label="Last modified"
-                  type="date"
-                  value={<DateTime format="DATE_MED" value={changeDate} />}
-                />
-                {/* <Banner.MetadataField
+      <Helmet title={title?.raw} />
+      {isClient && (
+        <Portal node={document.getElementById('page-header')}>
+          <div className="dataset">
+            <Banner>
+              <Banner.Content>
+                <Banner.Subtitle>
+                  <Link
+                    to={
+                      location?.state
+                        ? { pathname: fromPathname, search: fromSearch }
+                        : {
+                            pathname: '/en/datahub/',
+                          }
+                    }
+                  >
+                    <Icon className="arrow left" />
+                    Datahub overview
+                  </Link>
+                </Banner.Subtitle>
+                <Banner.Title>{title?.raw}</Banner.Title>
+                <Banner.Metadata>
+                  <Banner.MetadataField label="Prod-ID" value={prodID} />
+                  <Banner.MetadataField
+                    label="Published"
+                    type="date"
+                    value={<DateTime format="DATE_MED" value={result.issued} />}
+                  />
+                  <Banner.MetadataField
+                    label="Last modified"
+                    type="date"
+                    value={<DateTime format="DATE_MED" value={changeDate} />}
+                  />
+                  {/* <Banner.MetadataField
                   label="Reading time"
                   value={readingTime?.raw}
                 /> */}
-              </Banner.Metadata>
-            </Banner.Content>
-          </Banner>
-        </div>
-      </Portal>
+                </Banner.Metadata>
+              </Banner.Content>
+            </Banner>
+          </div>
+        </Portal>
+      )}
 
       <div className="dataset-container">
         <Callout>{description?.raw}</Callout>
@@ -136,16 +159,6 @@ function DatahubItemView(props) {
   React.useEffect(() => setIsClient(true), []);
 
   const docid = props.match?.params?.id;
-  const registry = config.settings.searchlib;
-
-  const appConfig = React.useMemo(
-    () => applyConfigurationSchema(rebind(registry.searchui[appName])),
-    [registry],
-  );
-  const appConfigContext = React.useMemo(() => ({ appConfig, registry }), [
-    appConfig,
-    registry,
-  ]);
 
   return (
     <div id="view">
@@ -153,28 +166,7 @@ function DatahubItemView(props) {
       {/* Body class if displayName in component is set */}
       <BodyClass className="view-datahub-item" />
       <Container className="view-wrapper">
-        <SearchProvider config={config}>
-          <WithSearch
-            mapContextToProps={(searchContext) => ({
-              ...searchContext,
-            })}
-          >
-            {(params) => {
-              // TODO: this needs to be optimized, it causes unmounts
-              return (
-                <AppConfigContext.Provider value={appConfigContext}>
-                  <SearchContext.Provider value={params}>
-                    <ItemView
-                      docid={docid}
-                      location={location}
-                      appConfig={appConfig}
-                    />
-                  </SearchContext.Provider>
-                </AppConfigContext.Provider>
-              );
-            }}
-          </WithSearch>
-        </SearchProvider>
+        <ItemView docid={docid} location={location} />
       </Container>
       {isClient && (
         <Portal node={document.getElementById('toolbar')}>
@@ -184,5 +176,23 @@ function DatahubItemView(props) {
     </div>
   );
 }
-
-export default DatahubItemView;
+export default asyncConnect([
+  {
+    key: 'datahubItem',
+    promise: function datahubItem({
+      location,
+      store,
+      match: {
+        params: { id },
+      },
+    }) {
+      const registry = config.settings.searchlib;
+      const appConfig = applyConfigurationSchema(
+        rebind(registry.searchui[appName]),
+      );
+      return fetchResult(id, appConfig, registry).then((result) => {
+        store.dispatch(setDatahubResult(id, result));
+      });
+    },
+  },
+])(DatahubItemView);
