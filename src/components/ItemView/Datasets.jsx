@@ -183,7 +183,12 @@ const DatasetList = (props) => {
                       {/* {(item.name || item.description) && (
                         <span className="item-protocol">{item.protocol}:</span>
                       )} */}
-                      <a className="item-link" href={item.url}>
+                      <a
+                        className="item-link"
+                        href={item.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         {item.protocol} {item.name || item.description}
                       </a>
                       {is_internal_url(item.url) && (
@@ -204,7 +209,12 @@ const DatasetList = (props) => {
                       {/* {(item.name || item.description) && (
                           <span className="item-protocol">{item.protocol}:</span>
                         )} */}
-                      <a className="item-link" href={item.url}>
+                      <a
+                        className="item-link"
+                        href={item.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         {item.protocol} {item.name || item.description}
                       </a>
                       {is_internal_url(item.url) && (
@@ -305,7 +315,17 @@ const Datasets = (props) => {
                         </span>
                       );
                     })}
+                    {(dataset.linkProtocol || [])
+                      .filter((i) => i.includes('ESRI') || i.includes('OGC'))
+                      .map((item, i) => {
+                        return (
+                          <span className="format-label" key={i}>
+                            {item}
+                          </span>
+                        );
+                      })}
                   </span>
+
                   {is_internal(dataset) && <SVGIcon name={lockSVG} size="18" />}
                 </span>
                 <Icon className="ri-arrow-down-s-line" />
@@ -348,14 +368,14 @@ const Datasets = (props) => {
 
                   {dataset.resourceType[0] !== 'nonGeographicDataset' && (
                     <div className="dataset-pdf">
-                      <div className="pdf-btn">
+                      <div className="d-link">
                         <Icon className="file pdf" />
                         <a
                           target="_blank"
                           rel="noreferrer"
                           href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
                         >
-                          SDI Metadata Factsheet
+                          Metadata Factsheet
                         </a>
                       </div>
                     </div>
