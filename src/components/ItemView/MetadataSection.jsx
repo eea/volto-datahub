@@ -64,14 +64,25 @@ const MetadataSection = (props) => {
         </div>
       )}
 
-      <div className="pdf-btn">
+      <div className="d-link">
         <Icon className="file pdf" />
         <a
           target="_blank"
           rel="noreferrer"
           href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${docid}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
         >
-          SDI Metadata Factsheet
+          Metadata Factsheet
+        </a>
+      </div>
+
+      <div className="d-link">
+        <i class="ri-external-link-line"></i>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href={`${appConfig.indexBaseUrl}/catalogue/srv/eng/catalog.search#/metadata/${docid}`}
+        >
+          Metadata catalogue
         </a>
       </div>
     </div>

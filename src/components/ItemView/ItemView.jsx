@@ -20,6 +20,17 @@ import { setDatahubResult } from '@eeacms/volto-datahub/store';
 
 const appName = 'datahub';
 
+function IsomorphicPortal({ children }) {
+  const [isClient, setIsClient] = React.useState();
+  React.useEffect(() => setIsClient(true), []);
+
+  return isClient ? (
+    <Portal node={document.getElementById('page-header')}>{children}</Portal>
+  ) : (
+    children
+  );
+}
+
 function ItemView(props) {
   const { docid, location } = props;
   const { fromPathname, fromSearch } = location?.state || {};
@@ -84,54 +95,49 @@ function ItemView(props) {
     handler();
   }, [item, dispatch, docid, rawTitle]);
 
-  const [isClient, setIsClient] = React.useState();
-  React.useEffect(() => setIsClient(true), []);
-
   return item && item._meta.found ? (
     <div className="dataset-view">
       <Helmet title={title?.raw} />
-      {isClient && (
-        <Portal node={document.getElementById('page-header')}>
-          <div className="dataset">
-            <Banner>
-              <Banner.Content>
-                <Banner.Subtitle>
-                  <Link
-                    to={
-                      location?.state
-                        ? { pathname: fromPathname, search: fromSearch }
-                        : {
-                            pathname: '/en/datahub/',
-                          }
-                    }
-                  >
-                    <Icon className="arrow left" />
-                    Datahub overview
-                  </Link>
-                </Banner.Subtitle>
-                <Banner.Title>{title?.raw}</Banner.Title>
-                <Banner.Metadata>
-                  <Banner.MetadataField label="Prod-ID" value={prodID} />
-                  <Banner.MetadataField
-                    label="Published"
-                    type="date"
-                    value={<DateTime format="DATE_MED" value={result.issued} />}
-                  />
-                  <Banner.MetadataField
-                    label="Last modified"
-                    type="date"
-                    value={<DateTime format="DATE_MED" value={changeDate} />}
-                  />
-                  {/* <Banner.MetadataField
+      <IsomorphicPortal>
+        <div className="dataset">
+          <Banner>
+            <Banner.Content>
+              <Banner.Subtitle>
+                <Link
+                  to={
+                    location?.state
+                      ? { pathname: fromPathname, search: fromSearch }
+                      : {
+                          pathname: '/en/datahub/',
+                        }
+                  }
+                >
+                  <Icon className="arrow left" />
+                  Datahub overview
+                </Link>
+              </Banner.Subtitle>
+              <Banner.Title>{title?.raw}</Banner.Title>
+              <Banner.Metadata>
+                <Banner.MetadataField label="Prod-ID" value={prodID} />
+                <Banner.MetadataField
+                  label="Published"
+                  type="date"
+                  value={<DateTime format="DATE_MED" value={result.issued} />}
+                />
+                <Banner.MetadataField
+                  label="Last modified"
+                  type="date"
+                  value={<DateTime format="DATE_MED" value={changeDate} />}
+                />
+                {/* <Banner.MetadataField
                   label="Reading time"
                   value={readingTime?.raw}
                 /> */}
-                </Banner.Metadata>
-              </Banner.Content>
-            </Banner>
-          </div>
-        </Portal>
-      )}
+              </Banner.Metadata>
+            </Banner.Content>
+          </Banner>
+        </div>
+      </IsomorphicPortal>
 
       <div className="dataset-container">
         <Callout>{description?.raw}</Callout>

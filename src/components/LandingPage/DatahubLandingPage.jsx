@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tab, Card, Menu } from 'semantic-ui-react';
+import { Tab, Card, Menu, Divider } from 'semantic-ui-react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useAtom } from 'jotai';
 
@@ -247,7 +247,7 @@ const LandingPage = (props) => {
           </div>
         ) : null}
         {children}
-        <hr></hr>
+        <Divider />
         <div className="landing-page-cards">
           <div className="ui cards">
             <div
