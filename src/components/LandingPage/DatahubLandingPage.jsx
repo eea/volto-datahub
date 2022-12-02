@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tab, Card, Menu, Divider } from 'semantic-ui-react';
+import { Tab, Menu, Divider, List } from 'semantic-ui-react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useAtom } from 'jotai';
 
@@ -52,6 +52,7 @@ const sortedTiles = (tiles, sectionConfig, appConfig) => {
 
 const LandingPage = (props) => {
   const { appConfig, children, setFilter, setSort } = props;
+  const { onlyLandingPage = false } = appConfig;
   // const facetsConfig = appConfig.facets;
 
   const {
@@ -176,7 +177,7 @@ const LandingPage = (props) => {
           return (
             <Tab.Pane>
               <div className="landing-page-cards">
-                <Card.Group itemsPerRow={5}>
+                <List>
                   {sortedTiles(tiles, activeSectionConfig, appConfig).map(
                     (topic, index) => {
                       const onClickHandler = () => {
@@ -203,28 +204,20 @@ const LandingPage = (props) => {
                       };
 
                       return (
-                        <Card onClick={onClickHandler} key={index}>
-                          <Card.Content>
-                            <Card.Header>
-                              {icon ? (
-                                <Icon {...icon} type={topic.value} />
-                              ) : (
-                                ''
-                              )}
-                              <Term term={topic.value} field={activeSection} />
-                            </Card.Header>
-                          </Card.Content>
-                          <Card.Content extra>
+                        <List.Item onClick={onClickHandler} key={index}>
+                          <List.Content>
+                            {icon ? <Icon {...icon} type={topic.value} /> : ''}
+                            <Term term={topic.value} field={activeSection} />
                             <span className="count">
-                              {topic.count}{' '}
-                              {topic.count === 1 ? 'item' : 'items'}
+                              ({topic.count}{' '}
+                              {topic.count === 1 ? 'item' : 'items'})
                             </span>
-                          </Card.Content>
-                        </Card>
+                          </List.Content>
+                        </List.Item>
                       );
                     },
                   )}
-                </Card.Group>
+                </List>
               </div>
             </Tab.Pane>
           );
@@ -235,7 +228,7 @@ const LandingPage = (props) => {
   return (
     <div className="landing-page-container">
       <div className="landing-page">
-        <h4 className="browse-by">Browse by</h4>
+        {!onlyLandingPage && <h4 className="browse-by">Browse by</h4>}
         <Tab
           className="search-tab"
           menu={{ secondary: true, pointing: true }}

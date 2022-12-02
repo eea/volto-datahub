@@ -1,6 +1,5 @@
 import React from 'react';
 import { Icon, List, Accordion } from 'semantic-ui-react';
-
 import servicesSVG from './icons/services.svg';
 import lockSVG from 'remixicon/icons/System/lock-line.svg';
 
@@ -315,15 +314,30 @@ const Datasets = (props) => {
                         </span>
                       );
                     })}
-                    {(dataset.linkProtocol || [])
-                      .filter((i) => i.includes('ESRI') || i.includes('OGC'))
-                      .map((item, i) => {
-                        return (
-                          <span className="format-label" key={i}>
-                            {item}
+
+                    {Array.isArray(dataset.linkProtocol) ? (
+                      <>
+                        {dataset.linkProtocol
+                          .filter(
+                            (i) => i.includes('ESRI') || i.includes('OGC'),
+                          )
+                          .map((item, i) => {
+                            return (
+                              <span className="format-label" key={i}>
+                                {item}
+                              </span>
+                            );
+                          })}
+                      </>
+                    ) : (
+                      <>
+                        {['ESRI', 'OGC'].includes(dataset.linkProtocol) && (
+                          <span className="format-label">
+                            {dataset.linkProtocol}
                           </span>
-                        );
-                      })}
+                        )}
+                      </>
+                    )}
                   </span>
 
                   {is_internal(dataset) && <SVGIcon name={lockSVG} size="18" />}
