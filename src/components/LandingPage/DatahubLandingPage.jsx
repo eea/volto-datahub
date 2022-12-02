@@ -52,6 +52,7 @@ const sortedTiles = (tiles, sectionConfig, appConfig) => {
 
 const LandingPage = (props) => {
   const { appConfig, children, setFilter, setSort } = props;
+  const { onlyLandingPage = false } = appConfig;
   // const facetsConfig = appConfig.facets;
 
   const {
@@ -227,7 +228,7 @@ const LandingPage = (props) => {
   return (
     <div className="landing-page-container">
       <div className="landing-page">
-        <h4 className="browse-by">Browse by</h4>
+        {!onlyLandingPage && <h4 className="browse-by">Browse by</h4>}
         <Tab
           className="search-tab"
           menu={{ secondary: true, pointing: true }}
