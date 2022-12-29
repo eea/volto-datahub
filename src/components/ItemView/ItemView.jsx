@@ -32,11 +32,15 @@ function IsomorphicPortal({ children }) {
 }
 
 function ItemView(props) {
-  const { docid, location } = props;
+  const { docid, location, staticContext } = props;
   const { fromPathname, fromSearch } = location?.state || {};
   const dispatch = useDispatch();
   // const content = useSelector((state) => state.content.data);
   let result = useSelector((state) => state.datahub_results?.[docid]);
+  if (__SERVER__ && !result?._original?.found) {
+    staticContext.error_code = 404;
+    staticContext.error = 'NotFound';
+  }
   const registry = config.settings.searchlib;
   const appConfig = React.useMemo(
     () => applyConfigurationSchema(rebind(registry.searchui[appName])),
@@ -171,6 +175,7 @@ function DatahubItemView(props) {
   React.useEffect(() => setIsClient(true), []);
 
   const docid = props.match?.params?.id;
+  const { staticContext = {} } = props;
 
   return (
     <div id="view">
@@ -178,7 +183,11 @@ function DatahubItemView(props) {
       {/* Body class if displayName in component is set */}
       <BodyClass className="view-datahub-item" />
       <Container className="view-wrapper">
-        <ItemView docid={docid} location={location} />
+        <ItemView
+          docid={docid}
+          location={location}
+          staticContext={staticContext}
+        />
       </Container>
       {isClient && (
         <Portal node={document.getElementById('toolbar')}>
