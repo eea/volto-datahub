@@ -30,7 +30,7 @@ const applyConfig = (config) => {
   datahub.enableNLP = true;
   datahub.showPromptQueries = false;
   datahub.requestBodyModifiers.push(tweakForNLPService);
-  datahub.indexBaseUrl = 'https://galliwasp.eea.europa.eu';
+  datahub.indexBaseUrl = 'https://sdi.eea.europa.eu';
   // datahub.resultViews[0].factories.item = "DatahubListingViewItem"
   datahub.resultItemModel.factory = 'DatahubResultModel';
 
