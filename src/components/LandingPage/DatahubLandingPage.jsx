@@ -176,7 +176,7 @@ const LandingPage = (props) => {
         render: () => {
           return (
             <Tab.Pane>
-              <div className="landing-page-cards">
+              <div className={`landing-page-cards ${activeSection}`}>
                 <List>
                   {sortedTiles(tiles, activeSectionConfig, appConfig).map(
                     (topic, index) => {
