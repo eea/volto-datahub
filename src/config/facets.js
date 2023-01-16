@@ -11,9 +11,10 @@ const facets = [
     field: 'instrument',
     isFilterable: true,
     isMulti: true,
-    label: 'Legal instruments',
+    label: 'Legislation',
     show: 10000,
     showAllOptions: true, // show all options (even if 0) in modal facet
+    alwaysVisible: true,
   }),
   multiTermFacet({
     field: 'rod',
@@ -39,6 +40,7 @@ const facets = [
     label: 'Available formats',
     show: 10000,
     showAllOptions: true, // show all options (even if 0) in modal facet
+    alwaysVisible: true,
   }),
   multiTermFacet({
     field: 'gemet',
