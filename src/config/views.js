@@ -27,8 +27,14 @@ export default {
         },
         {
           id: 'instrument',
-          title: 'Legal instruments',
+          title: 'Legislation',
           facetField: 'instrument',
+          sortOn: 'alpha',
+        },
+        {
+          id: 'formats',
+          title: 'Formats',
+          facetField: 'dataset_formats',
           sortOn: 'alpha',
         },
         {
