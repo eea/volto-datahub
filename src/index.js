@@ -31,6 +31,7 @@ const applyConfig = (config) => {
   datahub.showPromptQueries = false;
   datahub.requestBodyModifiers.push(tweakForNLPService);
   datahub.indexBaseUrl = 'https://sdi.eea.europa.eu';
+  datahub.landingPageURL = '/en/datahub';
   // datahub.resultViews[0].factories.item = "DatahubListingViewItem"
   datahub.resultItemModel.factory = 'DatahubResultModel';
 
