@@ -8,10 +8,6 @@ import { useAtom } from 'jotai';
 // import { getFacetCounts } from '@eeacms/search/components/LandingPage/request';
 // import buildStateFacets from '@eeacms/search/lib/search/state/facets';
 // import { customOrder } from '@eeacms/search/lib/utils';
-// import {
-//   landingPageDataAtom,
-//   isRequestedAtom,
-// } from '@eeacms/search/components/LandingPage/state';
 // import { Icon, Term } from '@eeacms/search/components';
 
 import {
@@ -19,8 +15,8 @@ import {
   showFacetsAsideAtom,
   getFacetCounts,
   buildStateFacets,
-  landingPageDataAtom,
-  isRequestedAtom,
+  useLandingPageData,
+  useLandingPageRequest,
   Icon,
   Term,
 } from '@eeacms/search';
@@ -52,6 +48,7 @@ const sortedTiles = (tiles, sectionConfig, appConfig) => {
 
 const LandingPage = (props) => {
   const { appConfig, children, setFilter, setSort } = props;
+  const { appName } = appConfig;
   const { onlyLandingPage = false } = appConfig;
   // const facetsConfig = appConfig.facets;
 
@@ -69,8 +66,11 @@ const LandingPage = (props) => {
 
   const [, setShowFacets] = useAtom(showFacetsAsideAtom);
 
-  const [landingPageData, setLandingPageData] = useAtom(landingPageDataAtom);
-  const [isRequested, setIsRequested] = useAtom(isRequestedAtom);
+  const [landingPageData, setLandingPageData] = useLandingPageData(appName);
+  const [isRequested, setIsRequested] = useLandingPageRequest(appName);
+
+  // const [landingPageData, setLandingPageData] = useAtom(landingPageDataAtom);
+  // const [isRequested, setIsRequested] = useAtom(isRequestedAtom);
 
   const getTiles = (maxPerSection) => {
     let result = landingPageData?.[activeSection]?.[0]?.data || [];
