@@ -6,7 +6,7 @@ import { Container, Icon } from 'semantic-ui-react';
 import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
-import { rebind, applyConfigurationSchema, DateTime } from '@eeacms/search';
+import { rebind, applyConfigurationSchema } from '@eeacms/search';
 import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
 import {
   MoreLikeThis,
@@ -126,12 +126,12 @@ function ItemView(props) {
                 <Banner.MetadataField
                   label="Published"
                   type="date"
-                  value={<DateTime format="DATE_MED" value={result.issued} />}
+                  value={new Date(result.issued)}
                 />
                 <Banner.MetadataField
                   label="Last modified"
                   type="date"
-                  value={<DateTime format="DATE_MED" value={changeDate} />}
+                  value={new Date(changeDate)}
                 />
                 {/* <Banner.MetadataField
                   label="Reading time"
