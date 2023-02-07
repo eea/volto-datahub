@@ -76,7 +76,7 @@ const MetadataSection = (props) => {
       </div>
 
       <div className="d-link">
-        <i class="ri-external-link-line"></i>
+        <i className="ri-external-link-line"></i>
         <a
           target="_blank"
           rel="noreferrer"

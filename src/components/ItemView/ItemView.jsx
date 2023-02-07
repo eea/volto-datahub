@@ -145,9 +145,15 @@ function ItemView(props) {
 
       <div className="dataset-container">
         <Callout>{description?.raw}</Callout>
+      </div>
 
-        <Datasets item={item} appConfig={appConfig} />
+      <div className="dataset-container">
+        <h2>Datasets</h2>
+      </div>
 
+      <Datasets item={item} appConfig={appConfig} />
+
+      <div className="dataset-container">
         <MetadataSection item={item} appConfig={appConfig} docid={docid} />
 
         <MoreLikeThis docid={docid} title={title?.raw} appConfig={appConfig} />
