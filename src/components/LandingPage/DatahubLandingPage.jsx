@@ -242,27 +242,29 @@ const LandingPage = (props) => {
         {children}
         <Divider />
         <div className="landing-page-cards">
-          <div className="ui cards">
-            <div
-              key="all_series"
-              tabIndex="-1"
-              role="button"
-              onKeyDown={fixedOnClickHandler}
-              className="ui card"
-              onClick={fixedOnClickHandler}
-            >
-              <div className="content">
-                <div className="header">
-                  <Term term={all_series.value} field="cluster_name" />
+          <List>
+            <List.Item>
+              <List.Content>
+                <div
+                  key="all_series"
+                  tabIndex="-1"
+                  role="button"
+                  onKeyDown={fixedOnClickHandler}
+                  onClick={fixedOnClickHandler}
+                >
+                  <div className="content">
+                    <Term term={all_series.value} field="cluster_name" />
+                  </div>
+                  <div className="extra content">
+                    <span className="count">
+                      {all_series.count}{' '}
+                      {all_series.count === 1 ? 'item' : 'items'}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="extra content">
-                <span className="count">
-                  {all_series.count} {all_series.count === 1 ? 'item' : 'items'}
-                </span>
-              </div>
-            </div>
-          </div>
+              </List.Content>
+            </List.Item>
+          </List>
         </div>
       </div>
     </div>
