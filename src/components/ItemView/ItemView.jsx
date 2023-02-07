@@ -155,9 +155,7 @@ function ItemView(props) {
 
       <MetadataSection item={item} appConfig={appConfig} docid={docid} />
 
-      <div className="dataset-container">
-        <MoreLikeThis docid={docid} title={title?.raw} appConfig={appConfig} />
-      </div>
+      <MoreLikeThis docid={docid} title={title?.raw} appConfig={appConfig} />
 
       {/* <div className="info-wrapper">
         <div className="info-content">
