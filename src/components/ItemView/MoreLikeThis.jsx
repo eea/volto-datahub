@@ -52,32 +52,34 @@ const MoreLikeThis = (props) => {
   }, [appConfig, docid, title]);
 
   return similarDocs && similarDocs.length > 0 ? (
-    <div className="more-like-this">
-      <h2>Similar content</h2>
-      <div className="section-wrapper">
-        <Card.Group itemsPerRow={3}>
-          {similarDocs.map((item, i) => {
-            return (
-              <Card
-                href={`/en/datahub/datahubitem-view/${item._source.about}`}
-                key={i}
-              >
-                <Card.Content>
-                  <Card.Header>
-                    <span title={item._source.label}>
-                      {firstWords(item._source.label, 10)}
-                    </span>
-                  </Card.Header>
-                  <Card.Description>
-                    <span className="card-description">
-                      {item._source.description}
-                    </span>
-                  </Card.Description>
-                </Card.Content>
-              </Card>
-            );
-          })}
-        </Card.Group>
+    <div className="dataset-container">
+      <div className="more-like-this">
+        <h2>Similar content</h2>
+        <div className="section-wrapper">
+          <Card.Group itemsPerRow={3}>
+            {similarDocs.map((item, i) => {
+              return (
+                <Card
+                  href={`/en/datahub/datahubitem-view/${item._source.about}`}
+                  key={i}
+                >
+                  <Card.Content>
+                    <Card.Header>
+                      <span title={item._source.label}>
+                        {firstWords(item._source.label, 10)}
+                      </span>
+                    </Card.Header>
+                    <Card.Description>
+                      <span className="card-description">
+                        {item._source.description}
+                      </span>
+                    </Card.Description>
+                  </Card.Content>
+                </Card>
+              );
+            })}
+          </Card.Group>
+        </div>
       </div>
     </div>
   ) : null;

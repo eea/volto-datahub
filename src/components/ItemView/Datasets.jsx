@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon, List, Accordion } from 'semantic-ui-react';
+import { Icon, List, Accordion, Tab } from 'semantic-ui-react';
 import servicesSVG from './icons/services.svg';
 import lockSVG from 'remixicon/icons/System/lock-line.svg';
 
@@ -24,6 +24,15 @@ const is_internal = (dataset) => {
   return internal;
 };
 
+const groupBy = (obj, key) => {
+  return obj.reduce((rv, item) => {
+    const group = rv[item[key]] || [];
+    group.push(item);
+    rv[item[key]] = group;
+    return rv;
+  }, {});
+};
+
 const SVGIcon = ({ name, size, color, className, title, onClick }) => {
   return (
     <svg
@@ -41,13 +50,7 @@ const SVGIcon = ({ name, size, color, className, title, onClick }) => {
 
 const DatasetList = (props) => {
   const { link } = props;
-
-  const dataset = link.reduce((dataset, item) => {
-    const group = dataset[item.protocol] || [];
-    group.push(item);
-    dataset[item.protocol] = group;
-    return dataset;
-  }, {});
+  const dataset = groupBy(link, 'protocol');
 
   return (
     <div>
@@ -268,7 +271,7 @@ const Datasets = (props) => {
   const { item, appConfig } = props;
   const { children } = item?.raw_value?.raw || {};
 
-  const [activeIndex, setActiveIndex] = React.useState(0);
+  const [activeIndex, setActiveIndex] = React.useState(-1);
 
   function handleClick(e, titleProps) {
     const { index } = titleProps;
@@ -286,124 +289,138 @@ const Datasets = (props) => {
     [children],
   );
 
-  // console.log('result', item);
-  // console.log('children', children);
+  const datasetsByYear = groupBy(datasets, 'publicationYearForResource');
+
+  const panes = Object.keys(datasetsByYear).map((dataset) => ({
+    menuItem: dataset,
+    render: () => (
+      <Tab.Pane>
+        <Accordion>
+          {datasetsByYear[dataset].map((dataset, index) => {
+            const { resourceTemporalExtentDetails } = dataset;
+            return (
+              <React.Fragment key={index}>
+                <Accordion.Title
+                  active={activeIndex === index}
+                  index={index}
+                  onClick={handleClick}
+                >
+                  <span className="dataset-title">
+                    {dataset.resourceTitleObject.default}
+                    <span className="formats">
+                      {(dataset.format || []).map((item, i) => {
+                        return (
+                          <span className="format-label" key={i}>
+                            {item}
+                          </span>
+                        );
+                      })}
+
+                      {Array.isArray(dataset.linkProtocol) ? (
+                        <>
+                          {dataset.linkProtocol
+                            .filter(
+                              (i) => i.includes('ESRI') || i.includes('OGC'),
+                            )
+                            .map((item, i) => {
+                              return (
+                                <span className="format-label" key={i}>
+                                  {item}
+                                </span>
+                              );
+                            })}
+                        </>
+                      ) : (
+                        <>
+                          {['ESRI', 'OGC'].includes(dataset.linkProtocol) && (
+                            <span className="format-label">
+                              {dataset.linkProtocol}
+                            </span>
+                          )}
+                        </>
+                      )}
+                    </span>
+
+                    {is_internal(dataset) && (
+                      <SVGIcon name={lockSVG} size="18" />
+                    )}
+                  </span>
+                  <Icon className="ri-arrow-down-s-line" />
+                </Accordion.Title>
+                <Accordion.Content active={activeIndex === index}>
+                  <div className="dataset-content">
+                    {resourceTemporalExtentDetails &&
+                      resourceTemporalExtentDetails?.length > 0 && (
+                        <div>
+                          <strong>Temporal coverage: </strong>
+
+                          {resourceTemporalExtentDetails.map((tc, i) => {
+                            let tc_start = tc?.start?.date;
+                            if (tc_start) {
+                              tc_start = new Date(
+                                Date.parse(tc_start),
+                              ).getFullYear();
+                            }
+                            let tc_end = tc?.end?.date;
+                            if (tc_end) {
+                              tc_end = new Date(
+                                Date.parse(tc_end),
+                              ).getFullYear();
+                            }
+                            tc_start = tc_start || '';
+                            tc_end = tc_end || '';
+                            return (
+                              <React.Fragment key={i}>
+                                <span>
+                                  {tc_start === tc_end && tc_start}
+                                  {tc_start !== tc_end &&
+                                    tc_start + ' - ' + tc_end}
+                                </span>
+                                {i !== resourceTemporalExtentDetails.length - 1
+                                  ? ', '
+                                  : ' '}
+                              </React.Fragment>
+                            );
+                          })}
+                        </div>
+                      )}
+
+                    {dataset.resourceType[0] !== 'nonGeographicDataset' && (
+                      <div className="dataset-pdf">
+                        <div className="d-link">
+                          <Icon className="file pdf" />
+                          <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+                          >
+                            Metadata Factsheet
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {!!dataset.link && dataset.link.length > 0 && (
+                    <DatasetList link={dataset.link} />
+                  )}
+                </Accordion.Content>
+              </React.Fragment>
+            );
+          })}
+        </Accordion>
+      </Tab.Pane>
+    ),
+  }));
 
   return datasets && datasets.length > 0 ? (
     <>
-      <h2>Data</h2>
-
-      <Accordion>
-        {datasets.map((dataset, index) => {
-          const { resourceTemporalExtentDetails } = dataset;
-
-          return (
-            <React.Fragment key={index}>
-              <Accordion.Title
-                active={activeIndex === index}
-                index={index}
-                onClick={handleClick}
-              >
-                <span className="dataset-title">
-                  {dataset.resourceTitleObject.default}
-                  <span className="formats">
-                    {(dataset.format || []).map((item, i) => {
-                      return (
-                        <span className="format-label" key={i}>
-                          {item}
-                        </span>
-                      );
-                    })}
-
-                    {Array.isArray(dataset.linkProtocol) ? (
-                      <>
-                        {dataset.linkProtocol
-                          .filter(
-                            (i) => i.includes('ESRI') || i.includes('OGC'),
-                          )
-                          .map((item, i) => {
-                            return (
-                              <span className="format-label" key={i}>
-                                {item}
-                              </span>
-                            );
-                          })}
-                      </>
-                    ) : (
-                      <>
-                        {['ESRI', 'OGC'].includes(dataset.linkProtocol) && (
-                          <span className="format-label">
-                            {dataset.linkProtocol}
-                          </span>
-                        )}
-                      </>
-                    )}
-                  </span>
-
-                  {is_internal(dataset) && <SVGIcon name={lockSVG} size="18" />}
-                </span>
-                <Icon className="ri-arrow-down-s-line" />
-              </Accordion.Title>
-              <Accordion.Content active={activeIndex === index}>
-                <div className="dataset-content">
-                  {resourceTemporalExtentDetails &&
-                    resourceTemporalExtentDetails?.length > 0 && (
-                      <div>
-                        <strong>Temporal coverage: </strong>
-
-                        {resourceTemporalExtentDetails.map((tc, i) => {
-                          let tc_start = tc?.start?.date;
-                          if (tc_start) {
-                            tc_start = new Date(
-                              Date.parse(tc_start),
-                            ).getFullYear();
-                          }
-                          let tc_end = tc?.end?.date;
-                          if (tc_end) {
-                            tc_end = new Date(Date.parse(tc_end)).getFullYear();
-                          }
-                          tc_start = tc_start || '';
-                          tc_end = tc_end || '';
-                          return (
-                            <React.Fragment key={i}>
-                              <span>
-                                {tc_start === tc_end && tc_start}
-                                {tc_start !== tc_end &&
-                                  tc_start + ' - ' + tc_end}
-                              </span>
-                              {i !== resourceTemporalExtentDetails.length - 1
-                                ? ', '
-                                : ' '}
-                            </React.Fragment>
-                          );
-                        })}
-                      </div>
-                    )}
-
-                  {dataset.resourceType[0] !== 'nonGeographicDataset' && (
-                    <div className="dataset-pdf">
-                      <div className="d-link">
-                        <Icon className="file pdf" />
-                        <a
-                          target="_blank"
-                          rel="noreferrer"
-                          href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
-                        >
-                          Metadata Factsheet
-                        </a>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {!!dataset.link && dataset.link.length > 0 && (
-                  <DatasetList link={dataset.link} />
-                )}
-              </Accordion.Content>
-            </React.Fragment>
-          );
-        })}
-      </Accordion>
+      <div className="item tabs-title">Publication year</div>
+      <Tab
+        className="datasets-tab"
+        menu={{ vertical: true, secondary: true, pointing: true }}
+        panes={panes}
+      />
     </>
   ) : null;
 };
