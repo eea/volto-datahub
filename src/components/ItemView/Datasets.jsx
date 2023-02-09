@@ -279,7 +279,7 @@ const Datasets = (props) => {
     setActiveIndex(newIndex);
   }
 
-  const datasets = React.useMemo(
+  const sortedDatasets = React.useMemo(
     () =>
       (children || []).sort(
         (a, b) =>
@@ -289,14 +289,14 @@ const Datasets = (props) => {
     [children],
   );
 
-  const datasetsByYear = groupBy(datasets, 'publicationYearForResource');
+  const datasets = groupBy(sortedDatasets, 'publicationYearForResource');
 
-  const panes = Object.keys(datasetsByYear).map((dataset) => ({
-    menuItem: dataset,
+  const panes = Object.keys(datasets).map((dataset) => ({
+    menuItem: dataset === 'undefined' ? 'Missing' : dataset,
     render: () => (
       <Tab.Pane>
         <Accordion>
-          {datasetsByYear[dataset].map((dataset, index) => {
+          {datasets[dataset].map((dataset, index) => {
             const { resourceTemporalExtentDetails } = dataset;
             return (
               <React.Fragment key={index}>
@@ -413,8 +413,12 @@ const Datasets = (props) => {
     ),
   }));
 
-  return datasets && datasets.length > 0 ? (
+  return children && children.length > 0 ? (
     <>
+      <div className="dataset-container">
+        <h2>Datasets</h2>
+      </div>
+
       <div className="item tabs-title">Publication year</div>
       <Tab
         className="datasets-tab"
