@@ -289,14 +289,14 @@ const Datasets = (props) => {
     [children],
   );
 
-  const datasetsByYear = groupBy(sortedDatasets, 'publicationYearForResource');
+  const datasets = groupBy(sortedDatasets, 'publicationYearForResource');
 
-  const panes = Object.keys(datasetsByYear).map((dataset) => ({
+  const panes = Object.keys(datasets).map((dataset) => ({
     menuItem: dataset === 'undefined' ? 'Missing' : dataset,
     render: () => (
       <Tab.Pane>
         <Accordion>
-          {datasetsByYear[dataset].map((dataset, index) => {
+          {datasets[dataset].map((dataset, index) => {
             const { resourceTemporalExtentDetails } = dataset;
             return (
               <React.Fragment key={index}>
