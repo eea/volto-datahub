@@ -292,7 +292,7 @@ const Datasets = (props) => {
   const datasetsByYear = groupBy(sortedDatasets, 'publicationYearForResource');
 
   const panes = Object.keys(datasetsByYear).map((dataset) => ({
-    menuItem: dataset,
+    menuItem: dataset === 'undefined' ? 'Missing' : dataset,
     render: () => (
       <Tab.Pane>
         <Accordion>
