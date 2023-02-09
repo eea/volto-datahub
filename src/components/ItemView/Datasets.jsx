@@ -289,12 +289,7 @@ const Datasets = (props) => {
     [children],
   );
 
-  const datasets = groupBy(sortedDatasets, 'publicationYearForResource');
-
-  const datasetsByYear = {};
-  delete Object.assign(datasetsByYear, datasets, {
-    Missing: datasets['undefined'],
-  })['undefined'];
+  const datasetsByYear = groupBy(sortedDatasets, 'publicationYearForResource');
 
   const panes = Object.keys(datasetsByYear).map((dataset) => ({
     menuItem: dataset,
