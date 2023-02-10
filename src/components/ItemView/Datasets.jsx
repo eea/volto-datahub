@@ -1,5 +1,6 @@
 import React from 'react';
-import { Icon, List, Accordion, Tab } from 'semantic-ui-react';
+import { Icon, List, Accordion, Tab, Menu } from 'semantic-ui-react';
+import { DateTime } from '@eeacms/search';
 import servicesSVG from './icons/services.svg';
 import lockSVG from 'remixicon/icons/System/lock-line.svg';
 
@@ -279,25 +280,53 @@ const Datasets = (props) => {
     setActiveIndex(newIndex);
   }
 
-  const sortedDatasets = React.useMemo(
-    () =>
-      (children || []).sort(
-        (a, b) =>
-          new Date(b.publicationDateForResource).getTime() -
-          new Date(a.publicationDateForResource).getTime(),
-      ),
-    [children],
-  );
+  const datasets = children.map((v, e) => {
+    const tc = v.resourceTemporalExtentDetails[0];
+    const { start, end } = tc || {};
+    const tc_start = start?.date
+      ? new Date(Date.parse(start.date)).getFullYear()
+      : '';
+    const tc_end = end?.date
+      ? new Date(Date.parse(end.date)).getFullYear()
+      : '';
 
-  const datasets = groupBy(sortedDatasets, 'publicationYearForResource');
+    let date;
+    if (tc_start === tc_end) {
+      date = tc_start;
+    } else {
+      date = tc_start + '-' + tc_end;
+    }
 
-  const panes = Object.keys(datasets).map((dataset) => ({
-    menuItem: dataset === 'undefined' ? 'Missing' : dataset,
+    return Object.assign({ temporalDateRange: date, ...v }, e);
+  });
+
+  const datasetsByCoverage = groupBy(datasets, 'temporalDateRange');
+
+  const sortedDatasets = Object.keys(datasetsByCoverage).sort(function (a, b) {
+    a = Math.max(...a.split('-'));
+    b = Math.max(...b.split('-'));
+    return b - a;
+  });
+
+  const groupedDatasets = sortedDatasets.map((v) => {
+    return { date: v, children: datasetsByCoverage[v] };
+  });
+
+  const panes = (groupedDatasets || []).map((item, i) => ({
+    menuItem: (
+      <Menu.Item key="location">
+        <span>{item.date}</span>
+      </Menu.Item>
+    ),
     render: () => (
       <Tab.Pane>
         <Accordion>
-          {datasets[dataset].map((dataset, index) => {
-            const { resourceTemporalExtentDetails } = dataset;
+          {item?.children.map((dataset, index) => {
+            const {
+              resourceTemporalExtentDetails,
+              temporalDateRange,
+              publicationDateForResource,
+            } = dataset;
             return (
               <React.Fragment key={index}>
                 <Accordion.Title
@@ -349,41 +378,25 @@ const Datasets = (props) => {
                 </Accordion.Title>
                 <Accordion.Content active={activeIndex === index}>
                   <div className="dataset-content">
-                    {resourceTemporalExtentDetails &&
-                      resourceTemporalExtentDetails?.length > 0 && (
+                    <div>
+                      {publicationDateForResource && (
                         <div>
-                          <strong>Temporal coverage: </strong>
-
-                          {resourceTemporalExtentDetails.map((tc, i) => {
-                            let tc_start = tc?.start?.date;
-                            if (tc_start) {
-                              tc_start = new Date(
-                                Date.parse(tc_start),
-                              ).getFullYear();
-                            }
-                            let tc_end = tc?.end?.date;
-                            if (tc_end) {
-                              tc_end = new Date(
-                                Date.parse(tc_end),
-                              ).getFullYear();
-                            }
-                            tc_start = tc_start || '';
-                            tc_end = tc_end || '';
-                            return (
-                              <React.Fragment key={i}>
-                                <span>
-                                  {tc_start === tc_end && tc_start}
-                                  {tc_start !== tc_end &&
-                                    tc_start + ' - ' + tc_end}
-                                </span>
-                                {i !== resourceTemporalExtentDetails.length - 1
-                                  ? ', '
-                                  : ' '}
-                              </React.Fragment>
-                            );
-                          })}
+                          <strong>Published: </strong>
+                          <DateTime
+                            format="DATE_MED"
+                            value={publicationDateForResource}
+                          />
                         </div>
                       )}
+
+                      {resourceTemporalExtentDetails &&
+                        resourceTemporalExtentDetails?.length > 0 && (
+                          <div>
+                            <strong>Temporal coverage: </strong>
+                            {temporalDateRange}
+                          </div>
+                        )}
+                    </div>
 
                     {dataset.resourceType[0] !== 'nonGeographicDataset' && (
                       <div className="dataset-pdf">
@@ -419,7 +432,7 @@ const Datasets = (props) => {
         <h2>Datasets</h2>
       </div>
 
-      <div className="item tabs-title">Publication year</div>
+      <div className="item tabs-title">Temporal coverage</div>
       <Tab
         className="datasets-tab"
         menu={{ vertical: true, secondary: true, pointing: true }}
