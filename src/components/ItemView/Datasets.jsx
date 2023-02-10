@@ -281,20 +281,24 @@ const Datasets = (props) => {
   }
 
   const datasets = children.map((v, e) => {
-    const tc = v.resourceTemporalExtentDetails[0];
-    const { start, end } = tc || {};
-    const tc_start = start?.date
-      ? new Date(Date.parse(start.date)).getFullYear()
-      : '';
-    const tc_end = end?.date
-      ? new Date(Date.parse(end.date)).getFullYear()
-      : '';
-
     let date;
-    if (tc_start === tc_end) {
-      date = tc_start;
+
+    if (v.resourceTemporalExtentDetails) {
+      const tc = v.resourceTemporalExtentDetails[0];
+      const { start, end } = tc || {};
+      const tc_start = start?.date
+        ? new Date(Date.parse(start.date)).getFullYear()
+        : '';
+      const tc_end = end?.date
+        ? new Date(Date.parse(end.date)).getFullYear()
+        : '';
+      if (tc_start === tc_end) {
+        date = tc_start;
+      } else {
+        date = tc_start + '-' + tc_end;
+      }
     } else {
-      date = tc_start + '-' + tc_end;
+      date = '';
     }
 
     return Object.assign({ temporalDateRange: date, ...v }, e);
@@ -314,9 +318,7 @@ const Datasets = (props) => {
 
   const panes = (groupedDatasets || []).map((item, i) => ({
     menuItem: (
-      <Menu.Item key="location">
-        <span>{item.date}</span>
-      </Menu.Item>
+      <Menu.Item>{item.date ? <span>{item.date}</span> : 'No date'}</Menu.Item>
     ),
     render: () => (
       <Tab.Pane>
