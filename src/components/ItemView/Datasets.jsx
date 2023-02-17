@@ -301,6 +301,13 @@ const Datasets = (props) => {
       date = '';
     }
 
+    if (v.link) {
+      v.link.forEach((link) => {
+        link.name = link?.nameObject?.default;
+        link.description = link?.descriptionObject?.default;
+        link.url = link?.urlObject?.default;
+      });
+    }
     return Object.assign({ temporalDateRange: date, ...v }, e);
   });
 
