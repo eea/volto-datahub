@@ -252,13 +252,11 @@ const LandingPage = (props) => {
                   onKeyDown={fixedOnClickHandler}
                   onClick={fixedOnClickHandler}
                 >
-                  <div className="content">
-                    <Term term={all_series.value} field="cluster_name" />
-                  </div>
                   <div className="extra content">
                     <span className="count">
-                      {all_series.count}{' '}
-                      {all_series.count === 1 ? 'item' : 'items'}
+                      See all 
+                      {' '}{all_series.count}{' '}
+                      datasets
                     </span>
                   </div>
                 </div>
