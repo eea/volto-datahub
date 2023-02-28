@@ -26,7 +26,7 @@ const applyConfig = (config) => {
 
   // Tweak the searchlib config to use the middleware instead of the index
   datahub.elastic_index = '_es/datahub';
-  datahub.index_name = 'data_searchui_datahub';
+  datahub.index_name = 'datahub_searchui_demo';
   datahub.enableNLP = true;
   datahub.showPromptQueries = false;
   datahub.requestBodyModifiers.push(tweakForNLPService);
