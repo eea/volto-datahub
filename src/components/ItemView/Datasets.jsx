@@ -441,6 +441,9 @@ const Datasets = (props) => {
         className="datasets-tab"
         menu={{ vertical: true, secondary: true, pointing: true }}
         panes={panes}
+        onTabChange={() => {
+          setActiveIndex(0);
+        }}
       />
     </>
   ) : null;
