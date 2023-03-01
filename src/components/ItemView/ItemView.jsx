@@ -32,8 +32,7 @@ function IsomorphicPortal({ children }) {
 }
 
 function ItemView(props) {
-  const { docid, location, staticContext } = props;
-  const { fromPathname, fromSearch } = location?.state || {};
+  const { docid, staticContext } = props;
   const dispatch = useDispatch();
   // const content = useSelector((state) => state.content.data);
   let result = useSelector((state) => state.datahub_results?.[docid]);
@@ -107,15 +106,7 @@ function ItemView(props) {
           <Banner>
             <Banner.Content>
               <Banner.Subtitle>
-                <Link
-                  to={
-                    location?.state
-                      ? { pathname: fromPathname, search: fromSearch }
-                      : {
-                          pathname: '/en/datahub/',
-                        }
-                  }
-                >
+                <Link to={appConfig.landingPageURL}>
                   <Icon className="arrow left" />
                   Datahub overview
                 </Link>
