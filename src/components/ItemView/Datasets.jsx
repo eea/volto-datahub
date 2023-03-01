@@ -272,7 +272,7 @@ const Datasets = (props) => {
   const { item, appConfig } = props;
   const { children } = item?.raw_value?.raw || {};
 
-  const [activeIndex, setActiveIndex] = React.useState(-1);
+  const [activeIndex, setActiveIndex] = React.useState(0);
 
   function handleClick(e, titleProps) {
     const { index } = titleProps;
@@ -318,7 +318,9 @@ const Datasets = (props) => {
 
   const panes = (groupedDatasets || []).map((item, i) => ({
     menuItem: (
-      <Menu.Item>{item.date ? <span>{item.date}</span> : 'No date'}</Menu.Item>
+      <Menu.Item key={i}>
+        {item.date ? <span>{item.date}</span> : 'No date'}
+      </Menu.Item>
     ),
     render: () => (
       <Tab.Pane>

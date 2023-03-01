@@ -107,15 +107,7 @@ function ItemView(props) {
           <Banner>
             <Banner.Content>
               <Banner.Subtitle>
-                <Link
-                  to={
-                    location?.state
-                      ? { pathname: fromPathname, search: fromSearch }
-                      : {
-                          pathname: '/en/datahub/',
-                        }
-                  }
-                >
+                <Link to={appConfig.landingPageURL}>
                   <Icon className="arrow left" />
                   Datahub overview
                 </Link>

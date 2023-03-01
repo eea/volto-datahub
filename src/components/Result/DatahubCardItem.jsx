@@ -13,18 +13,10 @@ const DatahubCardItem = (props) => {
   // if (metaType.length === 0) {
   //   metaType = 'Others';
   // }
+
   const item = {
     title: (
-      <Link
-        to={{
-          pathname: result.href,
-          state: {
-            fromPathname: window.location.pathname,
-            fromSearch: window.location.search,
-          },
-        }}
-        title={result.title}
-      >
+      <Link to={result.href} title={result.title}>
         {result.title}
       </Link>
     ),
