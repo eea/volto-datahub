@@ -254,9 +254,7 @@ const LandingPage = (props) => {
                 >
                   <div className="extra content">
                     <span className="count">
-                      See all 
-                      {' '}{all_series.count}{' '}
-                      datasets
+                      See all {all_series.count} datasets
                     </span>
                   </div>
                 </div>
