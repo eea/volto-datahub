@@ -18,6 +18,8 @@ import { asyncConnect, Helmet } from '@plone/volto/helpers';
 import { fetchResult } from '@eeacms/search/lib/hocs/useResult';
 import { setDatahubResult } from '@eeacms/volto-datahub/store';
 
+import { isObsolete } from './utils.js';
+
 const appName = 'datahub';
 
 function IsomorphicPortal({ children }) {
@@ -64,7 +66,8 @@ function ItemView(props) {
 
   const item = result ? result._result : null;
   const { title, description, raw_value } = item || {}; // readingTime
-  const { changeDate, resourceIdentifier } = raw_value?.raw || {};
+  const { changeDate, resourceIdentifier, cl_status } = raw_value?.raw || {};
+  const obsolete = isObsolete(cl_status);
 
   const prodID = (resourceIdentifier || []).filter((p) => {
     return p.code.includes('DAT');
@@ -113,6 +116,7 @@ function ItemView(props) {
               </Banner.Subtitle>
               <Banner.Title>{title?.raw}</Banner.Title>
               <Banner.Metadata>
+                {obsolete && <div class="ui label archived-item">Obsolete</div>}
                 <Banner.MetadataField label="Prod-ID" value={prodID} />
                 <Banner.MetadataField
                   label="Published"
