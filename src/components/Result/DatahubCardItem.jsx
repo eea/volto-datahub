@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { Label } from 'semantic-ui-react';
 import { DateTime, StringList } from '@eeacms/search';
 import { ResultContext } from '@eeacms/search';
 import { Link } from 'react-router-dom';
@@ -16,9 +17,15 @@ const DatahubCardItem = (props) => {
 
   const item = {
     title: (
-      <Link to={result.href} title={result.title}>
-        {result.title}
-      </Link>
+      <>
+        <Link to={result.href} title={result.title}>
+          {result.title}
+          {result.isNew && <Label className="new-item">New</Label>}
+          {result.isExpired && (
+            <Label className="archived-item">Archived</Label>
+          )}
+        </Link>
+      </>
     ),
     description: <ResultContext {...props} />,
     preview_image_url: result.hasImage ? result.thumbUrl : undefined,

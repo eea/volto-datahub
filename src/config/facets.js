@@ -3,10 +3,67 @@ import {
   fixedRangeFacet,
   histogramFacet,
   makeRange,
+  booleanFacet,
 } from '@eeacms/search';
 import { dateRangeFacet } from '@eeacms/search';
 
+export function getTodayWithTime() {
+  const d = new Date();
+  const month = d.getMonth() + 1;
+  const day = d.getDate();
+  const hour = d.getHours();
+  const minute = d.getMinutes();
+  const second = d.getSeconds();
+
+  const output = [
+    d.getFullYear(),
+    '-',
+    month < 10 ? '0' : '',
+    month,
+    '-',
+    day < 10 ? '0' : '',
+    day,
+    'T',
+    hour < 10 ? '0' : '',
+    hour,
+    ':',
+    minute < 10 ? '0' : '',
+    minute,
+    ':',
+    second < 10 ? '0' : '',
+    second,
+    'Z',
+  ].join('');
+  return output;
+}
+
 const facets = [
+  booleanFacet(() => ({
+    field: 'IncludeArchived',
+    label: 'Include archived content',
+    id: 'archived-facet',
+    showInFacetsList: false,
+    showInSecondaryFacetsList: true,
+    isFilter: true, // filters don't need facet options to show up
+
+    // we want this to be applied by default
+    // when the facet is checked, then apply the `on` key:
+    off: {
+      constant_score: {
+        filter: {
+          bool: {
+            should: [
+              { bool: { must_not: { exists: { field: 'expires' } } } },
+              // Functions should be supported in the buildFilters
+              { range: { expires: { gte: getTodayWithTime() } } },
+            ],
+          },
+        },
+      },
+    },
+    on: null,
+  })),
+
   multiTermFacet({
     field: 'instrument',
     isFilterable: true,
