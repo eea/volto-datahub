@@ -20,9 +20,11 @@ const DatahubCardItem = (props) => {
       <>
         <Link to={result.href} title={result.title}>
           {result.title}
+          {result.isNew && <Label className="new-item">New</Label>}
+          {result.isExpired && (
+            <Label className="archived-item">Archived</Label>
+          )}
         </Link>
-        {result.isNew && <Label className="new-item">New</Label>}
-        {result.isExpired && <Label className="archived-item">Archived</Label>}
       </>
     ),
     description: <ResultContext {...props} />,
