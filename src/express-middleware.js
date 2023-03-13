@@ -14,7 +14,7 @@ const getUrlES = (appName) => {
 
 function handleSearchRequest(body, params) {
   const { urlES } = params;
-  const url = `${urlES}/_search?filter_path=hits.hits._id&size=10000`;
+  const url = `${urlES}/_search`;
   if (body?.params?.config) {
     delete body.params.config;
   }
@@ -40,17 +40,22 @@ function toPublicURL(id) {
 function generateSitemap(appConfig) {
   return new Promise((resolve, reject) => {
     const body = buildRequest({ filters: [] }, appConfig);
-    delete body.source;
+    delete body['source'];
     delete body['params'];
     delete body['runtime_mappings'];
     delete body['index'];
+    body._source = {"include": ["about", "last_modified"]};
+    body.size = 10000;
     const urlES = getUrlES('datahub');
+    console.log(body)
     handleSearchRequest(body, { urlES }).then((body) => {
+      console.log(body)
       const items = body?.hits?.hits || [];
+      console.log(items)
 
       const urls = items.map(
         (item) => `  <url>\n    <loc>${toPublicURL(item._id)}</loc>\n
-          <lastmod>${item.modified}</lastmod>\n  </url>`,
+          <lastmod>${item._source.last_modified}</lastmod>\n  </url>`,
       );
       const result = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">\n${urls.join(
         '\n',
