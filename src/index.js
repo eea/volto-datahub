@@ -45,6 +45,16 @@ const applyConfig = (config) => {
     ...(config.addonRoutes || []),
   ];
   config.addonReducers.datahub_results = datahub_results;
+
+  if (__SERVER__) {
+    const makeMiddlewares = require('./express-middleware').default;
+
+    config.settings.expressMiddleware = [
+      ...config.settings.expressMiddleware,
+      makeMiddlewares(config),
+    ];
+  }
+
   return config;
 };
 
