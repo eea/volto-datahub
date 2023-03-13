@@ -47,11 +47,8 @@ function generateSitemap(appConfig) {
     body._source = {"include": ["about", "last_modified"]};
     body.size = 10000;
     const urlES = getUrlES('datahub');
-    console.log(body)
     handleSearchRequest(body, { urlES }).then((body) => {
-      console.log(body)
       const items = body?.hits?.hits || [];
-      console.log(items)
 
       const urls = items.map(
         (item) => `  <url>\n    <loc>${toPublicURL(item._id)}</loc>\n
