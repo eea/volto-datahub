@@ -4,6 +4,8 @@ import { DateTime } from '@eeacms/search';
 import servicesSVG from './icons/services.svg';
 import lockSVG from 'remixicon/icons/System/lock-line.svg';
 
+import { isObsolete } from './utils.js';
+
 const is_internal_url = (url) => {
   let internal = false;
   url.split('/').forEach((part) => {
@@ -267,12 +269,14 @@ const DatasetList = (props) => {
     </div>
   );
 };
-
 const Datasets = (props) => {
   const { item, appConfig } = props;
   const { children } = item?.raw_value?.raw || {};
-
   const [activeIndex, setActiveIndex] = React.useState(0);
+  // const [
+  //   archivedOrRestrictedActiveIndex,
+  //   setArchivedOrRestrictedActiveIndex,
+  // ] = React.useState(0);
 
   function handleClick(e, titleProps) {
     const { index } = titleProps;
@@ -280,9 +284,14 @@ const Datasets = (props) => {
     setActiveIndex(newIndex);
   }
 
-  const datasets = children.map((v, e) => {
-    let date;
+  // function handleClickArchivedOrRestricted(e, titleProps) {
+  //   const { index } = titleProps;
+  //   const newIndex = archivedOrRestrictedActiveIndex === index ? -1 : index;
+  //   setArchivedOrRestrictedActiveIndex(newIndex);
+  // }
 
+  const all_datasets = children.map((v, e) => {
+    let date;
     if (v.resourceTemporalExtentDetails) {
       const tc = v.resourceTemporalExtentDetails[0];
       const { start, end } = tc || {};
@@ -303,10 +312,30 @@ const Datasets = (props) => {
 
     return Object.assign({ temporalDateRange: date, ...v }, e);
   });
+  const datasets = all_datasets.filter((v) => {
+    return !(isObsolete(v.cl_status) || is_internal(v));
+  });
+
+  const archivedOrRestrictedDatasets = all_datasets.filter((v) => {
+    return isObsolete(v.cl_status) || is_internal(v);
+  });
 
   const datasetsByCoverage = groupBy(datasets, 'temporalDateRange');
 
+  const archivedOrRestrictedDatasetsByCoverage = groupBy(
+    archivedOrRestrictedDatasets,
+    'temporalDateRange',
+  );
+
   const sortedDatasets = Object.keys(datasetsByCoverage).sort(function (a, b) {
+    a = Math.max(...a.split('-'));
+    b = Math.max(...b.split('-'));
+    return b - a;
+  });
+
+  const sortedArchivedOrRestrictedDatasets = Object.keys(
+    archivedOrRestrictedDatasetsByCoverage,
+  ).sort(function (a, b) {
     a = Math.max(...a.split('-'));
     b = Math.max(...b.split('-'));
     return b - a;
@@ -316,137 +345,173 @@ const Datasets = (props) => {
     return { date: v, children: datasetsByCoverage[v] };
   });
 
-  const panes = (groupedDatasets || []).map((item, i) => ({
-    menuItem: (
-      <Menu.Item key={i}>
-        {item.date ? <span>{item.date}</span> : 'No date'}
-      </Menu.Item>
-    ),
-    render: () => (
-      <Tab.Pane>
-        <Accordion>
-          {item?.children.map((dataset, index) => {
-            const {
-              resourceTemporalExtentDetails,
-              temporalDateRange,
-              publicationDateForResource,
-            } = dataset;
-            return (
-              <React.Fragment key={index}>
-                <Accordion.Title
-                  active={activeIndex === index}
-                  index={index}
-                  onClick={handleClick}
-                >
-                  <span className="dataset-title">
-                    {dataset.resourceTitleObject.default}
-                    <span className="formats">
-                      {(dataset.format || []).map((item, i) => {
-                        return (
-                          <span className="format-label" key={i}>
-                            {item}
-                          </span>
-                        );
-                      })}
+  const groupedArchivedOrRestrictedDatasets = sortedArchivedOrRestrictedDatasets.map(
+    (v) => {
+      return { date: v, children: archivedOrRestrictedDatasetsByCoverage[v] };
+    },
+  );
 
-                      {Array.isArray(dataset.linkProtocol) ? (
-                        <>
-                          {dataset.linkProtocol
-                            .filter(
-                              (i) => i.includes('ESRI') || i.includes('OGC'),
-                            )
-                            .map((item, i) => {
-                              return (
-                                <span className="format-label" key={i}>
-                                  {item}
-                                </span>
-                              );
-                            })}
-                        </>
-                      ) : (
-                        <>
-                          {['ESRI', 'OGC'].includes(dataset.linkProtocol) && (
-                            <span className="format-label">
-                              {dataset.linkProtocol}
+  function buildPanes(gDatasets) {
+    return (gDatasets || []).map((item, i) => ({
+      menuItem: (
+        <Menu.Item key={i}>
+          {item.date ? <span>{item.date}</span> : 'No date'}
+        </Menu.Item>
+      ),
+      render: () => (
+        <Tab.Pane>
+          <Accordion>
+            {item?.children.map((dataset, index) => {
+              const {
+                resourceTemporalExtentDetails,
+                temporalDateRange,
+                publicationDateForResource,
+              } = dataset;
+              return (
+                <React.Fragment key={index}>
+                  <Accordion.Title
+                    active={activeIndex === index}
+                    index={index}
+                    onClick={handleClick}
+                  >
+                    <span className="dataset-title">
+                      {dataset.resourceTitleObject.default}
+                      <span className="formats">
+                        {(dataset.format || []).map((item, i) => {
+                          return (
+                            <span className="format-label" key={i}>
+                              {item}
                             </span>
-                          )}
-                        </>
+                          );
+                        })}
+
+                        {Array.isArray(dataset.linkProtocol) ? (
+                          <>
+                            {dataset.linkProtocol
+                              .filter(
+                                (i) => i.includes('ESRI') || i.includes('OGC'),
+                              )
+                              .map((item, i) => {
+                                return (
+                                  <span className="format-label" key={i}>
+                                    {item}
+                                  </span>
+                                );
+                              })}
+                          </>
+                        ) : (
+                          <>
+                            {['ESRI', 'OGC'].includes(dataset.linkProtocol) && (
+                              <span className="format-label">
+                                {dataset.linkProtocol}
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </span>
+
+                      {is_internal(dataset) && (
+                        <SVGIcon name={lockSVG} size="18" />
                       )}
                     </span>
-
-                    {is_internal(dataset) && (
-                      <SVGIcon name={lockSVG} size="18" />
-                    )}
-                  </span>
-                  <Icon className="ri-arrow-down-s-line" />
-                </Accordion.Title>
-                <Accordion.Content active={activeIndex === index}>
-                  <div className="dataset-content">
-                    <div>
-                      {publicationDateForResource && (
-                        <div>
-                          <strong>Published: </strong>
-                          <DateTime
-                            format="DATE_MED"
-                            value={publicationDateForResource}
-                          />
-                        </div>
-                      )}
-
-                      {resourceTemporalExtentDetails &&
-                        resourceTemporalExtentDetails?.length > 0 && (
+                    <Icon className="ri-arrow-down-s-line" />
+                  </Accordion.Title>
+                  <Accordion.Content active={activeIndex === index}>
+                    <div className="dataset-content">
+                      <div>
+                        {publicationDateForResource && (
                           <div>
-                            <strong>Temporal coverage: </strong>
-                            {temporalDateRange}
+                            <strong>Published: </strong>
+                            <DateTime
+                              format="DATE_MED"
+                              value={publicationDateForResource}
+                            />
                           </div>
                         )}
+
+                        {resourceTemporalExtentDetails &&
+                          resourceTemporalExtentDetails?.length > 0 && (
+                            <div>
+                              <strong>Temporal coverage: </strong>
+                              {temporalDateRange}
+                            </div>
+                          )}
+                      </div>
+
+                      {dataset.resourceType[0] !== 'nonGeographicDataset' && (
+                        <div className="dataset-pdf">
+                          <div className="d-link">
+                            <Icon className="file pdf" />
+                            <a
+                              target="_blank"
+                              rel="noreferrer"
+                              href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+                            >
+                              Metadata Factsheet
+                            </a>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
-                    {dataset.resourceType[0] !== 'nonGeographicDataset' && (
-                      <div className="dataset-pdf">
-                        <div className="d-link">
-                          <Icon className="file pdf" />
-                          <a
-                            target="_blank"
-                            rel="noreferrer"
-                            href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
-                          >
-                            Metadata Factsheet
-                          </a>
-                        </div>
-                      </div>
+                    {!!dataset.link && dataset.link.length > 0 && (
+                      <DatasetList link={dataset.link} />
                     )}
-                  </div>
+                  </Accordion.Content>
+                </React.Fragment>
+              );
+            })}
+          </Accordion>
+        </Tab.Pane>
+      ),
+    }));
+  }
+  const datasetPanes = buildPanes(groupedDatasets);
 
-                  {!!dataset.link && dataset.link.length > 0 && (
-                    <DatasetList link={dataset.link} />
-                  )}
-                </Accordion.Content>
-              </React.Fragment>
-            );
-          })}
-        </Accordion>
-      </Tab.Pane>
-    ),
-  }));
+  const archivedOrRestrictedDatasetPanes = buildPanes(
+    groupedArchivedOrRestrictedDatasets,
+  );
 
-  return children && children.length > 0 ? (
+  const x1 =
+    datasets && datasets.length > 0 ? (
+      <>
+        <div className="dataset-container">
+          <h2>Datasets</h2>
+        </div>
+
+        <Tab
+          className="datasets-tab"
+          menu={{ vertical: true, secondary: true, pointing: true }}
+          panes={datasetPanes}
+          onTabChange={() => {
+            setActiveIndex(0);
+          }}
+        />
+      </>
+    ) : null;
+  const x2 =
+    archivedOrRestrictedDatasets && archivedOrRestrictedDatasets.length > 0 ? (
+      <>
+        <div className="dataset-container">
+          <h2>Archived or restricted datasets</h2>
+        </div>
+
+        <Tab
+          className="datasets-tab"
+          menu={{ vertical: true, secondary: true, pointing: true }}
+          panes={archivedOrRestrictedDatasetPanes}
+          onTabChange={() => {
+            setActiveIndex(0);
+          }}
+        />
+      </>
+    ) : null;
+  return (
     <>
-      <div className="dataset-container">
-        <h2>Datasets</h2>
-      </div>
-
-      <div className="item tabs-title">Temporal coverage</div>
-      <Tab
-        className="datasets-tab"
-        menu={{ vertical: true, secondary: true, pointing: true }}
-        panes={panes}
-        onTabChange={() => {
-          setActiveIndex(0);
-        }}
-      />
+      {x1}
+      {x2}
     </>
-  ) : null;
+  );
 };
 
 export default Datasets;

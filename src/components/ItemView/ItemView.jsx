@@ -116,7 +116,7 @@ function ItemView(props) {
               </Banner.Subtitle>
               <Banner.Title>{title?.raw}</Banner.Title>
               <Banner.Metadata>
-                {obsolete && <div class="ui label archived-item">Obsolete</div>}
+                {obsolete && <div class="ui label archived-item">Archived</div>}
                 <Banner.MetadataField label="Prod-ID" value={prodID} />
                 <Banner.MetadataField
                   label="Published"
