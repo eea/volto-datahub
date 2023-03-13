@@ -44,7 +44,7 @@ function generateSitemap(appConfig) {
     delete body['params'];
     delete body['runtime_mappings'];
     delete body['index'];
-    body._source = {"include": ["about", "last_modified"]};
+    body._source = { include: ['about', 'last_modified'] };
     body.size = 10000;
     const urlES = getUrlES('datahub');
     handleSearchRequest(body, { urlES }).then((body) => {
