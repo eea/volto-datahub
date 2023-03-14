@@ -11,7 +11,7 @@ import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
 import {
   MoreLikeThis,
   MetadataSection,
-  Datasets,
+  DatasetsView,
 } from '@eeacms/volto-datahub/components/ItemView';
 
 import { asyncConnect, Helmet } from '@plone/volto/helpers';
@@ -116,7 +116,7 @@ function ItemView(props) {
               </Banner.Subtitle>
               <Banner.Title>{title?.raw}</Banner.Title>
               <Banner.Metadata>
-                {obsolete && <div class="ui label archived-item">Obsolete</div>}
+                {obsolete && <div class="ui label archived-item">Archived</div>}
                 <Banner.MetadataField label="Prod-ID" value={prodID} />
                 <Banner.MetadataField
                   label="Published"
@@ -142,7 +142,7 @@ function ItemView(props) {
         <Callout>{description?.raw}</Callout>
       </div>
 
-      <Datasets item={item} appConfig={appConfig} />
+      <DatasetsView item={item} appConfig={appConfig} />
 
       <MetadataSection item={item} appConfig={appConfig} docid={docid} />
 
