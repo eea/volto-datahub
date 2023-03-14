@@ -63,22 +63,31 @@ const DatasetsView = (props) => {
 
   return (
     <>
-      <div className="dataset-container">
-        <h2>Datasets</h2>
-      </div>
-      <DatasetsTab
-        appConfig={appConfig}
-        items={groupedByTemporalCoverage}
-        defaultAccordionOpenIndex={0}
-      />
+      {groupedByTemporalCoverage && groupedByTemporalCoverage.length > 0 && (
+        <>
+          <div className="dataset-container">
+            <h2>Datasets</h2>
+          </div>
+          <DatasetsTab
+            appConfig={appConfig}
+            items={groupedByTemporalCoverage}
+            defaultAccordionOpenIndex={0}
+          />
+        </>
+      )}
 
-      <div className="dataset-container">
-        <h2>Archived or restricted datasets</h2>
-      </div>
-      <DatasetsTab
-        appConfig={appConfig}
-        items={groupedByArchivedOrRestricted}
-      />
+      {groupedByArchivedOrRestricted &&
+        groupedByArchivedOrRestricted.length > 0 && (
+          <>
+            <div className="dataset-container">
+              <h2>Archived or restricted datasets</h2>
+            </div>
+            <DatasetsTab
+              appConfig={appConfig}
+              items={groupedByArchivedOrRestricted}
+            />
+          </>
+        )}
     </>
   );
 };

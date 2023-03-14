@@ -37,18 +37,14 @@ const DatasetsTab = (props) => {
   }));
 
   return (
-    <>
-      {items && items.length > 0 ? (
-        <Tab
-          className="datasets-tab"
-          menu={{ vertical: true, secondary: true, pointing: true }}
-          panes={panes}
-          onTabChange={() => {
-            setActiveAccordionIndex(0);
-          }}
-        />
-      ) : null}
-    </>
+    <Tab
+      className="datasets-tab"
+      menu={{ vertical: true, secondary: true, pointing: true }}
+      panes={panes}
+      onTabChange={() => {
+        setActiveAccordionIndex(0);
+      }}
+    />
   );
 };
 
