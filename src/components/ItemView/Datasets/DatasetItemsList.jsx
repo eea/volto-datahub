@@ -2,7 +2,7 @@ import React from 'react';
 import { Accordion } from 'semantic-ui-react';
 import { Icon } from 'semantic-ui-react';
 import { DateTime } from '@eeacms/search';
-import { isInternal, SVGIcon } from '../utils.js';
+import { isInternal, SVGIcon, isObsolete } from '../utils.js';
 import DatasetItemDownloadList from './DatasetItemDownloadList';
 
 import lockSVG from 'remixicon/icons/System/lock-line.svg';
@@ -34,6 +34,8 @@ const DatasetItemsList = (props) => {
           temporalDateRange,
           publicationDateForResource,
         } = dataset;
+        const archived = isObsolete(dataset.cl_status) || isInternal(dataset);
+
         return (
           <React.Fragment key={index}>
             <Accordion.Title
@@ -43,12 +45,13 @@ const DatasetItemsList = (props) => {
             >
               <span className="dataset-title">
                 {dataset.resourceTitleObject.default}
+
                 <span className="formats">
                   {(dataset.format || [])
                     .filter((item, pos, self) => self.indexOf(item) === pos)
                     .map((item, i) => {
                       return (
-                        <span className="format-label" key={i}>
+                        <span className="dh-label" key={i}>
                           {item}
                         </span>
                       );
@@ -61,7 +64,7 @@ const DatasetItemsList = (props) => {
                         .filter((item, pos, self) => self.indexOf(item) === pos)
                         .map((item, i) => {
                           return (
-                            <span className="format-label" key={i}>
+                            <span className="dh-label" key={i}>
                               {item}
                             </span>
                           );
@@ -70,15 +73,17 @@ const DatasetItemsList = (props) => {
                   ) : (
                     <>
                       {['ESRI', 'OGC'].includes(dataset.linkProtocol) && (
-                        <span className="format-label">
-                          {dataset.linkProtocol}
-                        </span>
+                        <span className="dh-label">{dataset.linkProtocol}</span>
                       )}
                     </>
                   )}
-                </span>
 
-                {isInternal(dataset) && <SVGIcon name={lockSVG} size="18" />}
+                  {archived && (
+                    <span className="dh-label inverted">Archived</span>
+                  )}
+
+                  {isInternal(dataset) && <SVGIcon name={lockSVG} size="18" />}
+                </span>
               </span>
               <Icon className="ri-arrow-down-s-line" />
             </Accordion.Title>
