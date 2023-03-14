@@ -11,7 +11,7 @@ import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
 import {
   MoreLikeThis,
   MetadataSection,
-  Datasets,
+  DatasetsView,
 } from '@eeacms/volto-datahub/components/ItemView';
 
 import { asyncConnect, Helmet } from '@plone/volto/helpers';
@@ -142,7 +142,7 @@ function ItemView(props) {
         <Callout>{description?.raw}</Callout>
       </div>
 
-      <Datasets item={item} appConfig={appConfig} />
+      <DatasetsView item={item} appConfig={appConfig} />
 
       <MetadataSection item={item} appConfig={appConfig} docid={docid} />
 
