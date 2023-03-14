@@ -34,7 +34,7 @@ const DatasetItemsList = (props) => {
           temporalDateRange,
           publicationDateForResource,
         } = dataset;
-        const archived = isObsolete(dataset.cl_status) || isInternal(dataset);
+        const archived = isObsolete(dataset.cl_status);
 
         return (
           <React.Fragment key={index}>
