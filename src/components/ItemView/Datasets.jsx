@@ -341,19 +341,24 @@ const Datasets = (props) => {
                   <span className="dataset-title">
                     {dataset.resourceTitleObject.default}
                     <span className="formats">
-                      {(dataset.format || []).map((item, i) => {
-                        return (
-                          <span className="format-label" key={i}>
-                            {item}
-                          </span>
-                        );
-                      })}
+                      {(dataset.format || [])
+                        .filter((item, pos, self) => self.indexOf(item) === pos)
+                        .map((item, i) => {
+                          return (
+                            <span className="format-label" key={i}>
+                              {item}
+                            </span>
+                          );
+                        })}
 
                       {Array.isArray(dataset.linkProtocol) ? (
                         <>
                           {dataset.linkProtocol
                             .filter(
                               (i) => i.includes('ESRI') || i.includes('OGC'),
+                            )
+                            .filter(
+                              (item, pos, self) => self.indexOf(item) === pos,
                             )
                             .map((item, i) => {
                               return (
