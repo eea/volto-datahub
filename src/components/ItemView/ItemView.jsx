@@ -2,7 +2,7 @@ import React from 'react';
 import { Portal } from 'react-portal';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-import { Container, Icon } from 'semantic-ui-react';
+import { Container, Icon, Button } from 'semantic-ui-react';
 import { Toolbar } from '@plone/volto/components';
 import { BodyClass } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
@@ -21,6 +21,21 @@ import { setDatahubResult } from '@eeacms/volto-datahub/store';
 import { isObsolete } from './utils.js';
 
 const appName = 'datahub';
+const WORD_COUNT = 60;
+
+const splitContent = (content, wordCount) => {
+  const words = content.split(' ');
+  let firstTextPart = '',
+    secondTextPart = '';
+  words.forEach((word, idx) => {
+    if (idx < wordCount) {
+      firstTextPart += ' ' + word;
+    } else {
+      secondTextPart += ' ' + word;
+    }
+  });
+  return [firstTextPart.trim(), secondTextPart.trim()];
+};
 
 function IsomorphicPortal({ children }) {
   const [isClient, setIsClient] = React.useState();
@@ -74,6 +89,13 @@ function ItemView(props) {
   })[0]?.code;
 
   const rawTitle = item && item._meta.found ? title?.raw || '' : docid;
+
+  const splitDescription = description?.raw.split(' ').length > WORD_COUNT;
+  const [firstTextPart, secondTextPart] = splitContent(
+    description?.raw,
+    WORD_COUNT,
+  );
+  const [isReadMore, setIsReadMore] = React.useState(false);
 
   React.useEffect(() => {
     const handler = async () => {
@@ -139,7 +161,21 @@ function ItemView(props) {
       </IsomorphicPortal>
 
       <div className="dataset-container">
-        <Callout>{description?.raw}</Callout>
+        <Callout>
+          {splitDescription ? (
+            <p>
+              {firstTextPart} {isReadMore ? secondTextPart : ''}
+              <Button
+                onClick={() => setIsReadMore(!isReadMore)}
+                className={`see-more ${isReadMore ? 'open' : 'close'}`}
+              >
+                {isReadMore ? 'See less' : ' See more'}
+              </Button>
+            </p>
+          ) : (
+            <p>{description?.raw}</p>
+          )}
+        </Callout>
       </div>
 
       <DatasetsView item={item} appConfig={appConfig} />
