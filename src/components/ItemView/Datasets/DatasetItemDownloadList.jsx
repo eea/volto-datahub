@@ -80,7 +80,7 @@ const DatasetItemDownloadList = (props) => {
               );
             })}
 
-            {(dataset['EEA:FILEPATH'] || []).map((item, i) => {
+            {/* {(dataset['EEA:FILEPATH'] || []).map((item, i) => {
               return (
                 <List.Item key={i}>
                   <List.Content>
@@ -115,7 +115,7 @@ const DatasetItemDownloadList = (props) => {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        WebDAV: {item.name || item.function}
+                        WebDAV1: {item.name || item.function}
                       </a>
                       {isInternalURL(item.url) && (
                         <SVGIcon name={lockSVG} size="18" />
@@ -124,7 +124,7 @@ const DatasetItemDownloadList = (props) => {
                   </List.Content>
                 </List.Item>
               );
-            })}
+            })} */}
           </List>
         </>
       )}
