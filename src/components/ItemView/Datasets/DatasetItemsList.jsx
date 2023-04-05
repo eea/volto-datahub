@@ -39,9 +39,15 @@ const DatasetItemsList = (props) => {
         return (
           <React.Fragment key={index}>
             <Accordion.Title
+              tabIndex={0}
               active={activeIndex === index}
               index={index}
               onClick={handleClick}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleClick(e, { index });
+                }
+              }}
             >
               <span className="dataset-title">
                 {dataset.resourceTitleObject.default}

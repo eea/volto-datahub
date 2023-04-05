@@ -10,6 +10,8 @@ const DatasetsTab = (props) => {
     defaultAccordionOpenIndex,
   );
 
+  const [activeTabIndex, setActiveTabIndex] = React.useState(0);
+
   React.useEffect(() => {
     if (defaultAccordionOpenIndex !== undefined) {
       setActiveAccordionIndex(defaultAccordionOpenIndex);
@@ -20,7 +22,16 @@ const DatasetsTab = (props) => {
 
   const panes = (items || []).map((item, i) => ({
     menuItem: (
-      <Menu.Item key={i}>
+      <Menu.Item
+        key={i}
+        tabIndex={0}
+        onClick={() => setActiveTabIndex(i)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            setActiveTabIndex(i);
+          }
+        }}
+      >
         {item.date ? <span>{item.date}</span> : 'No date'}
       </Menu.Item>
     ),
@@ -39,6 +50,7 @@ const DatasetsTab = (props) => {
   return (
     <Tab
       className="datasets-tab"
+      activeIndex={activeTabIndex}
       menu={{ vertical: true, secondary: true, pointing: true }}
       panes={panes}
       onTabChange={() => {
