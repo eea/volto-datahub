@@ -164,8 +164,14 @@ const LandingPage = (props) => {
             return (
               <React.Fragment key={`tab-${tabIndex}`}>
                 <Menu.Item
+                  tabIndex={0}
                   active={activeSection === section.facetField}
                   onClick={() => setActiveSection(section.facetField)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setActiveSection(section.facetField);
+                    }
+                  }}
                 >
                   {section.title}
                 </Menu.Item>
@@ -175,7 +181,7 @@ const LandingPage = (props) => {
         },
         render: () => {
           return (
-            <Tab.Pane>
+            <Tab.Pane tabIndex={0}>
               <div className={`landing-page-cards ${activeSection}`}>
                 <List>
                   {sortedTiles(tiles, activeSectionConfig, appConfig).map(
@@ -204,7 +210,16 @@ const LandingPage = (props) => {
                       };
 
                       return (
-                        <List.Item onClick={onClickHandler} key={index}>
+                        <List.Item
+                          key={index}
+                          tabIndex={0}
+                          onClick={onClickHandler}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              onClickHandler();
+                            }
+                          }}
+                        >
                           <List.Content>
                             {icon ? <Icon {...icon} type={topic.value} /> : ''}
                             <Term term={topic.value} field={activeSection} />
@@ -247,7 +262,7 @@ const LandingPage = (props) => {
               <List.Content>
                 <div
                   key="all_series"
-                  tabIndex="-1"
+                  tabIndex="0"
                   role="button"
                   onKeyDown={fixedOnClickHandler}
                   onClick={fixedOnClickHandler}
