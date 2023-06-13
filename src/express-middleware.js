@@ -77,13 +77,47 @@ function sitemap(req, res, next) {
     });
 }
 
+function datasetRedirect(req, res, next) {
+  const prod_id = req.params['id'];
+
+  if (!prod_id) return next();
+
+  // example of id: DAT-238-en
+
+  const body = {
+    query: {
+      bool: {
+        must: [
+          {
+            match: {
+              prod_id,
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  const urlES = getUrlES('datahub');
+
+  handleSearchRequest(body, { urlES }).then((result) => {
+    const total = result.hits.total.value;
+    if (!total) return next();
+
+    const hit = result.hits.hits[0];
+    const { _id } = hit;
+    res.redirect(301, `/en/datahub/datahubitem-view/${_id}`);
+  });
+}
+
 export default function makeMiddlewares(config) {
   const middleware = express.Router();
   // middleware.use(express.json({ limit: config.settings.maxResponseSize }));
   middleware.use(express.urlencoded({ extended: true }));
 
   middleware.all('**/datahub/sitemap-data.xml', sitemap);
-  middleware.id = 'datahub-sitemap';
+  middleware.all('**/datahub/dataset-redirect/:id', datasetRedirect);
+  middleware.id = 'datahub-middlewares';
 
   return middleware;
 }
