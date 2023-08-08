@@ -4,34 +4,28 @@ import { Tab, Menu } from 'semantic-ui-react';
 import DatasetItemsList from './DatasetItemsList';
 
 const DatasetsTab = (props) => {
-  const { items, appConfig, defaultAccordionOpenIndex } = props;
-
-  const [activeAccordionIndex, setActiveAccordionIndex] = React.useState(
-    defaultAccordionOpenIndex,
-  );
+  const { items, appConfig } = props;
 
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
+  const [activeAccordionId, setActiveAccordionId] = React.useState();
 
   React.useEffect(() => {
-    if (defaultAccordionOpenIndex !== undefined) {
-      setActiveAccordionIndex(defaultAccordionOpenIndex);
-    } else {
-      setActiveAccordionIndex(-1);
-    }
-  }, [defaultAccordionOpenIndex]);
+    const lastAccordionSelected =
+      activeAccordionId?.[activeAccordionId.length - 1];
+
+    const activeTab = items.filter((item) =>
+      item.children.find((child) => child.id === lastAccordionSelected),
+    );
+    setActiveTabIndex(activeTab?.[0]?.id);
+  }, [activeAccordionId, items]);
+
+  const handleTabChange = (e, { activeIndex }) => {
+    setActiveTabIndex(activeIndex);
+  };
 
   const panes = (items || []).map((item, i) => ({
     menuItem: (
-      <Menu.Item
-        key={i}
-        tabIndex={0}
-        onClick={() => setActiveTabIndex(i)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            setActiveTabIndex(i);
-          }
-        }}
-      >
+      <Menu.Item key={i} tabIndex={0}>
         {item.date ? <span>{item.date}</span> : 'No date'}
       </Menu.Item>
     ),
@@ -40,8 +34,7 @@ const DatasetsTab = (props) => {
         <DatasetItemsList
           appConfig={appConfig}
           item={item}
-          activeTabIndex={activeAccordionIndex}
-          setActiveTabIndex={setActiveAccordionIndex}
+          setActiveAccordion={setActiveAccordionId}
         />
       </Tab.Pane>
     ),
@@ -53,9 +46,7 @@ const DatasetsTab = (props) => {
       activeIndex={activeTabIndex}
       menu={{ vertical: true, secondary: true, pointing: true }}
       panes={panes}
-      onTabChange={() => {
-        setActiveAccordionIndex(0);
-      }}
+      onTabChange={handleTabChange}
     />
   );
 };
