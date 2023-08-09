@@ -36,6 +36,14 @@ const applyConfig = (config) => {
   datahub.resultItemModel.factory = 'DatahubResultModel';
 
   config.settings.nonContentRoutes.push(/datahubitem-view\/(.*)/); // \/(.*)\/
+  config.settings.nonContentRoutes.push(/datahub\/rss\.xml/);
+  config.settings.externalRoutes.push({
+    match: {
+      path: /\/.+\/datahub\/rss\.xml/,
+      strict: true,
+      exact: true,
+    },
+  });
   config.addonRoutes = [
     {
       path: '*/datahubitem-view/:id',
