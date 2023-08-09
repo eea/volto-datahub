@@ -2,6 +2,8 @@ import { registry } from '@eeacms/search';
 import express from 'express';
 import buildRequest from '@eeacms/search/lib/search/query';
 import superagent from 'superagent';
+import { Feed } from 'feed';
+
 // import zlib from 'zlib';
 
 const getUrlES = (appName) => {
@@ -28,7 +30,7 @@ function handleSearchRequest(body, params) {
         if (resp && resp.body) {
           return resolve(resp.body);
         }
-        return reject({ error: 'Error' });
+        return reject(err);
       });
   });
 }
@@ -110,12 +112,65 @@ function datasetRedirect(req, res, next) {
   });
 }
 
+function generateRSS(appConfig) {
+  return new Promise((resolve, reject) => {
+    const body = buildRequest({ filters: [] }, appConfig);
+    delete body['source'];
+    delete body['params'];
+    delete body['runtime_mappings'];
+    delete body['index'];
+    body._source = {
+      include: ['about', 'last_modified', 'title', 'description'],
+    };
+    body.size = 10000;
+    const urlES = getUrlES('datahub');
+
+    handleSearchRequest(body, { urlES })
+      .then((body) => {
+        const items = body?.hits?.hits || [];
+
+        const feed = new Feed({
+          title: 'EEA Datahub',
+          description: 'Latest changes in EEA Datahub',
+          id: 'https://eea.europa.eu/en/datahub',
+          generator: 'EEA Website',
+          link: 'https://eea.europa.eu/en/datahub',
+        });
+
+        items.forEach((item) => {
+          feed.addItem({
+            id: toPublicURL(item._id),
+            title: item._source.title,
+            description: item._source.description,
+            date: new Date(item._source.last_modified),
+          });
+        });
+
+        const result = feed.rss2();
+
+        resolve(result);
+      })
+      .catch(reject);
+  });
+}
+
+function rssMiddleware(req, res, next) {
+  const appConfig = registry.searchui['datahub'];
+
+  generateRSS(appConfig)
+    .then((body) => res.send(body))
+    .catch((body) => {
+      res.send({ error: body });
+    });
+}
+
 export default function makeMiddlewares(config) {
   const middleware = express.Router();
   // middleware.use(express.json({ limit: config.settings.maxResponseSize }));
   middleware.use(express.urlencoded({ extended: true }));
 
   middleware.all('**/datahub/sitemap-data.xml', sitemap);
+  middleware.all('**/datahub/rss.xml', rssMiddleware);
   middleware.all('**/datahub/dataset-redirect/:id', datasetRedirect);
   middleware.id = 'datahub-middlewares';
 
