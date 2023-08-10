@@ -25,7 +25,6 @@ const getClientProxyAddress = () => {
 };
 
 export default function install(config) {
-  // console.log(process.env.RAZZLE_ENV_CONFIG);
   const envConfig = process.env.RAZZLE_ENV_CONFIG
     ? JSON.parse(process.env.RAZZLE_ENV_CONFIG)
     : datahubConfig;

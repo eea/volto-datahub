@@ -1,6 +1,5 @@
 import React from 'react';
-import { Accordion } from 'semantic-ui-react';
-import { Icon } from 'semantic-ui-react';
+import { Accordion, Icon } from 'semantic-ui-react';
 import { DateTime } from '@eeacms/search';
 import { isInternal, SVGIcon, isObsolete } from '../utils.js';
 import DatasetItemDownloadList from './DatasetItemDownloadList';

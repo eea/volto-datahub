@@ -4,8 +4,8 @@ import {
   histogramFacet,
   makeRange,
   booleanFacet,
+  dateRangeFacet,
 } from '@eeacms/search';
-import { dateRangeFacet } from '@eeacms/search';
 
 export function getTodayWithTime() {
   const d = new Date();
