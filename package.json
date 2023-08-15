@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-datahub",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "@eeacms/volto-datahub: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
