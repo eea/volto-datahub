@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-datahub",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "description": "@eeacms/volto-datahub: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
@@ -18,7 +18,8 @@
   },
   "dependencies": {
     "@eeacms/volto-globalsearch": "*",
-    "@eeacms/volto-listing-block": "*"
+    "@eeacms/volto-listing-block": "*",
+    "feed": "4.2.2"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.10.0",

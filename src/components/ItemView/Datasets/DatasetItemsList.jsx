@@ -1,35 +1,109 @@
 import React from 'react';
-import { Accordion } from 'semantic-ui-react';
-import { Icon } from 'semantic-ui-react';
+import { Accordion, Icon } from 'semantic-ui-react';
 import { DateTime } from '@eeacms/search';
 import { isInternal, SVGIcon, isObsolete } from '../utils.js';
 import DatasetItemDownloadList from './DatasetItemDownloadList';
 
+import AnimateHeight from 'react-animate-height';
+
 import lockSVG from 'remixicon/icons/System/lock-line.svg';
 
+import { useLocation, useHistory } from 'react-router-dom';
+
+const useQuery = (location) => {
+  const { search } = location;
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+};
+
 const DatasetItemsList = (props) => {
-  const { appConfig, item, setActiveTabIndex, activeTabIndex } = props;
+  const { appConfig, item, setActiveAccordion } = props;
 
-  const [activeIndex, setActiveIndex] = React.useState(activeTabIndex);
+  const location = useLocation();
+  const history = useHistory();
+  const query = useQuery(location);
+  const { search } = useLocation();
+
+  const activePanels = query.get('activeAccordion')?.split(',') || [];
+  const [itemToScroll, setItemToScroll] = React.useState('');
+  const [activeIndex, setActiveIndex] = React.useState([]);
+  const [activePanel, setActivePanel] = React.useState([]);
+  const activePanelsRef = React.useRef(activePanels);
+
+  const addQueryParam = (key, value) => {
+    const searchParams = new URLSearchParams(location.search);
+    searchParams.set(key, value);
+
+    history.push({
+      hash: location.hash,
+      pathname: location.pathname,
+      search: searchParams.toString(),
+    });
+  };
 
   React.useEffect(() => {
-    setActiveIndex(activeTabIndex);
-  }, [activeTabIndex]);
+    const query = new URLSearchParams(search);
+    const panels = query.get('activeAccordion')?.split(',') || [];
+    setActiveAccordion(panels);
+  }, [search, setActiveAccordion]);
+
+  const handleClick = (e, titleProps) => {
+    const { index, id } = titleProps;
+
+    const newIndex =
+      activeIndex.indexOf(index) === -1
+        ? [...activeIndex, index]
+        : activeIndex.filter((item) => item !== index);
+
+    const newPanel =
+      activePanel.indexOf(id) === -1
+        ? [...activePanel, id]
+        : activePanel.filter((item) => item !== id);
+
+    handleActiveIndex(newIndex, newPanel);
+  };
+
+  const handleActiveIndex = (index, id) => {
+    setActiveIndex(index);
+    setActivePanel(id);
+    addQueryParam('activeAccordion', id);
+  };
+
+  const scrollToElement = () => {
+    if (!!activePanels && !!activePanels[0].length) {
+      let element = document.getElementById(
+        activePanels[activePanels.length - 1],
+      );
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const isActive = (id) => {
+    return activePanel.includes(id);
+  };
 
   React.useEffect(() => {
-    setActiveTabIndex(activeIndex);
-  }, [activeIndex, setActiveTabIndex]);
+    const firstAccordion = item?.children?.[0].id;
+    if (activePanel.length < 1) {
+      setActivePanel([firstAccordion]);
+    }
+  }, [activePanel.length, item.children]);
 
-  function handleClick(e, titleProps) {
-    const { index } = titleProps;
-    const newIndex = activeIndex === index ? -1 : index;
-    setActiveIndex(newIndex);
-  }
+  React.useEffect(() => {
+    !!activePanelsRef.current &&
+      setItemToScroll(
+        activePanelsRef.current[activePanelsRef.current?.length - 1],
+      );
+  }, []);
+
+  React.useEffect(() => {
+    setActivePanel(activePanelsRef.current || []);
+  }, []);
 
   return (
     <Accordion>
       {item?.children.map((dataset, index) => {
         const {
+          id,
           resourceTemporalExtentDetails,
           temporalDateRange,
           publicationDateForResource,
@@ -37,12 +111,12 @@ const DatasetItemsList = (props) => {
         const archived = isObsolete(dataset.cl_status);
 
         return (
-          <React.Fragment key={index}>
+          <div key={index} id={id}>
             <Accordion.Title
               tabIndex={0}
-              active={activeIndex === index}
+              active={isActive(id)}
               index={index}
-              onClick={handleClick}
+              onClick={(e) => handleClick(e, { index, id })}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   handleClick(e, { index });
@@ -51,7 +125,6 @@ const DatasetItemsList = (props) => {
             >
               <span className="dataset-title">
                 {dataset.resourceTitleObject.default}
-
                 <span className="formats">
                   {(dataset.format || [])
                     .filter((item, pos, self) => self.indexOf(item) === pos)
@@ -93,49 +166,61 @@ const DatasetItemsList = (props) => {
               </span>
               <Icon className="ri-arrow-down-s-line" />
             </Accordion.Title>
-            <Accordion.Content active={activeIndex === index}>
-              <div className="dataset-content">
-                <div>
-                  {publicationDateForResource && (
-                    <div>
-                      <strong>Published: </strong>
-                      <DateTime
-                        format="DATE_MED"
-                        value={publicationDateForResource}
-                      />
-                    </div>
-                  )}
-
-                  {resourceTemporalExtentDetails &&
-                    resourceTemporalExtentDetails?.length > 0 && (
+            <AnimateHeight
+              animateOpacity
+              duration={500}
+              height={isActive(id) ? 'auto' : 0}
+              onTransitionEnd={() => {
+                if (!!activePanels && id === itemToScroll) {
+                  setItemToScroll('');
+                  scrollToElement();
+                }
+              }}
+            >
+              <Accordion.Content active={isActive(id)}>
+                <div className="dataset-content">
+                  <div>
+                    {publicationDateForResource && (
                       <div>
-                        <strong>Temporal coverage: </strong>
-                        {temporalDateRange}
+                        <strong>Published: </strong>
+                        <DateTime
+                          format="DATE_MED"
+                          value={publicationDateForResource}
+                        />
                       </div>
                     )}
+
+                    {resourceTemporalExtentDetails &&
+                      resourceTemporalExtentDetails?.length > 0 && (
+                        <div>
+                          <strong>Temporal coverage: </strong>
+                          {temporalDateRange}
+                        </div>
+                      )}
+                  </div>
+
+                  {dataset.resourceType[0] !== 'nonGeographicDataset' && (
+                    <div className="dataset-pdf">
+                      <div className="d-link">
+                        <Icon className="file pdf" />
+                        <a
+                          target="_blank"
+                          rel="noreferrer"
+                          href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+                        >
+                          Metadata Factsheet
+                        </a>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {dataset.resourceType[0] !== 'nonGeographicDataset' && (
-                  <div className="dataset-pdf">
-                    <div className="d-link">
-                      <Icon className="file pdf" />
-                      <a
-                        target="_blank"
-                        rel="noreferrer"
-                        href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
-                      >
-                        Metadata Factsheet
-                      </a>
-                    </div>
-                  </div>
+                {!!dataset.link && dataset.link.length > 0 && (
+                  <DatasetItemDownloadList link={dataset.link} />
                 )}
-              </div>
-
-              {!!dataset.link && dataset.link.length > 0 && (
-                <DatasetItemDownloadList link={dataset.link} />
-              )}
-            </Accordion.Content>
-          </React.Fragment>
+              </Accordion.Content>
+            </AnimateHeight>
+          </div>
         );
       })}
     </Accordion>

@@ -49,8 +49,8 @@ const DatasetsView = (props) => {
       return b - a;
     });
 
-    const groupedDatasets = sortedDatasets.map((v) => {
-      return { date: v, children: datasetsByCoverage[v] };
+    const groupedDatasets = sortedDatasets.map((v, i) => {
+      return { id: i, date: v, children: datasetsByCoverage[v] };
     });
 
     return groupedDatasets;
@@ -71,7 +71,6 @@ const DatasetsView = (props) => {
           <DatasetsTab
             appConfig={appConfig}
             items={groupedByTemporalCoverage}
-            defaultAccordionOpenIndex={0}
           />
         </>
       )}

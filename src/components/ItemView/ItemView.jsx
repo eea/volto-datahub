@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { Container, Icon, Button } from 'semantic-ui-react';
 import { Toolbar } from '@plone/volto/components';
-import { BodyClass } from '@plone/volto/helpers';
+import { BodyClass, asyncConnect, Helmet } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 import { rebind, applyConfigurationSchema } from '@eeacms/search';
 import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
@@ -13,8 +13,6 @@ import {
   MetadataSection,
   DatasetsView,
 } from '@eeacms/volto-datahub/components/ItemView';
-
-import { asyncConnect, Helmet } from '@plone/volto/helpers';
 import { fetchResult } from '@eeacms/search/lib/hocs/useResult';
 import { setDatahubResult } from '@eeacms/volto-datahub/store';
 
@@ -51,7 +49,6 @@ function IsomorphicPortal({ children }) {
 function ItemView(props) {
   const { docid, staticContext } = props;
   const dispatch = useDispatch();
-  // const content = useSelector((state) => state.content.data);
   let result = useSelector((state) => state.datahub_results?.[docid]);
   if (__SERVER__ && !result?._original?.found) {
     staticContext.error_code = 404;

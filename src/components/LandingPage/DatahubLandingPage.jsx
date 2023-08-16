@@ -126,7 +126,6 @@ const LandingPage = (props) => {
               type: filterType,
             })),
         };
-        // console.log('state', state);
         const facetCounts = await getFacetCounts(
           state,
           appConfig,

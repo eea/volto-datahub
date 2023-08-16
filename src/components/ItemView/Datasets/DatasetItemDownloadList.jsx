@@ -79,52 +79,6 @@ const DatasetItemDownloadList = (props) => {
                 </List.Item>
               );
             })}
-
-            {/* {(dataset['EEA:FILEPATH'] || []).map((item, i) => {
-              return (
-                <List.Item key={i}>
-                  <List.Content>
-                    <div className="dataset-item">
-                      <Icon className="download" />
-                      <a
-                        href={item.url}
-                        className="item-link"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        WebDAV: {item.name || item.function}
-                      </a>
-                      {isInternalURL(item.url) && (
-                        <SVGIcon name={lockSVG} size="18" />
-                      )}
-                    </div>
-                  </List.Content>
-                </List.Item>
-              );
-            })}
-
-            {(dataset['EEA:FOLDERPATH'] || []).map((item, i) => {
-              return (
-                <List.Item key={i}>
-                  <List.Content>
-                    <div className="dataset-item">
-                      <Icon className="download" />
-                      <a
-                        href={item.url}
-                        className="item-link"
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        WebDAV1: {item.name || item.function}
-                      </a>
-                      {isInternalURL(item.url) && (
-                        <SVGIcon name={lockSVG} size="18" />
-                      )}
-                    </div>
-                  </List.Content>
-                </List.Item>
-              );
-            })} */}
           </List>
         </>
       )}
@@ -139,9 +93,6 @@ const DatasetItemDownloadList = (props) => {
                   <List.Content>
                     <div>
                       <SVGIcon name={servicesSVG} size="18" />
-                      {/* {(item.name || item.description) && (
-                        <span className="item-protocol">{item.protocol}:</span>
-                      )} */}
                       <a
                         className="item-link"
                         href={item.url}
@@ -165,9 +116,6 @@ const DatasetItemDownloadList = (props) => {
                   <List.Content>
                     <div>
                       <SVGIcon name={servicesSVG} size="18" />
-                      {/* {(item.name || item.description) && (
-                          <span className="item-protocol">{item.protocol}:</span>
-                        )} */}
                       <a
                         className="item-link"
                         href={item.url}
