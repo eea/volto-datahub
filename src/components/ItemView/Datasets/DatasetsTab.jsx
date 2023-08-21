@@ -8,6 +8,7 @@ const DatasetsTab = (props) => {
 
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
   const [activeAccordionId, setActiveAccordionId] = React.useState();
+  const [filterValue, setFilterValue] = React.useState('');
 
   React.useEffect(() => {
     const lastAccordionSelected =
@@ -20,7 +21,12 @@ const DatasetsTab = (props) => {
   }, [activeAccordionId, items]);
 
   const handleTabChange = (e, { activeIndex }) => {
+    setFilterValue('');
     setActiveTabIndex(activeIndex);
+  };
+
+  const handleFilteredValueChange = (value) => {
+    setFilterValue(value);
   };
 
   const panes = (items || []).map((item, i) => ({
@@ -32,9 +38,11 @@ const DatasetsTab = (props) => {
     render: () => (
       <Tab.Pane>
         <DatasetItemsList
-          appConfig={appConfig}
           item={item}
+          appConfig={appConfig}
+          filterValue={filterValue}
           setActiveAccordion={setActiveAccordionId}
+          handleFilteredValueChange={handleFilteredValueChange}
         />
       </Tab.Pane>
     ),
@@ -42,11 +50,11 @@ const DatasetsTab = (props) => {
 
   return (
     <Tab
+      panes={panes}
       className="datasets-tab"
       activeIndex={activeTabIndex}
-      menu={{ vertical: true, secondary: true, pointing: true }}
-      panes={panes}
       onTabChange={handleTabChange}
+      menu={{ vertical: true, secondary: true, pointing: true }}
     />
   );
 };
