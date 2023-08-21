@@ -1,14 +1,13 @@
 import React from 'react';
-import { Accordion, Icon } from 'semantic-ui-react';
 import { DateTime } from '@eeacms/search';
-import { isInternal, SVGIcon, isObsolete } from '../utils.js';
+import { Accordion, Icon } from 'semantic-ui-react';
+import { useLocation, useHistory } from 'react-router-dom';
 import DatasetItemDownloadList from './DatasetItemDownloadList';
-
 import AnimateHeight from 'react-animate-height';
 
-import lockSVG from 'remixicon/icons/System/lock-line.svg';
+import { isInternal, SVGIcon, isObsolete } from '../utils.js';
 
-import { useLocation, useHistory } from 'react-router-dom';
+import lockSVG from 'remixicon/icons/System/lock-line.svg';
 
 const useQuery = (location) => {
   const { search } = location;
@@ -28,6 +27,8 @@ const DatasetItemsList = (props) => {
   const [activeIndex, setActiveIndex] = React.useState([]);
   const [activePanel, setActivePanel] = React.useState([]);
   const activePanelsRef = React.useRef(activePanels);
+  const firstIdFromPanels = item.children[0].id;
+  const firstIdFromPanelsRef = React.useRef(firstIdFromPanels);
 
   const addQueryParam = (key, value) => {
     const searchParams = new URLSearchParams(location.search);
@@ -81,12 +82,12 @@ const DatasetItemsList = (props) => {
     return activePanel.includes(id);
   };
 
-  React.useEffect(() => {
-    const firstAccordion = item?.children?.[0].id;
-    if (activePanel.length < 1) {
-      setActivePanel([firstAccordion]);
-    }
-  }, [activePanel.length, item.children]);
+  // React.useEffect(() => {
+  //   const firstAccordion = item?.children?.[0].id;
+  //   if (activePanel.length < 1) {
+  //     setActivePanel([firstAccordion]);
+  //   }
+  // }, [activePanel.length, item.children]);
 
   React.useEffect(() => {
     !!activePanelsRef.current &&
@@ -96,11 +97,18 @@ const DatasetItemsList = (props) => {
   }, []);
 
   React.useEffect(() => {
-    setActivePanel(activePanelsRef.current || []);
+    if (!!activePanelsRef.current && !!activePanelsRef?.current[0]?.length) {
+      setActivePanel(activePanelsRef.current || []);
+    } else {
+      setActivePanel([
+        firstIdFromPanelsRef.current,
+        ...(activePanelsRef.current || []),
+      ]);
+    }
   }, []);
 
   return (
-    <Accordion>
+    <div>
       {item?.children.map((dataset, index) => {
         const {
           id,
@@ -109,12 +117,13 @@ const DatasetItemsList = (props) => {
           publicationDateForResource,
         } = dataset;
         const archived = isObsolete(dataset.cl_status);
+        const active = isActive(id);
 
         return (
-          <div key={index} id={id}>
+          <Accordion id={id} key={index}>
             <Accordion.Title
               tabIndex={0}
-              active={isActive(id)}
+              active={active}
               index={index}
               onClick={(e) => handleClick(e, { index, id })}
               onKeyDown={(e) => {
@@ -169,7 +178,7 @@ const DatasetItemsList = (props) => {
             <AnimateHeight
               animateOpacity
               duration={500}
-              height={isActive(id) ? 'auto' : 0}
+              height={active ? 'auto' : 0}
               onTransitionEnd={() => {
                 if (!!activePanels && id === itemToScroll) {
                   setItemToScroll('');
@@ -177,7 +186,7 @@ const DatasetItemsList = (props) => {
                 }
               }}
             >
-              <Accordion.Content active={isActive(id)}>
+              <Accordion.Content active={active}>
                 <div className="dataset-content">
                   <div>
                     {publicationDateForResource && (
@@ -220,10 +229,10 @@ const DatasetItemsList = (props) => {
                 )}
               </Accordion.Content>
             </AnimateHeight>
-          </div>
+          </Accordion>
         );
       })}
-    </Accordion>
+    </div>
   );
 };
 
