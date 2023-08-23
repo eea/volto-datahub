@@ -4,12 +4,6 @@ import { Tab, Menu, Divider, List } from 'semantic-ui-react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import { useAtom } from 'jotai';
 
-// import { showFacetsAsideAtom } from '@eeacms/search/state';
-// import { getFacetCounts } from '@eeacms/search/components/LandingPage/request';
-// import buildStateFacets from '@eeacms/search/lib/search/state/facets';
-// import { customOrder } from '@eeacms/search/lib/utils';
-// import { Icon, Term } from '@eeacms/search/components';
-
 import {
   customOrder,
   showFacetsAsideAtom,
@@ -50,7 +44,6 @@ const LandingPage = (props) => {
   const { appConfig, children, setFilter, setSort } = props;
   const { appName } = appConfig;
   const { onlyLandingPage = false } = appConfig;
-  // const facetsConfig = appConfig.facets;
 
   const {
     sections = [],
