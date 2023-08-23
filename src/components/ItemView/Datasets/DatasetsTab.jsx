@@ -6,19 +6,20 @@ import DatasetItemsList from './DatasetItemsList';
 const DatasetsTab = (props) => {
   const { items, appConfig } = props;
 
-  const [activeTabIndex, setActiveTabIndex] = React.useState(0);
-  const [activeAccordionId, setActiveAccordionId] = React.useState();
   const [filterValue, setFilterValue] = React.useState('');
 
-  React.useEffect(() => {
-    const lastAccordionSelected =
-      activeAccordionId?.[activeAccordionId.length - 1];
+  const [activeTabIndex, setActiveTabIndex] = React.useState(0);
+  const [activeAccordionId, setActiveAccordionId] = React.useState();
+  const [initialAccordionId, setInitialAccordionId] = React.useState();
 
-    const activeTab = items.filter((item) =>
-      item.children.find((child) => child.id === lastAccordionSelected),
-    );
-    setActiveTabIndex(activeTab?.[0]?.id);
-  }, [activeAccordionId, items]);
+  React.useEffect(() => {
+    if (!activeAccordionId) {
+      const activeTab = items.filter((item) =>
+        item.children.find((child) => child.id === initialAccordionId),
+      );
+      setActiveTabIndex(activeTab?.[0]?.id);
+    }
+  }, [activeAccordionId, initialAccordionId, items]);
 
   const handleTabChange = (e, { activeIndex }) => {
     setFilterValue('');
@@ -41,7 +42,9 @@ const DatasetsTab = (props) => {
           item={item}
           appConfig={appConfig}
           filterValue={filterValue}
-          setActiveAccordion={setActiveAccordionId}
+          setActiveTabIndex={setActiveTabIndex}
+          setActiveAccordionId={setActiveAccordionId}
+          setInitialAccordionId={setInitialAccordionId}
           handleFilteredValueChange={handleFilteredValueChange}
         />
       </Tab.Pane>

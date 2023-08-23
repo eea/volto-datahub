@@ -1,7 +1,6 @@
 import React from 'react';
 import config from '@plone/volto/registry';
 import { Accordion, Icon } from 'semantic-ui-react';
-import AnimateHeight from 'react-animate-height';
 import { useLocation, useHistory } from 'react-router-dom';
 
 import { DateTime } from '@eeacms/search';
@@ -22,14 +21,15 @@ const DatasetItemsList = (props) => {
     item,
     appConfig,
     filterValue,
-    setActiveAccordion,
+    setActiveTabIndex,
+    setActiveAccordionId,
+    setInitialAccordionId,
     handleFilteredValueChange,
   } = props;
 
   const history = useHistory();
   const location = useLocation();
   const query = useQuery(location);
-  const { search } = useLocation();
 
   const datasets = item?.children;
   const firstIdFromPanels = datasets?.[0]?.id;
@@ -38,10 +38,15 @@ const DatasetItemsList = (props) => {
 
   const [activeIndex, setActiveIndex] = React.useState([]);
   const [activePanel, setActivePanel] = React.useState([]);
-  const [itemToScroll, setItemToScroll] = React.useState('');
 
   const activePanelsRef = React.useRef(activePanels);
   const firstIdFromPanelsRef = React.useRef(firstIdFromPanels);
+
+  React.useEffect(() => {
+    setInitialAccordionId(
+      activePanelsRef.current[activePanelsRef.current.length - 1],
+    );
+  }, [setInitialAccordionId]);
 
   const addQueryParam = (key, value) => {
     const searchParams = new URLSearchParams(location.search);
@@ -54,14 +59,18 @@ const DatasetItemsList = (props) => {
     });
   };
 
-  React.useEffect(() => {
-    const query = new URLSearchParams(search);
-    const panels = query.get('activeAccordion')?.split(',') || [];
-    setActiveAccordion(panels);
-  }, [search, setActiveAccordion]);
+  const handleActiveIndex = (index, id) => {
+    setActivePanel(id);
+    setActiveIndex(index);
+    addQueryParam('activeAccordion', id);
+  };
+
+  const isActive = (id) => {
+    return activePanel.includes(id);
+  };
 
   const handleClick = (e, titleProps) => {
-    const { index, id } = titleProps;
+    const { index, id, item } = titleProps;
 
     const newIndex =
       activeIndex.indexOf(index) === -1
@@ -73,41 +82,10 @@ const DatasetItemsList = (props) => {
         ? [...activePanel, id]
         : activePanel.filter((item) => item !== id);
 
+    setActiveAccordionId(id);
+    setActiveTabIndex(item.id);
     handleActiveIndex(newIndex, newPanel);
   };
-
-  const handleActiveIndex = (index, id) => {
-    setActivePanel(id);
-    setActiveIndex(index);
-    addQueryParam('activeAccordion', id);
-  };
-
-  const scrollToElement = () => {
-    if (!!activePanels && !!activePanels[0].length) {
-      let element = document.getElementById(
-        activePanels[activePanels.length - 1],
-      );
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const isActive = (id) => {
-    return activePanel.includes(id);
-  };
-
-  // React.useEffect(() => {
-  //   const firstAccordion = datasets?.[0].id;
-  //   if (activePanel.length < 1) {
-  //     setActivePanel([firstAccordion]);
-  //   }
-  // }, [activePanel.length, item.children]);
-
-  React.useEffect(() => {
-    !!activePanelsRef.current &&
-      setItemToScroll(
-        activePanelsRef.current[activePanelsRef.current?.length - 1],
-      );
-  }, []);
 
   React.useEffect(() => {
     if (!!activePanelsRef.current && !!activePanelsRef?.current[0]?.length) {
@@ -118,6 +96,20 @@ const DatasetItemsList = (props) => {
         ...(activePanelsRef.current || []),
       ]);
     }
+  }, []);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      const activeAccordionId =
+        activePanelsRef?.current[activePanelsRef?.current.length - 1];
+      const element = document.getElementById(activeAccordionId);
+      element &&
+        element.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'start',
+        });
+    }, 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -158,7 +150,7 @@ const DatasetItemsList = (props) => {
                   tabIndex={0}
                   active={active}
                   index={index}
-                  onClick={(e) => handleClick(e, { index, id })}
+                  onClick={(e) => handleClick(e, { index, id, item })}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
                       handleClick(e, { index });
@@ -216,63 +208,51 @@ const DatasetItemsList = (props) => {
                   </span>
                   <Icon className="ri-arrow-down-s-line" />
                 </Accordion.Title>
-                <AnimateHeight
-                  animateOpacity
-                  duration={500}
-                  height={active ? 'auto' : 0}
-                  onTransitionEnd={() => {
-                    if (!!activePanels && id === itemToScroll) {
-                      setItemToScroll('');
-                      scrollToElement();
-                    }
-                  }}
-                >
-                  <Accordion.Content active={active}>
-                    <div className="dataset-content">
-                      <div>
-                        {publicationDateForResource && (
-                          <div>
-                            <strong>Published: </strong>
-                            <DateTime
-                              format="DATE_MED"
-                              value={publicationDateForResource}
-                            />
-                          </div>
-                        )}
-
-                        {resourceTemporalExtentDetails &&
-                          resourceTemporalExtentDetails?.length > 0 && (
-                            <div>
-                              <strong>Temporal coverage: </strong>
-                              {temporalDateRange}
-                            </div>
-                          )}
-                      </div>
-
-                      {dataset.resourceType[0] !== 'nonGeographicDataset' && (
-                        <div className="dataset-pdf">
-                          <div className="d-link">
-                            <Icon className="file pdf" />
-                            <a
-                              target="_blank"
-                              rel="noreferrer"
-                              href={
-                                `${appConfig.indexBaseUrl}/catalogue/datahub/api/records/` +
-                                `${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`
-                              }
-                            >
-                              Metadata Factsheet
-                            </a>
-                          </div>
+                <Accordion.Content active={active}>
+                  <div className="dataset-content">
+                    <div>
+                      {publicationDateForResource && (
+                        <div>
+                          <strong>Published: </strong>
+                          <DateTime
+                            format="DATE_MED"
+                            value={publicationDateForResource}
+                          />
                         </div>
                       )}
+
+                      {resourceTemporalExtentDetails &&
+                        resourceTemporalExtentDetails?.length > 0 && (
+                          <div>
+                            <strong>Temporal coverage: </strong>
+                            {temporalDateRange}
+                          </div>
+                        )}
                     </div>
 
-                    {!!dataset.link && dataset.link.length > 0 && (
-                      <DatasetItemDownloadList link={dataset.link} />
+                    {dataset.resourceType[0] !== 'nonGeographicDataset' && (
+                      <div className="dataset-pdf">
+                        <div className="d-link">
+                          <Icon className="file pdf" />
+                          <a
+                            target="_blank"
+                            rel="noreferrer"
+                            href={
+                              `${appConfig.indexBaseUrl}/catalogue/datahub/api/records/` +
+                              `${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`
+                            }
+                          >
+                            Metadata Factsheet
+                          </a>
+                        </div>
+                      </div>
                     )}
-                  </Accordion.Content>
-                </AnimateHeight>
+                  </div>
+
+                  {!!dataset.link && dataset.link.length > 0 && (
+                    <DatasetItemDownloadList link={dataset.link} />
+                  )}
+                </Accordion.Content>
               </Accordion>
             </>
           );
