@@ -1,6 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import renderer from 'react-test-renderer';
 
 import MetadataSection from './MetadataSection';
 
@@ -10,6 +9,10 @@ describe('MetadataSection Component', () => {
       indexBaseUrl: 'https://sdi.eea.europa.eu',
     };
 
-    render(<MetadataSection appConfig={appConfig} />);
+    const component = renderer.create(
+      <MetadataSection appConfig={appConfig} />,
+    );
+    const json = component.toJSON();
+    expect(json).toMatchSnapshot();
   });
 });
