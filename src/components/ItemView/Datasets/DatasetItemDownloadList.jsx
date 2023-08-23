@@ -33,7 +33,7 @@ const DatasetItemDownloadList = (props) => {
                         <span>{item.name}</span>
                       </a>
                       {isInternalURL(item.url) && (
-                        <SVGIcon name={lockSVG} size="18" />
+                        <SVGIcon name={lockSVG} size="20px" />
                       )}
                     </div>
                   </List.Content>
@@ -72,7 +72,7 @@ const DatasetItemDownloadList = (props) => {
                         </a>
                       )}
                       {isInternalURL(item.url) && (
-                        <SVGIcon name={lockSVG} size="18" />
+                        <SVGIcon name={lockSVG} size="20px" />
                       )}
                     </div>
                   </List.Content>
@@ -92,7 +92,7 @@ const DatasetItemDownloadList = (props) => {
                 <List.Item key={i}>
                   <List.Content>
                     <div>
-                      <SVGIcon name={servicesSVG} size="18" />
+                      <SVGIcon name={servicesSVG} size="20px" />
                       <a
                         className="item-link"
                         href={item.url}
@@ -102,7 +102,7 @@ const DatasetItemDownloadList = (props) => {
                         {item.protocol} {item.name || item.description}
                       </a>
                       {isInternalURL(item.url) && (
-                        <SVGIcon name={lockSVG} size="18" />
+                        <SVGIcon name={lockSVG} size="20px" />
                       )}
                     </div>
                   </List.Content>
@@ -115,7 +115,7 @@ const DatasetItemDownloadList = (props) => {
                 <List.Item key={i}>
                   <List.Content>
                     <div>
-                      <SVGIcon name={servicesSVG} size="18" />
+                      <SVGIcon name={servicesSVG} size="20px" />
                       <a
                         className="item-link"
                         href={item.url}
@@ -125,7 +125,7 @@ const DatasetItemDownloadList = (props) => {
                         {item.protocol} {item.name || item.description}
                       </a>
                       {isInternalURL(item.url) && (
-                        <SVGIcon name={lockSVG} size="18" />
+                        <SVGIcon name={lockSVG} size="20px" />
                       )}
                     </div>
                   </List.Content>
@@ -155,7 +155,7 @@ const DatasetItemDownloadList = (props) => {
                         <span>{item.name || item.url}</span>
                       </a>
                       {isInternalURL(item.url) && (
-                        <SVGIcon name={lockSVG} size="18" />
+                        <SVGIcon name={lockSVG} size="20px" />
                       )}
                     </div>
                   </List.Content>

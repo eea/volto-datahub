@@ -6,21 +6,28 @@ import DatasetItemsList from './DatasetItemsList';
 const DatasetsTab = (props) => {
   const { items, appConfig } = props;
 
+  const [filterValue, setFilterValue] = React.useState('');
+
   const [activeTabIndex, setActiveTabIndex] = React.useState(0);
   const [activeAccordionId, setActiveAccordionId] = React.useState();
+  const [initialAccordionId, setInitialAccordionId] = React.useState();
 
   React.useEffect(() => {
-    const lastAccordionSelected =
-      activeAccordionId?.[activeAccordionId.length - 1];
-
-    const activeTab = items.filter((item) =>
-      item.children.find((child) => child.id === lastAccordionSelected),
-    );
-    setActiveTabIndex(activeTab?.[0]?.id);
-  }, [activeAccordionId, items]);
+    if (!activeAccordionId) {
+      const activeTab = items.filter((item) =>
+        item.children.find((child) => child.id === initialAccordionId),
+      );
+      setActiveTabIndex(activeTab?.[0]?.id);
+    }
+  }, [activeAccordionId, initialAccordionId, items]);
 
   const handleTabChange = (e, { activeIndex }) => {
+    setFilterValue('');
     setActiveTabIndex(activeIndex);
+  };
+
+  const handleFilteredValueChange = (value) => {
+    setFilterValue(value);
   };
 
   const panes = (items || []).map((item, i) => ({
@@ -32,9 +39,13 @@ const DatasetsTab = (props) => {
     render: () => (
       <Tab.Pane>
         <DatasetItemsList
-          appConfig={appConfig}
           item={item}
-          setActiveAccordion={setActiveAccordionId}
+          appConfig={appConfig}
+          filterValue={filterValue}
+          setActiveTabIndex={setActiveTabIndex}
+          setActiveAccordionId={setActiveAccordionId}
+          setInitialAccordionId={setInitialAccordionId}
+          handleFilteredValueChange={handleFilteredValueChange}
         />
       </Tab.Pane>
     ),
@@ -42,11 +53,11 @@ const DatasetsTab = (props) => {
 
   return (
     <Tab
+      panes={panes}
       className="datasets-tab"
       activeIndex={activeTabIndex}
-      menu={{ vertical: true, secondary: true, pointing: true }}
-      panes={panes}
       onTabChange={handleTabChange}
+      menu={{ vertical: true, secondary: true, pointing: true }}
     />
   );
 };

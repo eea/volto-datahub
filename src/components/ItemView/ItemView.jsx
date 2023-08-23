@@ -77,8 +77,8 @@ function ItemView(props) {
   }, [result, docid, appConfig, registry, dispatch]);
 
   const item = result ? result._result : null;
-  const { title, description, raw_value } = item || {}; // readingTime
-  const { changeDate, resourceIdentifier, cl_status } = raw_value?.raw || {};
+  const { title, description, raw_value } = item || {};
+  const { changeDate, resourceIdentifier, cl_status } = raw_value?.raw;
   const obsolete = isObsolete(cl_status);
 
   const prodID = (resourceIdentifier || []).filter((p) => {
@@ -147,10 +147,6 @@ function ItemView(props) {
                   type="date"
                   value={new Date(changeDate)}
                 />
-                {/* <Banner.MetadataField
-                  label="Reading time"
-                  value={readingTime?.raw}
-                /> */}
               </Banner.Metadata>
             </Banner.Content>
           </Banner>
@@ -176,17 +172,8 @@ function ItemView(props) {
       </div>
 
       <DatasetsView item={item} appConfig={appConfig} />
-
       <MetadataSection item={item} appConfig={appConfig} docid={docid} />
-
       <MoreLikeThis docid={docid} title={title?.raw} appConfig={appConfig} />
-
-      {/* <div className="info-wrapper">
-        <div className="info-content">
-          <div className="info-title">More Information for {title?.raw}.</div>
-          <p>{description?.raw}</p>
-        </div>
-      </div> */}
     </div>
   ) : item ? (
     <>
@@ -207,8 +194,6 @@ function DatahubItemView(props) {
 
   return (
     <div id="view">
-      {/* <ContentMetadataTags content={this.props.content} /> */}
-      {/* Body class if displayName in component is set */}
       <BodyClass className="view-datahub-item" />
       <Container className="view-wrapper">
         <ItemView
