@@ -17,9 +17,9 @@
     "url": "git@github.com:eea/volto-datahub.git"
   },
   "dependencies": {
+    "@eeacms/volto-accordion-block": "*",
     "@eeacms/volto-globalsearch": "*",
     "@eeacms/volto-listing-block": "*",
-    "@eeacms/volto-accordion-block": "*",
     "feed": "4.2.2"
   },
   "devDependencies": {

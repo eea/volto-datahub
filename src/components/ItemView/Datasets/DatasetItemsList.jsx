@@ -147,13 +147,16 @@ const DatasetItemsList = (props) => {
             <>
               <Accordion id={id} key={index}>
                 <Accordion.Title
+                  role="button"
                   tabIndex={0}
                   active={active}
+                  aria-expanded={active}
                   index={index}
                   onClick={(e) => handleClick(e, { index, id, item })}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleClick(e, { index });
+                    if (e.keyCode === 13 || e.keyCode === 32) {
+                      e.preventDefault();
+                      handleClick(e, { index, id, item });
                     }
                   }}
                 >
@@ -206,7 +209,11 @@ const DatasetItemsList = (props) => {
                       )}
                     </span>
                   </span>
-                  <Icon className="ri-arrow-down-s-line" />
+                  {active ? (
+                    <Icon className="ri-arrow-up-s-line" />
+                  ) : (
+                    <Icon className="ri-arrow-down-s-line" />
+                  )}
                 </Accordion.Title>
                 <Accordion.Content active={active}>
                   <div className="dataset-content">
