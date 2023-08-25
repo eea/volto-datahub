@@ -81,7 +81,10 @@ const MetadataSection = (props) => {
           <a
             target="_blank"
             rel="noreferrer"
-            href={`${appConfig.indexBaseUrl}/catalogue/datahub/api/records/${docid}/formatters/xsl-view?output=pdf&language=eng&approved=true`}
+            href={
+              `${appConfig.indexBaseUrl}/catalogue/datahub/api/records/` +
+              `${docid}/formatters/xsl-view?output=pdf&language=eng&approved=true`
+            }
           >
             Metadata Factsheet
           </a>
