@@ -32,12 +32,21 @@ const DatasetsTab = (props) => {
 
   const panes = (items || []).map((item, i) => ({
     menuItem: (
-      <Menu.Item key={i} tabIndex={0}>
+      <Menu.Item
+        key={i}
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.keyCode === 13 || e.keyCode === 32) {
+            e.preventDefault();
+            setActiveTabIndex(i);
+          }
+        }}
+      >
         {item.date ? <span>{item.date}</span> : 'No date'}
       </Menu.Item>
     ),
     render: () => (
-      <Tab.Pane>
+      <Tab.Pane tabIndex={0}>
         <DatasetItemsList
           item={item}
           appConfig={appConfig}
