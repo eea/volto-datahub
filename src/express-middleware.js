@@ -158,7 +158,10 @@ function rssMiddleware(req, res, next) {
   const appConfig = registry.searchui['datahub'];
 
   generateRSS(appConfig)
-    .then((body) => res.send(body))
+    .then((body) => {
+      res.setHeader('content-type', 'application/rss+xml');
+      res.send(body);
+    })
     .catch((body) => {
       res.send({ error: body });
     });
