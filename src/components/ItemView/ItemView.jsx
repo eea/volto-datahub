@@ -8,6 +8,7 @@ import { BodyClass, asyncConnect, Helmet } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 import { rebind, applyConfigurationSchema } from '@eeacms/search';
 import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
+import { defineMessages, useIntl } from 'react-intl';
 import {
   MoreLikeThis,
   MetadataSection,
@@ -16,7 +17,8 @@ import {
 import { fetchResult } from '@eeacms/search/lib/hocs/useResult';
 import { setDatahubResult } from '@eeacms/volto-datahub/store';
 
-import { isObsolete } from './utils.js';
+import { viewRouteId } from '@eeacms/volto-datahub/constants';
+import { isObsolete } from '@eeacms/volto-datahub/utils';
 
 const appName = 'datahub';
 const WORD_COUNT = 60;
@@ -45,6 +47,13 @@ function IsomorphicPortal({ children }) {
     children
   );
 }
+
+const messages = defineMessages({
+  rssFeed: {
+    id: 'rssFeed',
+    defaultMessage: 'RSS Feed',
+  },
+});
 
 function ItemView(props) {
   const { docid, staticContext } = props;
@@ -93,6 +102,7 @@ function ItemView(props) {
     WORD_COUNT,
   );
   const [isReadMore, setIsReadMore] = React.useState(false);
+  const currentUrl = `/en/datahub/${viewRouteId}/${docid}`;
 
   React.useEffect(() => {
     const handler = async () => {
@@ -107,7 +117,7 @@ function ItemView(props) {
               },
               {
                 title: rawTitle,
-                '@id': `/en/datahub/view/${docid}`,
+                '@id': currentUrl,
               },
             ],
           },
@@ -118,7 +128,15 @@ function ItemView(props) {
     };
 
     handler();
-  }, [item, dispatch, docid, rawTitle]);
+  }, [item, dispatch, docid, rawTitle, currentUrl]);
+
+  const intl = useIntl();
+  const rssLinks = [
+    {
+      title: 'RSS',
+      href: `${currentUrl}/datahub_rss.xml`,
+    },
+  ];
 
   return item && item._meta.found ? (
     <div className="dataset-view">
@@ -126,7 +144,35 @@ function ItemView(props) {
       <IsomorphicPortal>
         <div className="dataset">
           <Banner>
-            <Banner.Content>
+            <Banner.Content
+              actions={rssLinks?.map((rssLink, index) => (
+                <>
+                  <Helmet
+                    link={[
+                      {
+                        rel: 'alternate',
+                        title:
+                          rssLink.title ?? intl.formatMessage(messages.rssFeed),
+                        href: rssLink.href,
+                        type:
+                          rssLink.feedType === 'atom'
+                            ? 'application/atom+xml'
+                            : 'application/rss+xml',
+                      },
+                    ]}
+                  />
+                  <Banner.Action
+                    icon="ri-rss-fill"
+                    title={
+                      rssLink.title ?? intl.formatMessage(messages.rssFeed)
+                    }
+                    className="rssfeed"
+                    href={rssLink.href}
+                    target="_blank"
+                  />
+                </>
+              ))}
+            >
               <Banner.Subtitle>
                 <Link to={appConfig.landingPageURL}>
                   <Icon className="arrow left" />

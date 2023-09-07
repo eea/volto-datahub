@@ -1,9 +1,10 @@
 import React from 'react';
 import { Icon, List } from 'semantic-ui-react';
-import { isInternalURL, groupBy, SVGIcon } from '../utils.js';
+import { SVGIcon } from '../utils.js';
 
 import servicesSVG from '../icons/services.svg';
 import lockSVG from 'remixicon/icons/System/lock-line.svg';
+import { isInternalURL, groupBy } from '@eeacms/volto-datahub/utils';
 
 const DatasetItemDownloadList = (props) => {
   const { link } = props;

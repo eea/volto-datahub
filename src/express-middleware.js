@@ -1,10 +1,16 @@
 import { registry } from '@eeacms/search';
 import express from 'express';
-import buildRequest from '@eeacms/search/lib/search/query';
 import superagent from 'superagent';
 import { Feed } from 'feed';
 
-// import zlib from 'zlib';
+import buildRequest from '@eeacms/search/lib/search/query';
+import { fetchResult } from '@eeacms/search/lib/hocs/useResult';
+
+import {
+  rssRouteId,
+  viewRouteId,
+  redirectRouteId,
+} from '@eeacms/volto-datahub/constants';
 
 const getUrlES = (appName) => {
   return (
@@ -35,11 +41,11 @@ function handleSearchRequest(body, params) {
   });
 }
 
-function toPublicURL(id) {
-  return `https://www.eea.europa.eu/en/datahub/datahubitem-view/${id}`;
-}
-
 function generateSitemap(appConfig) {
+  const toPublicURL = (id) => {
+    return `https://eea.europa.eu/en/datahub/${viewRouteId}/${id}`;
+  };
+
   return new Promise((resolve, reject) => {
     const body = buildRequest({ filters: [] }, appConfig);
     delete body['source'];
@@ -59,10 +65,6 @@ function generateSitemap(appConfig) {
       const result = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">\n${urls.join(
         '\n',
       )}\n</urlset>`;
-
-      // zlib.gzip(Buffer.from(result, 'utf8'), (_err, buffer) => {
-      //   resolve(buffer);
-      // });
 
       resolve(result);
     });
@@ -112,7 +114,7 @@ function datasetRedirect(req, res, next) {
   });
 }
 
-function generateRSS(appConfig) {
+function generateRSS({ appConfig, feedUrl, toPublicURL }) {
   return new Promise((resolve, reject) => {
     const body = buildRequest({ filters: [] }, appConfig);
     delete body['source'];
@@ -135,6 +137,9 @@ function generateRSS(appConfig) {
           id: 'https://eea.europa.eu/en/datahub',
           generator: 'EEA Website',
           link: 'https://eea.europa.eu/en/datahub',
+          feedLinks: {
+            rss: feedUrl,
+          },
         });
 
         items.forEach((item) => {
@@ -146,7 +151,7 @@ function generateRSS(appConfig) {
           });
         });
 
-        const result = feed.rss2();
+        const result = feed.rss2(); // TODO: make this pluggable
 
         resolve(result);
       })
@@ -154,17 +159,73 @@ function generateRSS(appConfig) {
   });
 }
 
-function rssMiddleware(req, res, next) {
-  const appConfig = registry.searchui['datahub'];
+function generateItemRSS({ appConfig, feedUrl, toPublicURL, params }) {
+  return new Promise((resolve, reject) => {
+    const body = buildRequest({ filters: [] }, appConfig);
+    delete body['source'];
+    delete body['params'];
+    delete body['runtime_mappings'];
+    delete body['index'];
+    body._source = {
+      include: ['about', 'last_modified', 'title', 'description'],
+    };
+    body.size = 10000;
+    // const urlES = getUrlES('datahub');
+    const docid = params['id'];
 
-  generateRSS(appConfig)
-    .then((body) => {
-      res.setHeader('content-type', 'application/rss+xml');
-      res.send(body);
-    })
-    .catch((body) => {
-      res.send({ error: body });
-    });
+    fetchResult(docid, appConfig, registry)
+      .then((body) => {
+        const result = body._result;
+        const url = toPublicURL(docid);
+        // const items = body?.hits?.hits || [];
+        //
+        const title = result.title.raw;
+        const feed = new Feed({
+          title,
+          description: `Latest changes in ${title}`,
+          id: url,
+          generator: 'EEA Website',
+          link: url,
+          feedLinks: {
+            rss: feedUrl,
+          },
+        });
+        const items = result['raw_value']['raw']['children'];
+
+        items.forEach((item) => {
+          const date = item.publicationDateForResource?.[0];
+          feed.addItem({
+            id: `${url}/${item.id}`,
+            title: item.resourceTitleObject.default,
+            link: url,
+            date: new Date(date),
+          });
+        });
+
+        resolve(feed.rss2());
+      })
+      .catch(reject);
+  });
+}
+
+function make_rssMiddleware(config, generator) {
+  function rssMiddleware(req, res, next) {
+    const appConfig = registry.searchui['datahub'];
+    const feedUrl = `${config.settings.apiPath}${req.path}`;
+
+    const toPublicURL = (id) =>
+      `${config.settings.apiPath}/en/datahub/${viewRouteId}/${id}`;
+
+    generator({ appConfig, feedUrl, toPublicURL, params: req.params })
+      .then((body) => {
+        res.setHeader('content-type', 'application/rss+xml');
+        res.send(body);
+      })
+      .catch((body) => {
+        res.send({ error: body });
+      });
+  }
+  return rssMiddleware;
 }
 
 export default function makeMiddlewares(config) {
@@ -173,8 +234,15 @@ export default function makeMiddlewares(config) {
   middleware.use(express.urlencoded({ extended: true }));
 
   middleware.all('**/datahub/sitemap-data.xml', sitemap);
-  middleware.all('**/datahub/rss.xml', rssMiddleware);
-  middleware.all('**/datahub/dataset-redirect/:id', datasetRedirect);
+  middleware.all(
+    '**/datahub/datahub_rss.xml',
+    make_rssMiddleware(config, generateRSS),
+  );
+  middleware.all(
+    `**/datahub/${viewRouteId}/:id/${rssRouteId}`,
+    make_rssMiddleware(config, generateItemRSS),
+  );
+  middleware.all(`**/datahub/${redirectRouteId}/:id`, datasetRedirect);
   middleware.id = 'datahub-middlewares';
 
   return middleware;
