@@ -195,9 +195,9 @@ function generateItemRSS({ appConfig, feedUrl, toPublicURL, params }) {
         items.forEach((item) => {
           const date = item.publicationDateForResource?.[0];
           feed.addItem({
-            id: `${url}/${item.id}`,
+            id: `${docid}/${item.id}`,
             title: item.resourceTitleObject.default,
-            link: url,
+            link: `${url}?activeAccordion=${item.id}`,
             date: new Date(date),
           });
         });
