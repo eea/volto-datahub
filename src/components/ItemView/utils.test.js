@@ -1,11 +1,11 @@
 import { render, cleanup, fireEvent } from '@testing-library/react';
+import { SVGIcon } from './utils';
 import {
   isObsolete,
   isInternalURL,
   isInternal,
   groupBy,
-  SVGIcon,
-} from './utils';
+} from '@eeacms/volto-datahub/utils';
 
 describe('isObsolete', () => {
   it('should return true if status array contains obsolete keys', () => {
