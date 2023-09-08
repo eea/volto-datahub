@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DatasetEsri renders correctly 1`] = `
+<div
+  className="item"
+  onClick={[Function]}
+  role="listitem"
+>
+  <div
+    className="content"
+  >
+    <div
+      className="dataset-item"
+    >
+      <i
+        aria-hidden="true"
+        className="icon download"
+        onClick={[Function]}
+      />
+      <a
+        className="item-link"
+        href="https://example.org/1"
+        rel="noreferrer"
+        target="_blank"
+      >
+        First
+      </a>
+    </div>
+  </div>
+</div>
+`;

@@ -6,8 +6,9 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { DateTime } from '@eeacms/search';
 import { AccordionFilter } from '@eeacms/volto-accordion-block/components';
 
-import { isInternal, SVGIcon, isObsolete } from '../utils.js';
+import { SVGIcon } from '../utils.js';
 import DatasetItemDownloadList from './DatasetItemDownloadList';
+import { isInternal, isObsolete } from '@eeacms/volto-datahub/utils';
 
 import lockSVG from 'remixicon/icons/System/lock-line.svg';
 

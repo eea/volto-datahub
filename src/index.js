@@ -3,6 +3,7 @@ import DatahubCardItem from './components/Result/DatahubCardItem';
 import DatahubItemView from './components/ItemView/ItemView';
 import { DatahubResultModel } from './config/models';
 import { datahub_results } from './store';
+import { viewRouteId, rssRouteId } from '@eeacms/volto-datahub/constants';
 
 function tweakForNLPService(body, config) {
   if (!config.enableNLP) {
@@ -35,18 +36,22 @@ const applyConfig = (config) => {
   // datahub.resultViews[0].factories.item = "DatahubListingViewItem"
   datahub.resultItemModel.factory = 'DatahubResultModel';
 
-  config.settings.nonContentRoutes.push(/datahubitem-view\/(.*)/); // \/(.*)\/
-  config.settings.nonContentRoutes.push(/datahub\/rss\.xml/);
+  config.settings.nonContentRoutes.push(new RegExp(`${viewRouteId}\\/(.*)`));
+  const rssRouteIdRegexp = rssRouteId.replace('.', '\\.');
+  config.settings.nonContentRoutes.push(
+    new RegExp(`/.+/datahub/${rssRouteIdRegexp}`),
+  );
+
   config.settings.externalRoutes.push({
     match: {
-      path: /\/.+\/datahub\/rss\.xml/,
+      path: new RegExp(`/.+/${rssRouteIdRegexp}`),
       strict: true,
       exact: true,
     },
   });
   config.addonRoutes = [
     {
-      path: '*/datahubitem-view/:id',
+      path: `*/${viewRouteId}/:id`,
       component: DatahubItemView,
     },
 
