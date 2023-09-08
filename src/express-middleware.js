@@ -198,7 +198,7 @@ function generateItemRSS({ appConfig, feedUrl, toPublicURL, params }) {
             id: `${docid}/${item.id}`,
             title: item.resourceTitleObject.default,
             link: `${url}?activeAccordion=${item.id}`,
-            date: new Date(date),
+            ...(date ? { date: new Date(date) } : {}),
           });
         });
 
