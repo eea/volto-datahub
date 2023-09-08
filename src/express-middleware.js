@@ -161,24 +161,12 @@ function generateRSS({ appConfig, feedUrl, toPublicURL }) {
 
 function generateItemRSS({ appConfig, feedUrl, toPublicURL, params }) {
   return new Promise((resolve, reject) => {
-    const body = buildRequest({ filters: [] }, appConfig);
-    delete body['source'];
-    delete body['params'];
-    delete body['runtime_mappings'];
-    delete body['index'];
-    body._source = {
-      include: ['about', 'last_modified', 'title', 'description'],
-    };
-    body.size = 10000;
-    // const urlES = getUrlES('datahub');
     const docid = params['id'];
 
     fetchResult(docid, appConfig, registry)
       .then((body) => {
         const result = body._result;
         const url = toPublicURL(docid);
-        // const items = body?.hits?.hits || [];
-        //
         const title = result.title.raw;
         const feed = new Feed({
           title,
