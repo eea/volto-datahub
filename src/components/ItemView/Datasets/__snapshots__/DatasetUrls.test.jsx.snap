@@ -1,7 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DatasetEsri renders correctly 1`] = `null`;
-
 exports[`DatasetUrl renders correctly 1`] = `
 <div
   className="item"
