@@ -18,25 +18,25 @@ const ItemLink = ({ item }) => (
         >
           {item.protocol} {item.name || item.description}
         </a>
-        {isInternalURL(item.url) && <SVGIcon name={lockSVG} size="20px" />}
+        {isInternalURL(item.url) ? (
+          <SVGIcon name={lockSVG} size="20px" />
+        ) : null}
       </div>
     </List.Content>
   </List.Item>
 );
 
 export default function DatasetEsri({ dataset }) {
-  return (
-    (dataset['ESRI:REST'] || dataset['OGC:WMS']) && (
-      <>
-        <h5>Services:</h5>
-        <List divided relaxed>
-          {[...(dataset['ESRI:REST'] || []), ...(dataset['OGC:WMS'] || [])].map(
-            (item, i) => (
-              <ItemLink item={item} key={item.id} />
-            ),
-          )}
-        </List>
-      </>
-    )
-  );
+  return dataset['ESRI:REST'] || dataset['OGC:WMS'] ? (
+    <>
+      <h5>Services:</h5>
+      <List divided relaxed>
+        {[...(dataset['ESRI:REST'] || []), ...(dataset['OGC:WMS'] || [])].map(
+          (item, i) => (
+            <ItemLink item={item} key={item.id} />
+          ),
+        )}
+      </List>
+    </>
+  ) : null;
 }
