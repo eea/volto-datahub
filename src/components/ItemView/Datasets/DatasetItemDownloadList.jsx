@@ -10,13 +10,16 @@ import DatasetHttpLinks from './DatasetHttpLinks';
 const DatasetItemDownloadList = (props) => {
   const { link } = props;
   const dataset = groupBy(link, 'protocol');
+  const showDownload = !!(
+    dataset['WWW:URL'] ||
+    dataset['WWW:LINK'] ||
+    dataset['EEA:FILEPATH'] ||
+    dataset['EEA:FOLDERPATH']
+  );
 
   return (
     <div>
-      {(dataset['WWW:URL'] ||
-        dataset['WWW:LINK'] ||
-        dataset['EEA:FILEPATH'] ||
-        dataset['EEA:FOLDERPATH']) && (
+      {showDownload ? (
         <>
           <h5>Download:</h5>
           <List divided relaxed>
@@ -24,7 +27,7 @@ const DatasetItemDownloadList = (props) => {
             <DatasetLinks dataset={dataset} />
           </List>
         </>
-      )}
+      ) : null}
 
       <DatasetEsri dataset={dataset} />
       <DatasetHttpLinks dataset={dataset} />

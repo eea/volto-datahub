@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DatasetUrl renders correctly 1`] = `
+<div
+  className="item"
+  onClick={[Function]}
+  role="listitem"
+>
+  <div
+    className="content"
+  >
+    <div
+      className="dataset-item"
+    >
+      <i
+        aria-hidden="true"
+        className="icon download"
+        onClick={[Function]}
+      />
+      <a
+        className="item-link"
+        href="https://example.org/1"
+        rel="noreferrer"
+        target="_blank"
+      >
+        <span>
+          Direct download
+        </span>
+      </a>
+    </div>
+  </div>
+  <span
+    className="item-description"
+    title="Download link description"
+  >
+    Download link description
+  </span>
+</div>
+`;
