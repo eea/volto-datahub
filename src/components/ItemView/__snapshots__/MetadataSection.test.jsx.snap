@@ -24,7 +24,9 @@ exports[`MetadataSection Component renders correctly with data 1`] = `
     className="d-link"
   >
     <i
-      className="ri-external-link-line"
+      aria-hidden="true"
+      className="icon ri-external-link-line"
+      onClick={[Function]}
     />
     <a
       href="https://sdi.eea.europa.eu/catalogue/srv/eng/catalog.search#/metadata/undefined"
