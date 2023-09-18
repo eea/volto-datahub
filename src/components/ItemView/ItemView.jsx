@@ -190,16 +190,20 @@ function ItemView(props) {
                 {obsolete && <div class="ui label archived-item">Archived</div>}
                 {prodID.length > PROD_ID_COUNT ? (
                   <>
-                    <span>
-                      <Banner.MetadataField
-                        label="Prod-ID"
-                        value={prodID.slice(0, PROD_ID_COUNT).join(', ')}
-                      />
-                    </span>
-
                     <Popup
+                      // on="click"
+                      position="top right"
                       trigger={
-                        <span style={{ cursor: 'pointer' }}> ... more</span>
+                        <span className="prod-id">
+                          <span>
+                            <Banner.MetadataField
+                              label="Prod-ID"
+                              value={prodID.slice(0, PROD_ID_COUNT).join(', ')}
+                            />
+                          </span>
+                          {'...'}
+                          <Icon className="ri-add-line" />
+                        </span>
                       }
                       content={prodID.slice(PROD_ID_COUNT).join(', ')}
                     />
