@@ -95,7 +95,7 @@ function ItemView(props) {
   //   return p.code.includes('DAT');
   // })[0]?.code;
 
-  const prodID = Array.isArray(item?.prod_id.raw)
+  const prodID = Array.isArray(item?.prod_id?.raw)
     ? item?.prod_id?.raw
     : item?.prod_id?.raw.split(', ');
 
@@ -188,32 +188,38 @@ function ItemView(props) {
               {/* <Banner.MetadataField label="Prod-ID" value={prodID} /> */}
               <Banner.Metadata>
                 {obsolete && <div class="ui label archived-item">Archived</div>}
-                {prodID.length > PROD_ID_COUNT ? (
+                {prodID && (
                   <>
-                    <Popup
-                      // on="click"
-                      position="top right"
-                      trigger={
-                        <span className="prod-id">
-                          <span>
-                            <Banner.MetadataField
-                              label="Prod-ID"
-                              value={prodID.slice(0, PROD_ID_COUNT).join(', ')}
-                            />
-                          </span>
-                          {'...'}
-                          <Icon className="ri-add-line" />
-                        </span>
-                      }
-                      content={prodID.slice(PROD_ID_COUNT).join(', ')}
-                    />
-                    {' | '}
+                    {prodID.length > PROD_ID_COUNT ? (
+                      <>
+                        <Popup
+                          // on="click"
+                          position="top right"
+                          trigger={
+                            <span className="prod-id">
+                              <span>
+                                <Banner.MetadataField
+                                  label="Prod-ID"
+                                  value={prodID
+                                    .slice(0, PROD_ID_COUNT)
+                                    .join(', ')}
+                                />
+                              </span>
+                              {'...'}
+                              <Icon className="ri-add-line" />
+                            </span>
+                          }
+                          content={prodID.slice(PROD_ID_COUNT).join(', ')}
+                        />
+                        {' | '}
+                      </>
+                    ) : (
+                      <Banner.MetadataField
+                        label="Prod-ID"
+                        value={prodID.join(', ')}
+                      />
+                    )}
                   </>
-                ) : (
-                  <Banner.MetadataField
-                    label="Prod-ID"
-                    value={prodID.join(', ')}
-                  />
                 )}
                 {result.issued && (
                   <Banner.MetadataField
