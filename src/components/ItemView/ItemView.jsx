@@ -2,7 +2,7 @@ import React from 'react';
 import { Portal } from 'react-portal';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-import { Container, Icon, Button } from 'semantic-ui-react';
+import { Container, Icon, Button, Popup } from 'semantic-ui-react';
 import { Toolbar } from '@plone/volto/components';
 import { BodyClass, asyncConnect, Helmet } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
@@ -22,6 +22,7 @@ import { isObsolete } from '@eeacms/volto-datahub/utils';
 
 const appName = 'datahub';
 const WORD_COUNT = 60;
+const PROD_ID_COUNT = 3;
 
 const splitContent = (content, wordCount) => {
   const words = content.split(' ');
@@ -87,12 +88,16 @@ function ItemView(props) {
 
   const item = result ? result._result : null;
   const { title, description, raw_value } = item || {};
-  const { changeDate, resourceIdentifier, cl_status } = raw_value?.raw;
+  const { changeDate, cl_status } = raw_value?.raw || {}; // resourceIdentifier
   const obsolete = isObsolete(cl_status);
 
-  const prodID = (resourceIdentifier || []).filter((p) => {
-    return p.code.includes('DAT');
-  })[0]?.code;
+  // const prodID = (resourceIdentifier || []).filter((p) => {
+  //   return p.code.includes('DAT');
+  // })[0]?.code;
+
+  const prodID = Array.isArray(item?.prod_id?.raw)
+    ? item?.prod_id?.raw
+    : item?.prod_id?.raw.split(', ');
 
   const rawTitle = item && item._meta.found ? title?.raw || '' : docid;
 
@@ -180,19 +185,56 @@ function ItemView(props) {
                 </Link>
               </Banner.Subtitle>
               <Banner.Title>{title?.raw}</Banner.Title>
+              {/* <Banner.MetadataField label="Prod-ID" value={prodID} /> */}
               <Banner.Metadata>
                 {obsolete && <div class="ui label archived-item">Archived</div>}
-                <Banner.MetadataField label="Prod-ID" value={prodID} />
-                <Banner.MetadataField
-                  label="Published"
-                  type="date"
-                  value={new Date(result.issued)}
-                />
-                <Banner.MetadataField
-                  label="Last modified"
-                  type="date"
-                  value={new Date(changeDate)}
-                />
+                {prodID && (
+                  <>
+                    {prodID.length > PROD_ID_COUNT ? (
+                      <>
+                        <Popup
+                          // on="click"
+                          position="top right"
+                          trigger={
+                            <span className="prod-id">
+                              <span>
+                                <Banner.MetadataField
+                                  label="Prod-ID"
+                                  value={prodID
+                                    .slice(0, PROD_ID_COUNT)
+                                    .join(', ')}
+                                />
+                              </span>
+                              {'...'}
+                              <Icon className="ri-add-line" />
+                            </span>
+                          }
+                          content={prodID.slice(PROD_ID_COUNT).join(', ')}
+                        />
+                        {' | '}
+                      </>
+                    ) : (
+                      <Banner.MetadataField
+                        label="Prod-ID"
+                        value={prodID.join(', ')}
+                      />
+                    )}
+                  </>
+                )}
+                {result.issued && (
+                  <Banner.MetadataField
+                    label="Published"
+                    type="date"
+                    value={new Date(result.issued)}
+                  />
+                )}
+                {changeDate && (
+                  <Banner.MetadataField
+                    label="Last modified"
+                    type="date"
+                    value={new Date(changeDate)}
+                  />
+                )}
               </Banner.Metadata>
             </Banner.Content>
           </Banner>

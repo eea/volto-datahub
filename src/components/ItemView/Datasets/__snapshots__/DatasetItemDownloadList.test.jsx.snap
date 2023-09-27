@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DatasetEsri renders correctly 1`] = `
-Array [
+exports[`DatasetItemDownloadList renders correctly 1`] = `
+<div>
   <h5>
-    Services:
-  </h5>,
+    Download:
+  </h5>
   <div
     className="ui divided relaxed list"
     role="list"
@@ -20,20 +20,10 @@ Array [
         <div
           className="dataset-item"
         >
-          <svg
-            className="icon"
-            dangerouslySetInnerHTML={
-              Object {
-                "__html": undefined,
-              }
-            }
-            style={
-              Object {
-                "fill": "currentColor",
-                "height": "20px",
-                "width": "auto",
-              }
-            }
+          <i
+            aria-hidden="true"
+            className="icon download"
+            onClick={[Function]}
           />
           <a
             className="item-link"
@@ -41,13 +31,13 @@ Array [
             rel="noreferrer"
             target="_blank"
           >
-            https
-             
-            First
+            <span>
+              Direct download
+            </span>
           </a>
         </div>
       </div>
     </div>
-  </div>,
-]
+  </div>
+</div>
 `;

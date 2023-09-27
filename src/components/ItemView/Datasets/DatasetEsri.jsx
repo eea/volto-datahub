@@ -8,7 +8,7 @@ import servicesSVG from '../icons/services.svg';
 const ItemLink = ({ item }) => (
   <List.Item key={item.id}>
     <List.Content>
-      <div>
+      <div className="dataset-item">
         <SVGIcon name={servicesSVG} size="20px" />
         <a
           className="item-link"
