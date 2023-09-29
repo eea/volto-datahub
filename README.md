@@ -15,11 +15,11 @@
 [![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub-develop)
 
 
-[Volto](https://github.com/plone/volto) add-on
+EEA DataHub search [Volto](https://github.com/plone/volto) add-on
 
-## Features
+## Demo
 
-Demo GIF
+- https://demo-www.eea.europa.eu/en/datahub
 
 ## Getting started
 
