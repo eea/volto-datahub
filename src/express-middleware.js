@@ -12,6 +12,8 @@ import {
   redirectRouteId,
 } from '@eeacms/volto-datahub/constants';
 
+const EEA_DATAHUB = `https://eea.europa.eu/en/datahub`;
+
 const getUrlES = (appName) => {
   return (
     process.env[`RAZZLE_PROXY_ES_DSN_${appName}`] ||
@@ -43,7 +45,7 @@ function handleSearchRequest(body, params) {
 
 function generateSitemap(appConfig) {
   const toPublicURL = (id) => {
-    return `https://eea.europa.eu/en/datahub/${viewRouteId}/${id}`;
+    return `${EEA_DATAHUB}/${viewRouteId}/${id}`;
   };
 
   return new Promise((resolve, reject) => {
@@ -134,9 +136,9 @@ function generateRSS({ appConfig, feedUrl, toPublicURL }) {
         const feed = new Feed({
           title: 'EEA Datahub',
           description: 'Latest changes in EEA Datahub',
-          id: 'https://eea.europa.eu/en/datahub',
+          id: EEA_DATAHUB,
           generator: 'EEA Website',
-          link: 'https://eea.europa.eu/en/datahub',
+          link: EEA_DATAHUB,
           feedLinks: {
             rss: feedUrl,
           },
@@ -199,10 +201,9 @@ function generateItemRSS({ appConfig, feedUrl, toPublicURL, params }) {
 function make_rssMiddleware(config, generator) {
   function rssMiddleware(req, res, next) {
     const appConfig = registry.searchui['datahub'];
-    const feedUrl = `${config.settings.apiPath}${req.path}`;
+    const feedUrl = `${EEA_DATAHUB}${req.path}`;
 
-    const toPublicURL = (id) =>
-      `${config.settings.apiPath}/en/datahub/${viewRouteId}/${id}`;
+    const toPublicURL = (id) => `${EEA_DATAHUB}/${viewRouteId}/${id}`;
 
     generator({ appConfig, feedUrl, toPublicURL, params: req.params })
       .then((body) => {
