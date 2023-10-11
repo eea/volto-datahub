@@ -201,7 +201,7 @@ function generateItemRSS({ appConfig, feedUrl, toPublicURL, params }) {
 function make_rssMiddleware(config, generator) {
   function rssMiddleware(req, res, next) {
     const appConfig = registry.searchui['datahub'];
-    const feedUrl = `${config.settings.apiPath}${req.path}`;
+    const feedUrl = `${EEA_DATAHUB}${req.path}`;
 
     const toPublicURL = (id) => `${EEA_DATAHUB}/${viewRouteId}/${id}`;
 
