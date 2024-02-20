@@ -15,12 +15,7 @@ export default function DatasetHttpLinks({ dataset }) {
               <List.Content>
                 <div className="dataset-item">
                   <Icon className="linkify" />
-                  <a
-                    href={item.url}
-                    className="item-link"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <a href={item.url} className="item-link" target="_blank">
                     <span>{item.name || item.url}</span>
                   </a>
                   {isInternalURL(item.url) ? (
@@ -40,12 +35,7 @@ export default function DatasetHttpLinks({ dataset }) {
               <List.Content>
                 <div className="dataset-item">
                   <Icon className="info circle" />
-                  <a
-                    href={item.url}
-                    className="item-link"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
+                  <a href={item.url} className="item-link" target="_blank">
                     <span>{item.name || item.url}</span>
                   </a>
                   {isInternalURL(item.url) ? (

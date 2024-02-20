@@ -10,12 +10,7 @@ const ItemLink = ({ item }) => (
     <List.Content>
       <div className="dataset-item">
         <SVGIcon name={servicesSVG} size="20px" />
-        <a
-          className="item-link"
-          href={item.url}
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a className="item-link" href={item.url} target="_blank">
           {item.protocol} {item.name || item.description}
         </a>
         {isInternalURL(item.url) ? (
