@@ -1,14 +1,9 @@
 import { ResultModel } from '@eeacms/search';
-const path = require('path');
 
 export class DatahubResultModel extends ResultModel {
   get href() {
     if (__CLIENT__) {
-      return path.join(
-        window.location.pathname,
-        'datahubitem-view/',
-        this._result.about?.raw,
-      );
+      return `${window.location.pathname}/datahubitem-view/${this._result.about?.raw}`;
     } else {
       return ''; //TODO
     }
