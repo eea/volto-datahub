@@ -14,7 +14,6 @@ exports[`MetadataSection Component renders correctly with data 1`] = `
     />
     <a
       href="https://sdi.eea.europa.eu/catalogue/datahub/api/records/undefined/formatters/xsl-view?output=pdf&language=eng&approved=true"
-      rel="noreferrer"
       target="_blank"
     >
       Metadata Factsheet
@@ -30,7 +29,6 @@ exports[`MetadataSection Component renders correctly with data 1`] = `
     />
     <a
       href="https://sdi.eea.europa.eu/catalogue/srv/eng/catalog.search#/metadata/undefined"
-      rel="noreferrer"
       target="_blank"
     >
       Metadata catalogue
