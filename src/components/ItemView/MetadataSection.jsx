@@ -80,7 +80,6 @@ const MetadataSection = (props) => {
           <Icon className="file pdf" />
           <a
             target="_blank"
-            rel="noreferrer"
             href={
               `${appConfig.indexBaseUrl}/catalogue/datahub/api/records/` +
               `${docid}/formatters/xsl-view?output=pdf&language=eng&approved=true`
@@ -94,7 +93,6 @@ const MetadataSection = (props) => {
           <Icon className="ri-external-link-line" />
           <a
             target="_blank"
-            rel="noreferrer"
             href={`${appConfig.indexBaseUrl}/catalogue/srv/eng/catalog.search#/metadata/${docid}`}
           >
             Metadata catalogue

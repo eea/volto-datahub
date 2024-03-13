@@ -5,8 +5,10 @@ const projectRootPath = fs.existsSync('./project')
   ? fs.realpathSync('./project')
   : fs.realpathSync('./../../../');
 const packageJson = require(path.join(projectRootPath, 'package.json'));
-const jsConfig = require(path.join(projectRootPath, 'jsconfig.json'))
-  .compilerOptions;
+const jsConfig = require(path.join(
+  projectRootPath,
+  'jsconfig.json',
+)).compilerOptions;
 
 const pathsConfig = jsConfig.paths;
 
@@ -49,5 +51,8 @@ module.exports = {
         rootPathSuffix: 'src',
       },
     },
+  },
+  rules: {
+    'react/jsx-no-target-blank': 'off',
   },
 };
