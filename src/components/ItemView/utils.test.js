@@ -77,11 +77,11 @@ describe('groupBy', () => {
       { id: 1, name: 'test3' },
     ];
     expect(groupBy(arr, 'id')).toEqual({
-      '1': [
+      1: [
         { id: 1, name: 'test1' },
         { id: 1, name: 'test3' },
       ],
-      '2': [{ id: 2, name: 'test2' }],
+      2: [{ id: 2, name: 'test2' }],
     });
   });
 });
