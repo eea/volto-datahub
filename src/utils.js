@@ -83,14 +83,13 @@ export function parseDatasets(children) {
   const groupDatasets = (items) => {
     const datasetsByCoverage = groupBy(items, 'temporalDateRange');
 
-    const sortedDatasets = Object.keys(datasetsByCoverage).sort(function (
-      a,
-      b,
-    ) {
-      a = Math.max(...a.split('-'));
-      b = Math.max(...b.split('-'));
-      return b - a;
-    });
+    const sortedDatasets = Object.keys(datasetsByCoverage).sort(
+      function (a, b) {
+        a = Math.max(...a.split('-'));
+        b = Math.max(...b.split('-'));
+        return b - a;
+      },
+    );
 
     const groupedDatasets = sortedDatasets.map((v, i) => {
       return { id: i, date: v, children: datasetsByCoverage[v] };
