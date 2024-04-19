@@ -1,5 +1,4 @@
-/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
-export default {
+const views = {
   resultViews: [
     {
       id: 'datahubCards',
@@ -50,3 +49,5 @@ export default {
     },
   },
 };
+
+export default views;

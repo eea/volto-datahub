@@ -4,5 +4,6 @@ const vocab = {
   },
 };
 
-/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
-export default { vocab };
+const vocabWrapper = { vocab };
+
+export default vocabWrapper;

@@ -194,10 +194,11 @@ const facets = [
   }),
 ];
 
-/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
-export default {
+const facetsWrapper = {
   facets,
 };
+
+export default facetsWrapper;
 
 // wrapper: 'ModalFacetWrapper',
 // factory: 'MultiTermListFacet',
