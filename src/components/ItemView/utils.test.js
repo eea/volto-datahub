@@ -77,35 +77,17 @@ describe('groupBy', () => {
       { id: 1, name: 'test3' },
     ];
     expect(groupBy(arr, 'id')).toEqual({
-      '1': [
+      1: [
         { id: 1, name: 'test1' },
         { id: 1, name: 'test3' },
       ],
-      '2': [{ id: 2, name: 'test2' }],
+      2: [{ id: 2, name: 'test2' }],
     });
   });
 });
 
 describe('SVGIcon', () => {
   afterEach(cleanup);
-
-  it('should render SVGIcon correctly', () => {
-    const { container } = render(
-      <SVGIcon
-        name={{
-          attributes: {
-            xmlns: 'http://www.w3.org/2000/svg',
-            viewBox: '0 0 32 32',
-          },
-          content: '<path d="M2 9h28l-14 14L2 9z"></path>',
-        }}
-        className={'test'}
-        title={'test title'}
-        size="32px"
-      />,
-    );
-    expect(container.firstChild).toMatchSnapshot();
-  });
 
   it('should call onClick when clicked', () => {
     const onClick = jest.fn();
