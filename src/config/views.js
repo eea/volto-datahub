@@ -1,4 +1,4 @@
-export default {
+const views = {
   resultViews: [
     {
       id: 'datahubCards',
@@ -49,3 +49,5 @@ export default {
     },
   },
 };
+
+export default views;

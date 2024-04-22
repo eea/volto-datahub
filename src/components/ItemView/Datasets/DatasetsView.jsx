@@ -5,10 +5,8 @@ import { parseDatasets } from '@eeacms/volto-datahub/utils';
 const DatasetsView = (props) => {
   const { item, appConfig } = props;
   const { children } = item?.raw_value?.raw || {};
-  const {
-    groupedByTemporalCoverage,
-    groupedByArchivedOrRestricted,
-  } = parseDatasets(children);
+  const { groupedByTemporalCoverage, groupedByArchivedOrRestricted } =
+    parseDatasets(children);
 
   return (
     <>

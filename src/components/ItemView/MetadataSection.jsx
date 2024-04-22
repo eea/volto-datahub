@@ -84,6 +84,7 @@ const MetadataSection = (props) => {
               `${appConfig.indexBaseUrl}/catalogue/datahub/api/records/` +
               `${docid}/formatters/xsl-view?output=pdf&language=eng&approved=true`
             }
+            rel="noopener"
           >
             Metadata Factsheet
           </a>
@@ -94,6 +95,7 @@ const MetadataSection = (props) => {
           <a
             target="_blank"
             href={`${appConfig.indexBaseUrl}/catalogue/srv/eng/catalog.search#/metadata/${docid}`}
+            rel="noopener"
           >
             Metadata catalogue
           </a>

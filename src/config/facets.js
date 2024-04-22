@@ -194,9 +194,11 @@ const facets = [
   }),
 ];
 
-export default {
+const facetsWrapper = {
   facets,
 };
+
+export default facetsWrapper;
 
 // wrapper: 'ModalFacetWrapper',
 // factory: 'MultiTermListFacet',
