@@ -143,7 +143,6 @@ const DatasetItemsList = (props) => {
           } = dataset;
           const archived = isObsolete(dataset.cl_status);
           const active = isActive(id);
-
           return (
             <>
               <Accordion id={id} key={index}>
@@ -238,23 +237,21 @@ const DatasetItemsList = (props) => {
                         )}
                     </div>
 
-                    {dataset.resourceType[0] !== 'nonGeographicDataset' && (
-                      <div className="dataset-pdf">
-                        <div className="d-link">
-                          <Icon className="file pdf" />
-                          <a
-                            target="_blank"
-                            rel="noreferrer"
-                            href={
-                              `${appConfig.indexBaseUrl}/catalogue/datahub/api/records/` +
-                              `${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`
-                            }
-                          >
-                            Metadata Factsheet
-                          </a>
-                        </div>
+                    <div className="dataset-pdf">
+                      <div className="d-link">
+                        <Icon className="file pdf" />
+                        <a
+                          target="_blank"
+                          rel="noreferrer"
+                          href={
+                            `${appConfig.indexBaseUrl}/catalogue/datahub/api/records/` +
+                            `${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`
+                          }
+                        >
+                          Metadata Factsheet
+                        </a>
                       </div>
-                    )}
+                    </div>
                   </div>
 
                   {!!dataset.link && dataset.link.length > 0 && (
