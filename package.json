@@ -20,6 +20,7 @@
     "@eeacms/volto-accordion-block": "*",
     "@eeacms/volto-globalsearch": "*",
     "@eeacms/volto-listing-block": "*",
+    "@eeacms/volto-eea-design-system": "*",
     "feed": "4.2.2"
   },
   "devDependencies": {
@@ -35,7 +36,8 @@
   "addons": [
     "@eeacms/volto-globalsearch",
     "@eeacms/volto-listing-block",
-    "@eeacms/volto-accordion-block"
+    "@eeacms/volto-accordion-block",
+    "@eeacms/volto-eea-design-system"
   ],
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json}": [
