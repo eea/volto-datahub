@@ -26,7 +26,7 @@ const DatasetsView = (props) => {
         groupedByArchivedOrRestricted.length > 0 && (
           <>
             <div className="dataset-container">
-              <h2>Archived or restricted datasets</h2>
+              <h2>Superseded or restricted datasets</h2>
             </div>
             <DatasetsTab
               appConfig={appConfig}
