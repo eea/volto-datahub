@@ -201,7 +201,7 @@ const DatasetItemsList = (props) => {
                       )}
 
                       {archived && (
-                        <span className="dh-label inverted">Archived</span>
+                        <span className="dh-label inverted">Superseded</span>
                       )}
 
                       {isInternal(dataset) && (
