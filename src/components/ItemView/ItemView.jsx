@@ -58,6 +58,7 @@ const messages = defineMessages({
 
 function ItemView(props) {
   const { docid, staticContext } = props;
+  console.log('props', props);
   const dispatch = useDispatch();
   let result = useSelector((state) => state.datahub_results?.[docid]);
   if (__SERVER__ && !result?._original?.found) {
@@ -136,47 +137,42 @@ function ItemView(props) {
   }, [item, dispatch, docid, rawTitle, currentUrl]);
 
   const intl = useIntl();
-  const rssLinks = [
-    {
-      title: 'RSS',
-      href: `${currentUrl}/datahub_rss.xml`,
-    },
-  ];
+  const rssLink = {
+    title: 'RSS',
+    href: `${currentUrl}/datahub_rss.xml`,
+  };
 
   return item && item._meta.found ? (
     <div className="dataset-view">
-      <Helmet title={title?.raw} />
+      <Helmet
+        title={title?.raw}
+        link={[
+          {
+            rel: 'alternate',
+            title: rssLink.title ?? intl.formatMessage(messages.rssFeed),
+            href: rssLink.href,
+            type:
+              rssLink.feedType === 'atom'
+                ? 'application/atom+xml'
+                : 'application/rss+xml',
+          },
+        ]}
+      />
       <IsomorphicPortal>
         <div className="dataset">
           <Banner>
             <Banner.Content
-              actions={rssLinks?.map((rssLink, index) => (
+              actions={
                 <>
-                  <Helmet
-                    link={[
-                      {
-                        rel: 'alternate',
-                        title:
-                          rssLink.title ?? intl.formatMessage(messages.rssFeed),
-                        href: rssLink.href,
-                        type:
-                          rssLink.feedType === 'atom'
-                            ? 'application/atom+xml'
-                            : 'application/rss+xml',
-                      },
-                    ]}
-                  />
                   <Banner.Action
                     icon="ri-rss-fill"
-                    title={
-                      rssLink.title ?? intl.formatMessage(messages.rssFeed)
-                    }
+                    title={rssLink.title ?? intl.formatMessage(messages.rssFeed)}
                     className="rssfeed"
                     href={rssLink.href}
                     target="_blank"
                   />
                 </>
-              ))}
+              }
             >
               <Banner.Subtitle>
                 <Link to={appConfig.landingPageURL}>

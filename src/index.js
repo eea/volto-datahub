@@ -41,10 +41,20 @@ const applyConfig = (config) => {
   config.settings.nonContentRoutes.push(
     new RegExp(`/.+/datahub/${rssRouteIdRegexp}`),
   );
+  // Original landing page RSS route
+  config.settings.nonContentRoutes.push(new RegExp(`/.+/datahub/rss\\.xml`));
 
   config.settings.externalRoutes.push({
     match: {
       path: new RegExp(`/.+/${rssRouteIdRegexp}`),
+      strict: true,
+      exact: true,
+    },
+  });
+  // Original landing page RSS route
+  config.settings.externalRoutes.push({
+    match: {
+      path: new RegExp(`/.+/datahub/rss\\.xml`),
       strict: true,
       exact: true,
     },

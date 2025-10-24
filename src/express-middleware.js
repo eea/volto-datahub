@@ -223,10 +223,17 @@ export default function makeMiddlewares(config) {
   middleware.use(express.urlencoded({ extended: true }));
 
   middleware.all('**/datahub/sitemap-data.xml', sitemap);
+  // Original landing page RSS route (restored for backwards compatibility)
+  middleware.all(
+    '**/datahub/rss.xml',
+    make_rssMiddleware(config, generateRSS),
+  );
+  // Alternative landing page RSS route
   middleware.all(
     '**/datahub/datahub_rss.xml',
     make_rssMiddleware(config, generateRSS),
   );
+  // Per-item RSS route
   middleware.all(
     `**/datahub/${viewRouteId}/:id/${rssRouteId}`,
     make_rssMiddleware(config, generateItemRSS),
