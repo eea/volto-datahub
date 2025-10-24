@@ -224,10 +224,7 @@ export default function makeMiddlewares(config) {
 
   middleware.all('**/datahub/sitemap-data.xml', sitemap);
   // Original landing page RSS route (restored for backwards compatibility)
-  middleware.all(
-    '**/datahub/rss.xml',
-    make_rssMiddleware(config, generateRSS),
-  );
+  middleware.all('**/datahub/rss.xml', make_rssMiddleware(config, generateRSS));
   // Alternative landing page RSS route
   middleware.all(
     '**/datahub/datahub_rss.xml',

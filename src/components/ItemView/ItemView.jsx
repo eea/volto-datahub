@@ -166,7 +166,9 @@ function ItemView(props) {
                 <>
                   <Banner.Action
                     icon="ri-rss-fill"
-                    title={rssLink.title ?? intl.formatMessage(messages.rssFeed)}
+                    title={
+                      rssLink.title ?? intl.formatMessage(messages.rssFeed)
+                    }
                     className="rssfeed"
                     href={rssLink.href}
                     target="_blank"
