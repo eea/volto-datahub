@@ -58,7 +58,6 @@ const messages = defineMessages({
 
 function ItemView(props) {
   const { docid, staticContext } = props;
-  console.log('props', props);
   const dispatch = useDispatch();
   let result = useSelector((state) => state.datahub_results?.[docid]);
   if (__SERVER__ && !result?._original?.found) {
