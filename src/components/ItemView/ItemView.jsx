@@ -3,7 +3,7 @@ import { Portal } from 'react-portal';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { Container, Icon, Button, Popup } from 'semantic-ui-react';
-import { Toolbar } from '@plone/volto/components';
+import { Toolbar, ErrorBoundary } from '@plone/volto/components';
 import { BodyClass, asyncConnect, Helmet } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 import { rebind, applyConfigurationSchema } from '@eeacms/search';
@@ -25,6 +25,9 @@ const WORD_COUNT = 60;
 const PROD_ID_COUNT = 3;
 
 const splitContent = (content, wordCount) => {
+  if (!content || typeof content !== 'string') {
+    return ['', ''];
+  }
   const words = content.split(' ');
   let firstTextPart = '',
     secondTextPart = '';
@@ -101,9 +104,10 @@ function ItemView(props) {
 
   const rawTitle = item && item._meta.found ? title?.raw || '' : docid;
 
-  const splitDescription = description?.raw.split(' ').length > WORD_COUNT;
+  const descriptionText = description?.raw || '';
+  const splitDescription = descriptionText.split(' ').length > WORD_COUNT;
   const [firstTextPart, secondTextPart] = splitContent(
-    description?.raw,
+    descriptionText,
     WORD_COUNT,
   );
   const [isReadMore, setIsReadMore] = React.useState(false);
@@ -251,7 +255,7 @@ function ItemView(props) {
               </Button>
             </p>
           ) : (
-            <p>{description?.raw}</p>
+            <p>{descriptionText}</p>
           )}
         </Callout>
       </div>
@@ -278,21 +282,23 @@ function DatahubItemView(props) {
   const { staticContext = {} } = props;
 
   return (
-    <div id="view">
-      <BodyClass className="view-datahub-item" />
-      <Container className="view-wrapper">
-        <ItemView
-          docid={docid}
-          location={location}
-          staticContext={staticContext}
-        />
-      </Container>
-      {isClient && (
-        <Portal node={document.getElementById('toolbar')}>
-          <Toolbar pathname={props.pathname || ''} inner={<span />} />
-        </Portal>
-      )}
-    </div>
+    <ErrorBoundary>
+      <div id="view">
+        <BodyClass className="view-datahub-item" />
+        <Container className="view-wrapper">
+          <ItemView
+            docid={docid}
+            location={location}
+            staticContext={staticContext}
+          />
+        </Container>
+        {isClient && (
+          <Portal node={document.getElementById('toolbar')}>
+            <Toolbar pathname={props.pathname || ''} inner={<span />} />
+          </Portal>
+        )}
+      </div>
+    </ErrorBoundary>
   );
 }
 export default asyncConnect([
