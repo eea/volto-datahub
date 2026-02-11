@@ -46,7 +46,7 @@ const applyConfig = (config) => {
 
   config.settings.externalRoutes.push({
     match: {
-      path: new RegExp(`/.+/${rssRouteIdRegexp}`),
+      path: `/**/${rssRouteId}`,
       strict: true,
       exact: true,
     },
@@ -54,7 +54,7 @@ const applyConfig = (config) => {
   // Original landing page RSS route
   config.settings.externalRoutes.push({
     match: {
-      path: new RegExp(`/.+/datahub/rss\\.xml`),
+      path: '/**/datahub/rss.xml',
       strict: true,
       exact: true,
     },
