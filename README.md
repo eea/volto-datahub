@@ -3,16 +3,16 @@
 [![Releases](https://img.shields.io/github/v/release/eea/volto-datahub)](https://github.com/eea/volto-datahub/releases)
 
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-datahub%2Fmaster&subject=master)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-datahub/job/master/display/redirect)
-[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub-master&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub-master)
-[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub-master&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub-master)
-[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub-master&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub-master)
-[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub-master&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub-master)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub)
 
 [![Pipeline](https://ci.eionet.europa.eu/buildStatus/icon?job=volto-addons%2Fvolto-datahub%2Fdevelop&subject=develop)](https://ci.eionet.europa.eu/view/Github/job/volto-addons/job/volto-datahub/job/develop/display/redirect)
-[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub-develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub-develop)
-[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub-develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub-develop)
-[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub-develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub-develop)
-[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub-develop)
+[![Lines of Code](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub&branch=develop&metric=ncloc)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub&branch=develop)
+[![Coverage](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub&branch=develop&metric=coverage)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub&branch=develop)
+[![Bugs](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub&branch=develop&metric=bugs)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub&branch=develop)
+[![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-datahub&branch=develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-datahub&branch=develop)
 
 
 EEA DataHub search [Volto](https://github.com/plone/volto) add-on
