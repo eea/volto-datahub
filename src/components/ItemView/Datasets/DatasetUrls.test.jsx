@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { isInternalURL } from '@eeacms/volto-datahub/utils';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 import DatasetUrls from './DatasetUrls';
 
