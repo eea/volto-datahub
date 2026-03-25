@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { runRequest } from '@eeacms/search';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 import MoreLikeThis from './MoreLikeThis';
 

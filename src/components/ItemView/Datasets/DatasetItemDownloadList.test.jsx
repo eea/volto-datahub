@@ -5,7 +5,7 @@ import DatasetUrls from './DatasetUrls';
 import DatasetLinks from './DatasetLinks';
 import DatasetEsri from './DatasetEsri';
 import DatasetHttpLinks from './DatasetHttpLinks';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 import DatasetItemDownloadList from './DatasetItemDownloadList';
 
