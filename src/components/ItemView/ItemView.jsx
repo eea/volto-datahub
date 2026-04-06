@@ -3,11 +3,15 @@ import { Portal } from 'react-portal';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import { Container, Icon, Button, Popup } from 'semantic-ui-react';
-import { Toolbar, ErrorBoundary } from '@plone/volto/components';
-import { BodyClass, asyncConnect, Helmet } from '@plone/volto/helpers';
+import Toolbar from '@plone/volto/components/manage/Toolbar/Toolbar';
+import ErrorBoundary from '@plone/volto/components/theme/Error/ErrorBoundary';
+import BodyClass from '@plone/volto/helpers/BodyClass/BodyClass';
+import Helmet from '@plone/volto/helpers/Helmet/Helmet';
+import { asyncConnect } from '@plone/volto/helpers/AsyncConnect';
 import config from '@plone/volto/registry';
 import { rebind, applyConfigurationSchema } from '@eeacms/search';
-import { Callout, Banner } from '@eeacms/volto-eea-design-system/ui';
+import Callout from '@eeacms/volto-eea-design-system/ui/Callout/Callout';
+import Banner from '@eeacms/volto-eea-design-system/ui/Banner/Banner';
 import { defineMessages, useIntl } from 'react-intl';
 import {
   MoreLikeThis,
@@ -188,7 +192,9 @@ function ItemView(props) {
               <Banner.Title>{title?.raw}</Banner.Title>
               {/* <Banner.MetadataField label="Prod-ID" value={prodID} /> */}
               <Banner.Metadata>
-                {obsolete && <div class="ui label archived-item">Archived</div>}
+                {obsolete && (
+                  <div className="ui label archived-item">Archived</div>
+                )}
                 {prodID && (
                   <>
                     {prodID.length > PROD_ID_COUNT ? (

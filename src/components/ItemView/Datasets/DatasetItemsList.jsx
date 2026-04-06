@@ -144,122 +144,120 @@ const DatasetItemsList = (props) => {
           const archived = isObsolete(dataset.cl_status);
           const active = isActive(id);
           return (
-            <>
-              <Accordion id={id} key={index}>
-                <Accordion.Title
-                  role="button"
-                  tabIndex={0}
-                  active={active}
-                  aria-expanded={active}
-                  index={index}
-                  onClick={(e) => handleClick(e, { index, id, item })}
-                  onKeyDown={(e) => {
-                    if (e.keyCode === 13 || e.keyCode === 32) {
-                      e.preventDefault();
-                      handleClick(e, { index, id, item });
-                    }
-                  }}
-                >
-                  <span className="dataset-title">
-                    {dataset.resourceTitleObject.default}
-                    <span className="formats">
-                      {(dataset.format || [])
-                        .filter((item, pos, self) => self.indexOf(item) === pos)
-                        .map((item, i) => {
-                          return (
-                            <span className="dh-label" key={i}>
-                              {item}
-                            </span>
-                          );
-                        })}
+            <Accordion id={id} key={id ?? index}>
+              <Accordion.Title
+                role="button"
+                tabIndex={0}
+                active={active}
+                aria-expanded={active}
+                index={index}
+                onClick={(e) => handleClick(e, { index, id, item })}
+                onKeyDown={(e) => {
+                  if (e.keyCode === 13 || e.keyCode === 32) {
+                    e.preventDefault();
+                    handleClick(e, { index, id, item });
+                  }
+                }}
+              >
+                <span className="dataset-title">
+                  {dataset.resourceTitleObject.default}
+                  <span className="formats">
+                    {(dataset.format || [])
+                      .filter((item, pos, self) => self.indexOf(item) === pos)
+                      .map((item, i) => {
+                        return (
+                          <span className="dh-label" key={i}>
+                            {item}
+                          </span>
+                        );
+                      })}
 
-                      {Array.isArray(dataset.linkProtocol) ? (
-                        <>
-                          {dataset.linkProtocol
-                            .filter(
-                              (i) => i.includes('ESRI') || i.includes('OGC'),
-                            )
-                            .filter(
-                              (item, pos, self) => self.indexOf(item) === pos,
-                            )
-                            .map((item, i) => {
-                              return (
-                                <span className="dh-label" key={i}>
-                                  {item}
-                                </span>
-                              );
-                            })}
-                        </>
-                      ) : (
-                        <>
-                          {['ESRI', 'OGC'].includes(dataset.linkProtocol) && (
-                            <span className="dh-label">
-                              {dataset.linkProtocol}
-                            </span>
-                          )}
-                        </>
-                      )}
+                    {Array.isArray(dataset.linkProtocol) ? (
+                      <>
+                        {dataset.linkProtocol
+                          .filter(
+                            (i) => i.includes('ESRI') || i.includes('OGC'),
+                          )
+                          .filter(
+                            (item, pos, self) => self.indexOf(item) === pos,
+                          )
+                          .map((item, i) => {
+                            return (
+                              <span className="dh-label" key={i}>
+                                {item}
+                              </span>
+                            );
+                          })}
+                      </>
+                    ) : (
+                      <>
+                        {['ESRI', 'OGC'].includes(dataset.linkProtocol) && (
+                          <span className="dh-label">
+                            {dataset.linkProtocol}
+                          </span>
+                        )}
+                      </>
+                    )}
 
-                      {archived && (
-                        <span className="dh-label inverted">Superseded</span>
-                      )}
+                    {archived && (
+                      <span className="dh-label inverted">Superseded</span>
+                    )}
 
-                      {isInternal(dataset) && (
-                        <SVGIcon name={lockSVG} size="18" />
-                      )}
-                    </span>
+                    {isInternal(dataset) && (
+                      <SVGIcon name={lockSVG} size="18" />
+                    )}
                   </span>
-                  {active ? (
-                    <Icon className="ri-arrow-up-s-line" />
-                  ) : (
-                    <Icon className="ri-arrow-down-s-line" />
-                  )}
-                </Accordion.Title>
-                <Accordion.Content active={active}>
-                  <div className="dataset-content">
-                    <div>
-                      {publicationDateForResource && (
+                </span>
+                {active ? (
+                  <Icon className="ri-arrow-up-s-line" />
+                ) : (
+                  <Icon className="ri-arrow-down-s-line" />
+                )}
+              </Accordion.Title>
+              <Accordion.Content active={active}>
+                <div className="dataset-content">
+                  <div>
+                    {publicationDateForResource && (
+                      <div>
+                        <strong>Published: </strong>
+                        <DateTime
+                          format="DATE_MED"
+                          value={publicationDateForResource}
+                        />
+                      </div>
+                    )}
+
+                    {resourceTemporalExtentDetails &&
+                      resourceTemporalExtentDetails?.length > 0 && (
                         <div>
-                          <strong>Published: </strong>
-                          <DateTime
-                            format="DATE_MED"
-                            value={publicationDateForResource}
-                          />
+                          <strong>Temporal coverage: </strong>
+                          {temporalDateRange}
                         </div>
                       )}
-
-                      {resourceTemporalExtentDetails &&
-                        resourceTemporalExtentDetails?.length > 0 && (
-                          <div>
-                            <strong>Temporal coverage: </strong>
-                            {temporalDateRange}
-                          </div>
-                        )}
-                    </div>
-
-                    <div className="dataset-pdf">
-                      <div className="d-link">
-                        <Icon className="file pdf" />
-                        <a
-                          target="_blank"
-                          rel="noreferrer"
-                          href={
-                            `${appConfig.indexBaseUrl}/catalogue/datahub/api/records/` +
-                            `${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`
-                          }
-                        >
-                          Metadata Factsheet
-                        </a>
-                      </div>
-                    </div>
                   </div>
 
-                  {!!dataset.link && dataset.link.length > 0 && (
-                    <DatasetItemDownloadList link={dataset.link} />
-                  )}
-                </Accordion.Content>
-              </Accordion>
-            </>
+                  <div className="dataset-pdf">
+                    <div className="d-link">
+                      <Icon className="file pdf" />
+                      <a
+                        target="_blank"
+                        rel="noreferrer"
+                        href={
+                          `${appConfig.indexBaseUrl}/catalogue/datahub/api/records/` +
+                          `${dataset.metadataIdentifier}/formatters/xsl-view?output=pdf&language=eng&approved=true`
+                        }
+                      >
+                        Metadata Factsheet
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {!!dataset.link && dataset.link.length > 0 && (
+                  <DatasetItemDownloadList link={dataset.link} />
+                )}
+              </Accordion.Content>
+            </Accordion>
           );
         })}
     </>
