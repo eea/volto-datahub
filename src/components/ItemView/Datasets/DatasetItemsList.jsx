@@ -6,7 +6,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { DateTime } from '@eeacms/search';
 import { AccordionFilter } from '@eeacms/volto-accordion-block/components';
 
-import { SVGIcon } from '../utils.js';
+import { SVGIcon } from '@eeacms/volto-datahub/components/ItemView/utils.js';
 import DatasetItemDownloadList from './DatasetItemDownloadList';
 import { isInternal, isObsolete } from '@eeacms/volto-datahub/utils';
 
