@@ -4,7 +4,7 @@ import views from './views';
 import filters from './filters';
 import vocabs from './vocabulary';
 
-import DatahubLandingPage from '../components/LandingPage/DatahubLandingPage';
+import DatahubLandingPage from '@eeacms/volto-datahub/components/LandingPage/DatahubLandingPage';
 
 const datahubConfig = {
   title: 'Datahub',

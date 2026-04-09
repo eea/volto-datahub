@@ -1,9 +1,9 @@
 import { List } from 'semantic-ui-react';
-import { SVGIcon } from '../utils.js';
+import { SVGIcon } from '@eeacms/volto-datahub/components/ItemView/utils.js';
 
 import lockSVG from 'remixicon/icons/System/lock-line.svg';
 import { isInternalURL } from '@eeacms/volto-datahub/utils';
-import servicesSVG from '../icons/services.svg';
+import servicesSVG from '@eeacms/volto-datahub/components/ItemView/icons/services.svg';
 
 const ItemLink = ({ item }) => (
   <List.Item key={item.id}>
