@@ -12,7 +12,7 @@ import {
   redirectRouteId,
 } from '@eeacms/volto-datahub/constants';
 
-const EEA_DATAHUB = `https://eea.europa.eu/en/datahub`;
+const EEA_DATAHUB = `https://www.eea.europa.eu/en/datahub`;
 
 const getUrlES = (appName) => {
   return (
