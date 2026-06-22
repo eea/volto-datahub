@@ -21,6 +21,22 @@ EEA DataHub search [Volto](https://github.com/plone/volto) add-on
 
 - https://demo-www.eea.europa.eu/en/datahub
 
+### Environment variables
+
+The Elasticsearch middleware proxy uses the following environment variables:
+
+- `PROXY_ES_DSN` — default Elasticsearch DSN (e.g. `http://localhost:9200/_all`)
+- `PROXY_ES_DSN_${appName}` — per-app DSN override (e.g. `PROXY_ES_DSN_datahub`)
+
+#### Upgrading from 3.x to 4.x
+
+The `RAZZLE_` prefix has been removed from the Elasticsearch middleware environment variable. Update your deployment configuration:
+
+- `RAZZLE_PROXY_ES_DSN` → `PROXY_ES_DSN`
+- `RAZZLE_PROXY_ES_DSN_${appName}` → `PROXY_ES_DSN_${appName}`
+
+- https://demo-www.eea.europa.eu/en/datahub
+
 ## Getting started
 
 ### Try volto-datahub with Docker

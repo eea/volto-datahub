@@ -16,8 +16,8 @@ const EEA_DATAHUB = `https://www.eea.europa.eu/en/datahub`;
 
 const getUrlES = (appName) => {
   return (
-    process.env[`RAZZLE_PROXY_ES_DSN_${appName}`] ||
-    process.env.RAZZLE_PROXY_ES_DSN ||
+    process.env[`PROXY_ES_DSN_${appName}`] ||
+    process.env.PROXY_ES_DSN ||
     'http://localhost:9200/_all'
   );
 };
