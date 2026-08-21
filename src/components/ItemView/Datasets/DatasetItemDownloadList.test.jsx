@@ -9,13 +9,13 @@ import '@testing-library/jest-dom';
 
 import DatasetItemDownloadList from './DatasetItemDownloadList';
 
-jest.mock('@eeacms/search', () => ({
-  runRequest: jest.fn(),
+vi.mock('@eeacms/search', () => ({
+  runRequest: vi.fn(),
 }));
-jest.mock('./DatasetUrls', () => jest.fn(() => null));
-jest.mock('./DatasetLinks', () => jest.fn(() => null));
-jest.mock('./DatasetEsri', () => jest.fn(() => null));
-jest.mock('./DatasetHttpLinks', () => jest.fn(() => null));
+vi.mock('./DatasetUrls', () => ({ default: vi.fn(() => null) }));
+vi.mock('./DatasetLinks', () => ({ default: vi.fn(() => null) }));
+vi.mock('./DatasetEsri', () => ({ default: vi.fn(() => null) }));
+vi.mock('./DatasetHttpLinks', () => ({ default: vi.fn(() => null) }));
 
 describe('DatasetItemDownloadList', () => {
   const link = [
