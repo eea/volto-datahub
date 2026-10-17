@@ -19,7 +19,8 @@ const addonAliases = Object.keys(registry.packages).map((o) => [
 module.exports = {
   extends: `${coreLocation}/packages/volto/.eslintrc`,
   rules: {
-    'import/no-unresolved': 1,
+    // `@eeacms/search` is provided by the consumer project (volto-searchlib).
+    'import/no-unresolved': [1, { ignore: ['^@eeacms/search'] }],
   },
   settings: {
     'import/resolver': {
@@ -28,10 +29,7 @@ module.exports = {
           ['@plone/volto', `${coreLocation}/packages/volto/src`],
           ['@plone/volto-slate', `${coreLocation}/packages/volto-slate/src`],
           ['@plone/registry', `${coreLocation}/packages/registry/src`],
-          [
-            '@eeacms/volto-datahub',
-            './packages/volto-datahub/src',
-          ],
+          ['@eeacms/volto-datahub', './packages/volto-datahub/src'],
           ...addonAliases,
         ],
         extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
