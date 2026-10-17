@@ -5,9 +5,11 @@ import '@testing-library/jest-dom';
 
 import DatasetUrls from './DatasetUrls';
 
-jest.mock('remixicon/icons/System/lock-line.svg', () => 'MockLockIcon');
-jest.mock('@eeacms/volto-datahub/utils', () => ({
-  isInternalURL: jest.fn(),
+vi.mock('remixicon/icons/System/lock-line.svg', () => ({
+  default: 'MockLockIcon',
+}));
+vi.mock('@eeacms/volto-datahub/utils', () => ({
+  isInternalURL: vi.fn(),
 }));
 
 describe('DatasetUrls', () => {
