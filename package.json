@@ -44,6 +44,7 @@
   "pnpm": {
     "overrides": {
       "@eeacms/volto-eea-chatbot": "github:eea/volto-eea-chatbot#volto19&path:/packages/volto-eea-chatbot",
+      "@eeacms/volto-eea-design-system": "github:eea/volto-eea-design-system#volto19&path:/packages/volto-eea-design-system",
       "@eeacms/volto-searchlib": "github:eea/volto-searchlib#volto19&path:/packages/volto-searchlib",
       "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
       "react-refresh": "^0.14.2"
