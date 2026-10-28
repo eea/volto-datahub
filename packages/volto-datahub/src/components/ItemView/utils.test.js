@@ -90,7 +90,7 @@ describe('SVGIcon', () => {
   afterEach(cleanup);
 
   it('should call onClick when clicked', () => {
-    const onClick = jest.fn();
+    const onClick = vi.fn();
     const { container } = render(
       <SVGIcon
         name={{

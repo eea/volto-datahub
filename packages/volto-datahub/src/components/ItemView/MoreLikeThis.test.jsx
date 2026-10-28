@@ -5,10 +5,10 @@ import '@testing-library/jest-dom';
 
 import MoreLikeThis from './MoreLikeThis';
 
-jest.mock('@eeacms/search', () => {
+vi.mock('@eeacms/search', () => {
   return {
-    runRequest: jest.fn(),
-    firstWords: jest.fn((word, length) =>
+    runRequest: vi.fn(),
+    firstWords: vi.fn((word, length) =>
       word.split(' ').slice(0, length).join(' '),
     ),
   };

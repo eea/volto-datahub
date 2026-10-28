@@ -5,15 +5,17 @@ import { isInternalURL } from '@eeacms/volto-datahub/utils';
 
 import DatasetHttpLinks from './DatasetHttpLinks';
 
-jest.mock('@eeacms/search', () => ({
-  runRequest: jest.fn(),
+vi.mock('@eeacms/search', () => ({
+  runRequest: vi.fn(),
 }));
 
-jest.mock('@eeacms/volto-datahub/utils', () => ({
-  isInternalURL: jest.fn(),
+vi.mock('@eeacms/volto-datahub/utils', () => ({
+  isInternalURL: vi.fn(),
 }));
 
-jest.mock('remixicon/icons/System/lock-line.svg', () => 'MockLockIcon');
+vi.mock('remixicon/icons/System/lock-line.svg', () => ({
+  default: 'MockLockIcon',
+}));
 
 describe('DatasetHttpLinks', () => {
   const dataset = {

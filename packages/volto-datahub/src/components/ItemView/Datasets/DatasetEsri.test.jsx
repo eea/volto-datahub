@@ -4,7 +4,9 @@ import '@testing-library/jest-dom';
 
 import DatasetEsri from './DatasetEsri';
 
-jest.mock('remixicon/icons/System/lock-line.svg', () => 'MockLockIcon');
+vi.mock('remixicon/icons/System/lock-line.svg', () => ({
+  default: 'MockLockIcon',
+}));
 
 describe('DatasetEsri', () => {
   const dataset = {
