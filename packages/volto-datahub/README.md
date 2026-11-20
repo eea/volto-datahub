@@ -26,6 +26,30 @@ The `RAZZLE_` prefix has been removed from the Elasticsearch middleware environm
 
 - https://demo-www.eea.europa.eu/en/datahub
 
+## Upgrade
+
+### Upgrading to 5.x
+
+> This version requires `Volto 18` or `Volto 19` and Node.js 22.
+
+No API change: the block ids, the schema fields, the API path and the stored block data are the same
+as 4.x, so an upgrade renders the same items. The release adds Volto 19 support and moves the
+repository to the Volto 19 layout, where the published package lives in
+`packages/volto-datahub`.
+
+#### Fix
+
+- External dataset links in the item view open with `rel="noopener noreferrer"` instead of
+  `rel="noopener"`, so the target page cannot reach back through `window.opener`.
+
+#### Breaking changes
+
+- **Node.js 22 or newer is required** (`engines.node >= 22`), 4.x declared no engine.
+- **React 18 is required.** The package declares `react` and `react-dom` as `^18.2.0` peers, 4.x
+  declared no peers.
+- **The package no longer ships the repository tooling.** The Cypress specs and the Jest setup are
+  gone and the unit tests moved to Vitest next to the add-on, so nothing a site imports was removed.
+
 ## Requirements
 
 ### Backend
