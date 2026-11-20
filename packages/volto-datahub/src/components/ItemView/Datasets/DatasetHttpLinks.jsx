@@ -9,7 +9,12 @@ const renderListItem = (item, index, iconClass) => (
     <List.Content>
       <div className="dataset-item">
         <Icon className={iconClass} />
-        <a href={item.url} className="item-link" target="_blank" rel="noopener">
+        <a
+          href={item.url}
+          className="item-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <span>{item.name || item.url}</span>
         </a>
         {isInternalURL(item.url) ? (
